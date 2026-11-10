@@ -22,3 +22,6 @@ keystore.properties
 
 # Личные настройки Claude Code
 .claude/settings.local.json
+
+# Готовые сборки и тексты релизов (выкладываются на GitHub Releases, в репозиторий не входят)
+dist/
