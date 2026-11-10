@@ -56,6 +56,7 @@ fun MoreScreen(modules: List<Module>, onOpen: (Module) -> Unit, onSettings: () -
             Text(stringResource(R.string.more_none), style = type.body, color = colors.muted)
         } else {
             Text(stringResource(R.string.more_modules), style = type.caption, color = colors.muted)
+            Spacer(Modifier.height(XoSpacing.s3))
             modules.forEach { m -> MoreRow(ModuleUi.icon(m), stringResource(ModuleUi.nameRes(m)), stringResource(ModuleUi.subRes(m))) { onOpen(m) } }
             XoHairline()
         }
@@ -79,7 +80,7 @@ private fun MoreRow(icon: androidx.compose.ui.graphics.vector.ImageVector, title
         Column(Modifier.weight(1f)) {
             Text(title, style = type.bodyStrong, color = colors.ink)
             if (subtitle != null) {
-                Spacer(Modifier.height(XoSpacing.s1 / 2))
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(subtitle, style = type.caption, color = colors.muted)
             }
         }

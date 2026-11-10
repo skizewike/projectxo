@@ -40,20 +40,18 @@ fun StepsEntry(container: AppContainer, date: java.time.LocalDate) {
     val motion = container.motionSteps
     val motionOn by motion.enabled.collectAsStateWithLifecycle()
     var refused by rememberSaveable { mutableStateOf(false) }
-    // Разрешение спросили ради счёта по движению: после «да» сразу включаем.
-    var wantMotion by rememberSaveable { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
         container.stepsLive.refreshPermission()
         if (ok) {
-            if (wantMotion) motion.enable()
+            // Разрешили: фоновый счёт включается сразу (датчиком или по движению).
+            motion.enable()
         } else {
             val activity = context as? Activity
             // Система больше не покажет запрос: дальше только через настройки.
             refused = activity == null ||
                 !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACTIVITY_RECOGNITION)
         }
-        wantMotion = false
     }
 
     val access = when {
@@ -81,14 +79,13 @@ fun StepsEntry(container: AppContainer, date: java.time.LocalDate) {
             when {
                 access == StepsAccess.MotionOff && granted -> motion.enable()
                 refused -> openSettings()
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.Q -> if (access == StepsAccess.MotionOff) motion.enable() else openSettings()
-                else -> {
-                    wantMotion = access == StepsAccess.MotionOff
-                    launcher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
-                }
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.Q -> motion.enable()
+                else -> launcher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
             }
         },
         onStopMotion = motion::disable,
+        backgroundOn = motionOn,
+        onStartBackground = motion::enable,
         onAddManual = vm::addManual,
         onUndoManual = vm::undoManual,
     )

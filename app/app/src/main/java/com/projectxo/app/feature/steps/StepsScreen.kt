@@ -104,6 +104,9 @@ fun StepsScreen(
     onAddManual: (Int) -> Unit = {},
     onUndoManual: () -> Unit = {},
     onStopMotion: () -> Unit = {},
+    /** Фоновый счёт включён (телефон с датчиком шагов, Р67). */
+    backgroundOn: Boolean = true,
+    onStartBackground: () -> Unit = {},
     /** Текущий час; в превью и тестах подставляется. */
     nowHour: Int? = null,
 ) {
@@ -148,10 +151,10 @@ fun StepsScreen(
     ) {
         Spacer(Modifier.height(XoSpacing.s5))
         Text(stringResource(R.string.tab_steps), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
-        Spacer(Modifier.height(XoSpacing.s1))
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(formatToday(state.date), style = type.caption, color = colors.muted)
         if (access == StepsAccess.MotionOn) {
-            Spacer(Modifier.height(XoSpacing.s1))
+            Spacer(Modifier.height(XoSpacing.headGap))
             Text(stringResource(R.string.motion_on), style = type.caption, color = colors.muted)
         }
 
@@ -173,6 +176,14 @@ fun StepsScreen(
         // Без датчика та же кнопка уже стоит наверху.
         if (access != StepsAccess.NoSensor) XoTextButton(stringResource(R.string.steps_manual_open), onClick = { showManual = true })
         if (access == StepsAccess.MotionOn) XoTextButton(stringResource(R.string.motion_stop), onClick = onStopMotion)
+        // С датчиком: в фоне шаги считает служба с уведомлением, её можно выключить и включить.
+        if (access == StepsAccess.Granted) {
+            if (backgroundOn) {
+                XoTextButton(stringResource(R.string.steps_bg_stop), onClick = onStopMotion)
+            } else {
+                XoTextButton(stringResource(R.string.steps_bg_start), onClick = onStartBackground)
+            }
+        }
         // Место под полосу отмены, чтобы она не закрывала кнопку.
         Spacer(Modifier.height(XoSize.touchMin + XoSpacing.s5))
     }
@@ -234,7 +245,7 @@ private fun StepsTotal(state: StepsUiState, celebrationMs: () -> Float) {
             Text(first, style = type.caption, color = colors.muted)
         } else {
             Text(first, style = type.caption.copy(fontWeight = type.bodyStrong.fontWeight), color = colors.ink)
-            Spacer(Modifier.height(XoSpacing.s1))
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(second, style = type.caption, color = colors.muted)
         }
     }

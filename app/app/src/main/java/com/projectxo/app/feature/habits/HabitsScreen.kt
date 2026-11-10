@@ -123,6 +123,7 @@ fun HabitsScreen(state: HabitsUiState, actions: HabitsActions, modifier: Modifie
             Row(verticalAlignment = Alignment.Top) {
                 Column(Modifier.weight(1f)) {
                     Text(stringResource(R.string.module_habits), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+                    Spacer(Modifier.height(XoSpacing.headGap))
                     Text(formatToday(state.today), style = type.caption, color = colors.muted)
                 }
                 IconButton(XoIcons.Settings, stringResource(R.string.habits_settings)) { settingsOpen = true }
@@ -306,6 +307,7 @@ private fun RingView(state: HabitsUiState, actions: HabitsActions, onEdit: (Habi
                 stringResource(R.string.habits_ring_count, formatCount(state.doneCount.toLong()), formatCount(due.size.toLong())),
                 style = type.display.copy(fontSize = type.display.fontSize * 0.6f), color = colors.ink,
             )
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(stringResource(R.string.habits_ring_label), style = type.caption, color = colors.muted)
         }
     }
@@ -313,6 +315,7 @@ private fun RingView(state: HabitsUiState, actions: HabitsActions, onEdit: (Habi
     if (rest.isNotEmpty()) {
         Spacer(Modifier.height(XoSpacing.s3))
         Text(stringResource(R.string.habits_not_today), style = type.caption, color = colors.muted)
+        Spacer(Modifier.height(XoSpacing.s3))
         rest.forEach { HabitRow(it, state, actions, onEdit, dim = true) }
     }
 }
@@ -334,6 +337,7 @@ private fun HabitRow(item: HabitItem, state: HabitsUiState, actions: HabitsActio
         Spacer(Modifier.width(XoSpacing.s2))
         Column(Modifier.weight(1f)) {
             Text(habitName(item.habit), style = type.bodyStrong, color = colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(subtitle(item), style = type.caption, color = colors.muted)
         }
         if (item.habit.target > 1 && !state.editMode) {
@@ -377,6 +381,7 @@ private fun ListView(state: HabitsUiState, actions: HabitsActions, onEdit: (Habi
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(habitName(item.habit), style = type.bodyStrong, color = colors.ink)
+                    Spacer(Modifier.height(XoSpacing.textGap))
                     Text(subtitle(item), style = type.caption, color = colors.muted)
                 }
                 RowActions(item, state, actions, onEdit)
@@ -425,6 +430,7 @@ private fun CardsView(state: HabitsUiState, actions: HabitsActions, onEdit: (Hab
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(habitName(item.habit), style = type.bodyStrong, color = colors.ink)
+                    Spacer(Modifier.height(XoSpacing.textGap))
                     Text(freqText(item.habit), style = type.caption, color = colors.muted)
                 }
                 if (item.habit.planned(state)) Check(item, { actions.onToggle(item, 0) }, big = true)

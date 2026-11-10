@@ -226,6 +226,7 @@ private fun Point(icon: ImageVector, @StringRes t: Int, @StringRes s: Int) {
         Spacer(Modifier.width(14.dp))
         Column {
             Text(stringResource(t), style = XoTheme.type.bodyStrong, color = c.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(stringResource(s), style = XoTheme.type.caption, color = c.muted)
         }
     }
@@ -498,6 +499,7 @@ private fun WorkoutStep(onAnswer: (Boolean) -> Unit) {
         ).forEach { (name, sub) ->
             Column(Modifier.fillMaxWidth().padding(vertical = XoSpacing.s3)) {
                 Text(stringResource(name), style = XoTheme.type.bodyStrong, color = c.ink)
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(stringResource(sub), style = XoTheme.type.caption, color = c.muted)
             }
             XoHairline()
@@ -524,6 +526,7 @@ private fun RemindersStep(s: OnbState, onChange: (com.projectxo.app.core.model.R
         XoHairline()
         Column(Modifier.padding(vertical = XoSpacing.s3)) {
             Text(stringResource(R.string.rem_quiet), style = XoTheme.type.bodyStrong, color = XoTheme.colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(stringResource(R.string.rem_quiet_sub, hm(r.quietFromMin), hm(r.quietToMin)), style = XoTheme.type.caption, color = XoTheme.colors.muted)
         }
         XoHairline()
@@ -660,6 +663,7 @@ private fun PlanRow(icon: ImageVector, title: String, sub2: String?, value: Stri
         }
         Column(horizontalAlignment = Alignment.End) {
             Text(value, style = XoTheme.type.subtitle, color = c.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(sub, style = XoTheme.type.caption, color = c.muted)
         }
     }

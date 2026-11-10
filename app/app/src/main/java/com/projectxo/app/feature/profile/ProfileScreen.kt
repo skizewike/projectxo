@@ -122,6 +122,7 @@ fun ProfileGraphsPage(
         Spacer(Modifier.width(XoSpacing.s3))
         Column(Modifier.weight(1f)) {
             Text(stringResource(R.string.profile_edit), style = type.bodyStrong, color = colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(stringResource(R.string.profile_edit_sub), style = type.caption, color = colors.muted)
         }
         Icon(XoIcons.Chevron, null, tint = colors.muted, modifier = Modifier.size(16.dp))
@@ -314,6 +315,7 @@ private fun Kpi(label: String, value: String, modifier: Modifier, sub: String? =
     val type = XoTheme.type
     Column(modifier.padding(end = XoSpacing.s2)) {
         Text(label, style = type.caption, color = colors.muted)
+        Spacer(Modifier.height(XoSpacing.textGap))
         Text(value, style = type.bodyStrong, color = colors.ink)
         if (sub != null) Text(sub, style = type.caption, color = colors.muted)
     }

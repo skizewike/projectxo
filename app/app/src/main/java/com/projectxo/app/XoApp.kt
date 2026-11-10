@@ -12,6 +12,8 @@ import com.projectxo.app.core.model.WaterPortions
 import kotlinx.coroutines.delay
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -83,13 +85,39 @@ fun XoApp(
         splash.loadProgress = 1f
     }
 
-    // Один раз после первого запуска просим разрешение на уведомления, если напоминания включены (Android 13+).
+    // Шаги считаются сами (Р67): один раз после первого запуска просим «Физическую активность», если «Ходьба» включена.
+    // Сразу после «да» запускается фоновый счёт. Уведомления спрашиваем после этого ответа, не одновременно.
     val context = androidx.compose.ui.platform.LocalContext.current
+    val motion = container.motionSteps
+    var activityAsked by remember { mutableStateOf(motion.permissionAsked || container.stepSensor.hasPermission()) }
+    val activityLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+    ) { ok ->
+        container.stepsLive.refreshPermission()
+        if (ok) motion.ensureRunning()
+        activityAsked = true
+    }
+    LaunchedEffect(settings.onboarded, settings.modules, splash.done) {
+        if (activityAsked || !settings.onboarded || !splash.done) return@LaunchedEffect
+        if (com.projectxo.app.core.model.Module.Steps !in settings.modules || !motion.canTrack) {
+            activityAsked = true
+            return@LaunchedEffect
+        }
+        motion.permissionAsked = true
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            activityLauncher.launch(android.Manifest.permission.ACTIVITY_RECOGNITION)
+        } else {
+            motion.ensureRunning()
+            activityAsked = true
+        }
+    }
+
+    // Один раз после первого запуска просим разрешение на уведомления, если напоминания включены (Android 13+).
     val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
     ) { }
-    LaunchedEffect(settings.onboarded, settings.reminders, settings.notificationPermissionAsked) {
-        if (android.os.Build.VERSION.SDK_INT >= 33 && settings.onboarded && !settings.notificationPermissionAsked &&
+    LaunchedEffect(settings.onboarded, settings.reminders, settings.notificationPermissionAsked, activityAsked) {
+        if (android.os.Build.VERSION.SDK_INT >= 33 && activityAsked && settings.onboarded && !settings.notificationPermissionAsked &&
             com.projectxo.app.core.model.ReminderPolicy.anyEnabled(settings.reminders, settings.modules) &&
             !com.projectxo.app.core.reminders.ReminderNotifier.canPost(context)
         ) {

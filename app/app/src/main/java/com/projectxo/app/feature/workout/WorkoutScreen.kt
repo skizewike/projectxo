@@ -240,9 +240,10 @@ private fun Overview(state: WorkoutUiState, actions: WorkoutActions) {
     val datePattern = stringResource(R.string.calendar_day_short_pattern)
     val dateFormat = remember(datePattern, locale) { DateTimeFormatter.ofPattern(datePattern, locale) }
     Text(stringResource(R.string.workout_title), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+    Spacer(Modifier.height(XoSpacing.textGap))
     Text(stringResource(R.string.workout_lead), style = type.caption, color = colors.muted)
     if (state.doneToday > 0) {
-        Spacer(Modifier.height(XoSpacing.s1))
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(stringResource(R.string.workout_today_done, state.doneToday.toString()), style = type.caption, color = colors.ink)
     }
     Spacer(Modifier.height(XoSpacing.s4))
@@ -280,7 +281,7 @@ private fun Overview(state: WorkoutUiState, actions: WorkoutActions) {
     if (recent.isNotEmpty()) {
         Spacer(Modifier.height(XoSpacing.s5))
         Text(stringResource(R.string.workout_history), style = type.caption, color = colors.muted)
-        Spacer(Modifier.height(XoSpacing.s1))
+        Spacer(Modifier.height(XoSpacing.headGap))
         recent.forEach { r ->
             val ex = Exercise.fromId(r.exercise)
             Row(Modifier.fillMaxWidth().padding(vertical = XoSpacing.s1)) {
@@ -311,7 +312,7 @@ private fun CheckLevel(st: WorkoutStep.CheckLevel, actions: WorkoutActions) {
     Spacer(Modifier.height(XoSpacing.s2))
     if (st.retest) {
         Text(stringResource(R.string.workout_check_again), style = type.caption, color = colors.muted)
-        Spacer(Modifier.height(XoSpacing.s1))
+        Spacer(Modifier.height(XoSpacing.headGap))
     }
     Text(
         stringResource(if (st.exercise.seconds) R.string.workout_check_seconds else R.string.workout_check_reps),
@@ -367,6 +368,7 @@ private fun Sets(st: WorkoutStep.Sets, counting: WorkoutCounting, actions: Worko
         exerciseName(st.exercise) + if (st.exercise == Exercise.Pushups) " · " + pushupVariant(WorkoutMath.pushupVariant(st.level)) else "",
         style = type.caption, color = colors.muted,
     )
+    Spacer(Modifier.height(XoSpacing.textGap))
     Text(
         stringResource(R.string.workout_set_of, (minOf(st.index + 1, st.plan.size)).toString(), st.plan.size.toString()),
         style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() },
@@ -569,6 +571,7 @@ private fun TimerRing(fraction: Float, time: String, caption: String, a11y: Stri
         if (style == com.projectxo.app.core.model.WorkoutTimerStyle.Bar) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 Text(time, style = type.display, color = colors.ink)
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(caption, style = type.caption, color = colors.muted)
                 Spacer(Modifier.height(XoSpacing.s4))
                 Box(Modifier.fillMaxWidth().height(XoSize.bar).background(colors.track)) {
@@ -578,6 +581,7 @@ private fun TimerRing(fraction: Float, time: String, caption: String, a11y: Stri
         } else {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(time, style = type.display, color = colors.ink)
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(caption, style = type.caption, color = colors.muted)
             }
         }
@@ -595,6 +599,7 @@ private fun RateStep(st: WorkoutStep.Rate, actions: WorkoutActions) {
     val type = XoTheme.type
     val haptic = LocalHapticFeedback.current
     Text(stringResource(R.string.workout_rate_title), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+    Spacer(Modifier.height(XoSpacing.textGap))
     Text(
         stringResource(if (st.allDone) R.string.workout_rate_all else R.string.workout_rate_partial),
         style = type.body, color = colors.muted,
@@ -653,7 +658,7 @@ private fun DoneStep(st: WorkoutStep.Done, actions: WorkoutActions) {
         }
     }
     Text(stringResource(R.string.workout_done_title), style = type.title, color = colors.ink, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().semantics { heading() })
-    Spacer(Modifier.height(XoSpacing.s1))
+    Spacer(Modifier.height(XoSpacing.headGap))
     Text(
         stringResource(R.string.workout_done_total, unitText(st.exercise, st.total)),
         style = type.caption, color = colors.muted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),
@@ -669,7 +674,7 @@ private fun DoneStep(st: WorkoutStep.Done, actions: WorkoutActions) {
         else stringResource(R.string.workout_done_same, exerciseName(st.exercise), unitText(st.exercise, st.newLevel)),
         style = type.body, color = colors.ink, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),
     )
-    Spacer(Modifier.height(XoSpacing.s1))
+    Spacer(Modifier.height(XoSpacing.headGap))
     Text(stringResource(R.string.workout_done_habit), style = type.caption, color = colors.muted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
     Spacer(Modifier.height(XoSpacing.s5))
     XoPrimaryButton(stringResource(R.string.got_it), actions.onBack)

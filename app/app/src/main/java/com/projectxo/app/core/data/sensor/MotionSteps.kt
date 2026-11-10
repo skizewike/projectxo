@@ -42,21 +42,36 @@ import java.time.ZoneId
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Счёт шагов по движению телефона (Р65): только для телефонов без датчика шагов.
- * Включается пользователем на экране «Ходьба», выключается там же или кнопкой в уведомлении.
+ * Счёт шагов в фоне (Р65, Р67). Шаги должны считаться сами, даже когда приложение закрыто:
+ * Android не отдаёт показания датчиков приложению в фоне, поэтому нужна служба с уведомлением.
+ * - Есть датчик шагов: служба слушает его (без блокировки сна, батарею почти не тратит).
+ * - Нет датчика, но есть акселерометр: служба считает шаги по движению телефона.
+ * Включено по умолчанию; стартует, как только есть разрешение «Физическая активность».
+ * Выключается на экране «Ходьба» или кнопкой в уведомлении.
  */
 class MotionSteps(private val context: Context, private val stepSensor: StepSensor) {
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-    private val _enabled = MutableStateFlow(prefs.getBoolean(KEY_ENABLED, false))
+    private val _enabled = MutableStateFlow(prefs.getBoolean(KEY_ENABLED, true))
     val enabled: StateFlow<Boolean> = _enabled.asStateFlow()
 
-    /** Есть акселерометр, но нет датчика шагов: тогда и только тогда нужен свой счёт. */
-    val available: Boolean
-        get() = !stepSensor.isAvailable &&
-            (context.getSystemService(Context.SENSOR_SERVICE) as SensorManager).getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
+    private val hasAccelerometer: Boolean
+        get() = (context.getSystemService(Context.SENSOR_SERVICE) as SensorManager).getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
 
-    /** Можно запускать: включено, доступно и есть разрешение «Физическая активность» (Android 10+). */
-    fun shouldRun(): Boolean = _enabled.value && available && stepSensor.hasPermission()
+    /** Нет датчика шагов, но есть акселерометр: считаем по движению. */
+    val available: Boolean
+        get() = !stepSensor.isAvailable && hasAccelerometer
+
+    /** Фоновый счёт возможен: датчиком шагов или по движению. */
+    val canTrack: Boolean
+        get() = stepSensor.isAvailable || hasAccelerometer
+
+    /** Разрешение «Физическая активность» уже спрашивали сами после первого запуска. */
+    var permissionAsked: Boolean
+        get() = prefs.getBoolean(KEY_ASKED, false)
+        set(v) { prefs.edit().putBoolean(KEY_ASKED, v).apply() }
+
+    /** Можно запускать: включено, есть чем считать и есть разрешение (Android 10+). */
+    fun shouldRun(): Boolean = _enabled.value && canTrack && stepSensor.hasPermission()
 
     fun enable() {
         setEnabled(true)
@@ -82,10 +97,11 @@ class MotionSteps(private val context: Context, private val stepSensor: StepSens
     private companion object {
         const val PREFS = "motion_steps"
         const val KEY_ENABLED = "enabled"
+        const val KEY_ASKED = "permission_asked"
     }
 }
 
-/** Служба на переднем плане: слушает акселерометр и пишет шаги в базу каждые 15 секунд. */
+/** Служба на переднем плане: слушает датчик шагов (или акселерометр) и пишет шаги в базу каждые 15 секунд. */
 class MotionStepsService : Service(), SensorEventListener {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val detector = MotionStepDetector()
@@ -93,6 +109,10 @@ class MotionStepsService : Service(), SensorEventListener {
     private val flushLock = Mutex()
     private var wakeLock: PowerManager.WakeLock? = null
     private var started = false
+
+    /** Последнее показание датчика шагов, ещё не записанное; -1 — нет нового. */
+    @Volatile private var counter = -1L
+    private var counterListener: SensorEventListener? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -115,16 +135,30 @@ class MotionStepsService : Service(), SensorEventListener {
     @SuppressLint("WakelockTimeout")
     private fun begin() {
         val sm = getSystemService(SENSOR_SERVICE) as SensorManager
-        val accel = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        if (accel == null) {
-            stopSelf()
-            return
+        val stepCounter = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        if (stepCounter != null) {
+            // Датчик шагов сам копит общий счётчик, даже когда телефон спит: блокировка сна не нужна.
+            val l = object : SensorEventListener {
+                override fun onSensorChanged(event: SensorEvent) {
+                    counter = event.values[0].toLong()
+                }
+
+                override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+            }
+            counterListener = l
+            sm.registerListener(l, stepCounter, SensorManager.SENSOR_DELAY_NORMAL, BATCH_US)
+        } else {
+            val accel = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            if (accel == null) {
+                stopSelf()
+                return
+            }
+            // Без частичной блокировки сна телефон с выключенным экраном перестаёт присылать показания.
+            wakeLock = (getSystemService(POWER_SERVICE) as PowerManager)
+                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "xo:motion-steps").apply { acquire() }
+            // ~50 показаний в секунду, система может присылать их пачками раз в несколько секунд.
+            sm.registerListener(this, accel, SAMPLING_US, BATCH_US)
         }
-        // Без частичной блокировки сна телефон с выключенным экраном перестаёт присылать показания.
-        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager)
-            .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "xo:motion-steps").apply { acquire() }
-        // ~50 показаний в секунду, система может присылать их пачками раз в несколько секунд.
-        sm.registerListener(this, accel, SAMPLING_US, BATCH_US)
         scope.launch {
             refreshNotification()
             while (true) {
@@ -142,9 +176,17 @@ class MotionStepsService : Service(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
 
     private suspend fun flush() = flushLock.withLock {
+        val container = (application as XoApplication).container
+        val c = counter
+        if (c >= 0) {
+            counter = -1L
+            // Через общий рекордер: экран и фоновая проверка не посчитают ту же разницу дважды.
+            container.stepsRecorder.onReading(c, container.clock.nowMs())
+            refreshNotification()
+            return@withLock
+        }
         val n = pending.getAndSet(0)
         if (n <= 0) return@withLock
-        val container = (application as XoApplication).container
         val now = Instant.ofEpochMilli(container.clock.nowMs()).atZone(ZoneId.systemDefault())
         container.steps.addSteps(listOf(HourSteps(now.toLocalDate(), now.hour, n)))
         refreshNotification()
@@ -200,7 +242,10 @@ class MotionStepsService : Service(), SensorEventListener {
     }
 
     override fun onDestroy() {
-        (getSystemService(SENSOR_SERVICE) as SensorManager).unregisterListener(this)
+        val sm = getSystemService(SENSOR_SERVICE) as SensorManager
+        sm.unregisterListener(this)
+        counterListener?.let { sm.unregisterListener(it) }
+        counterListener = null
         // Последние шаги — в базу, пока служба не ушла.
         runBlocking { runCatching { flush() } }
         scope.cancel()

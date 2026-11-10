@@ -104,7 +104,7 @@ fun XoSwitchRow(title: String, subtitle: String?, checked: Boolean, onChange: (B
         Column(Modifier.weight(1f)) {
             Text(title, style = XoTheme.type.bodyStrong, color = c.ink)
             if (subtitle != null) {
-                Spacer(Modifier.height(XoSpacing.s1 / 2))
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(subtitle, style = XoTheme.type.caption, color = c.muted)
             }
         }
@@ -168,7 +168,7 @@ fun XoOption(
         Column(Modifier.weight(1f)) {
             Text(title, style = XoTheme.type.bodyStrong, color = c.ink)
             if (subtitle != null) {
-                Spacer(Modifier.height(XoSpacing.s1 / 2))
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(subtitle, style = XoTheme.type.caption, color = c.muted)
             }
         }

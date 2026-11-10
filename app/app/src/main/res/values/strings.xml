@@ -82,7 +82,9 @@
     <string name="steps_hour_range" translatable="false">%1$s:00–%2$s:00</string>
     <string name="steps_none" translatable="false">—</string>
     <string name="steps_perm_title">Шаги считает датчик телефона</string>
-    <string name="steps_perm_text">Чтобы видеть шаги за день, разрешите приложению распознавать физическую активность. Данные остаются на телефоне.</string>
+    <string name="steps_perm_text">Чтобы шаги считались сами, разрешите приложению распознавать физическую активность. Пока идёт счёт, в шторке видно тихое уведомление. Данные остаются на телефоне.</string>
+    <string name="steps_bg_stop">Не считать шаги в фоне</string>
+    <string name="steps_bg_start">Считать шаги в фоне</string>
     <string name="steps_perm_allow">Разрешить</string>
     <string name="steps_perm_settings">Открыть настройки</string>
     <string name="steps_no_sensor_title">На этом телефоне нет датчика шагов</string>

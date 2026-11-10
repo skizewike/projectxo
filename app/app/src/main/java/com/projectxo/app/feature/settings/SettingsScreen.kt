@@ -219,7 +219,7 @@ private fun PageTitle(@androidx.annotation.StringRes title: Int, @androidx.annot
     val type = XoTheme.type
     Text(stringResource(title), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
     if (lead != null) {
-        Spacer(Modifier.height(XoSpacing.s1))
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(stringResource(lead), style = type.caption, color = colors.muted)
     }
     Spacer(Modifier.height(XoSpacing.s4))
@@ -229,7 +229,7 @@ private fun PageTitle(@androidx.annotation.StringRes title: Int, @androidx.annot
 private fun GroupTitle(text: String) {
     Text(
         text, style = XoTheme.type.caption, color = XoTheme.colors.muted,
-        modifier = Modifier.padding(top = XoSpacing.s5, bottom = XoSpacing.s1).semantics { heading() },
+        modifier = Modifier.padding(top = XoSpacing.s5, bottom = XoSpacing.s3).semantics { heading() },
     )
 }
 
@@ -247,7 +247,7 @@ private fun SettingsRow(icon: ImageVector, title: String, subtitle: String?, onC
         Column(Modifier.weight(1f)) {
             Text(title, style = type.bodyStrong, color = colors.ink)
             if (subtitle != null) {
-                Spacer(Modifier.height(XoSpacing.s1 / 2))
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(subtitle, style = type.caption, color = colors.muted)
             }
         }
@@ -330,6 +330,7 @@ private fun MainPage(s: AppSettings, onOpen: (Page) -> Unit, onPolicy: () -> Uni
         Spacer(Modifier.width(XoSpacing.s3))
         Column {
             Text(stringResource(R.string.set_about), style = XoTheme.type.bodyStrong, color = XoTheme.colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(stringResource(R.string.set_about_sub, stringResource(R.string.contact_email), BuildConfig.VERSION_NAME), style = XoTheme.type.caption, color = XoTheme.colors.muted)
         }
     }
@@ -453,6 +454,7 @@ private fun Kpi(label: String, value: String, modifier: Modifier, sub: String? =
     val type = XoTheme.type
     Column(modifier.padding(end = XoSpacing.s2)) {
         Text(label, style = type.caption, color = colors.muted)
+        Spacer(Modifier.height(XoSpacing.textGap))
         Text(value, style = type.bodyStrong, color = colors.ink)
         if (sub != null) Text(sub, style = type.caption, color = colors.muted)
     }

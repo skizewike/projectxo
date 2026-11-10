@@ -160,7 +160,7 @@ internal fun WellbeingPicker(state: CalendarUiState, draft: DayLogDraft, actions
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = XoSpacing.s4).padding(bottom = XoSpacing.s4),
             verticalArrangement = Arrangement.spacedBy(XoSpacing.s3),
         ) {
-            Spacer(Modifier.height(XoSpacing.s1))
+            Spacer(Modifier.height(XoSpacing.headGap))
             if (q.isEmpty()) {
                 Card(stringResource(R.string.pick_overall)) { Faces(draft.feel, actions.onFeel) }
                 Card(stringResource(R.string.pick_frequent)) {

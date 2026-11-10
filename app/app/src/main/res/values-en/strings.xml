@@ -70,7 +70,9 @@
     <string name="steps_active_hours">Active hours</string>
     <string name="steps_best_hour">Peak hour</string>
     <string name="steps_perm_title">Steps are counted by the phone’s sensor</string>
-    <string name="steps_perm_text">To see your steps for the day, allow the app to recognise physical activity. Data stays on the phone.</string>
+    <string name="steps_perm_text">To count steps on their own, allow the app to recognise physical activity. While counting, a quiet notification stays in the shade. Data stays on the phone.</string>
+    <string name="steps_bg_stop">Stop counting in the background</string>
+    <string name="steps_bg_start">Count steps in the background</string>
     <string name="steps_perm_allow">Allow</string>
     <string name="steps_perm_settings">Open settings</string>
     <string name="steps_no_sensor_title">This phone has no step sensor</string>

@@ -195,6 +195,7 @@ private fun Header(date: LocalDate, onAddClick: () -> Unit, modifier: Modifier =
                 stringResource(R.string.tab_food), style = type.title, color = colors.ink,
                 modifier = Modifier.semantics { heading() },
             )
+            Spacer(Modifier.height(XoSpacing.headGap))
             Text(formatToday(date), style = type.caption, color = colors.muted)
         }
         Box(
@@ -262,6 +263,7 @@ private fun Total(state: FoodUiState, celebrationMs: () -> Float, modifier: Modi
             Text(firstLine, style = type.caption, color = colors.muted)
         } else {
             Text(firstLine, style = type.caption.copy(fontWeight = type.bodyStrong.fontWeight), color = colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(secondLine, style = type.caption, color = colors.muted)
         }
     }
@@ -326,6 +328,7 @@ private fun MacroRow(
             Spacer(Modifier.width(XoSpacing.s2))
             Text(label, style = type.caption, color = colors.muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
+        Spacer(Modifier.height(XoSpacing.s1))
         Row(Modifier.padding(start = XoSize.foodSwatch + XoSpacing.s2), verticalAlignment = Alignment.Bottom) {
             Text(stringResource(R.string.macro_grams, formatCount(grams.toLong())), style = type.bodyStrong, color = colors.ink)
             Spacer(Modifier.width(XoSpacing.s1))
@@ -422,7 +425,7 @@ private fun Entries(state: FoodUiState, onDelete: (FoodEntry) -> Unit, modifier:
             stringResource(R.string.food_list_title), style = type.caption, color = colors.muted,
             modifier = Modifier.semantics { heading() },
         )
-        Spacer(Modifier.height(XoSpacing.s2))
+        Spacer(Modifier.height(XoSpacing.s3))
         if (state.loaded && state.entries.isEmpty()) {
             Text(stringResource(R.string.food_empty), style = type.body, color = colors.muted)
             return@Column
@@ -483,6 +486,7 @@ private fun EntryRow(entry: FoodEntry, isLast: Boolean, onDelete: () -> Unit, mo
             Spacer(Modifier.width(XoSpacing.s4))
             Column(Modifier.weight(1f)) {
                 Text(entry.name, style = type.body, color = colors.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(
                     stringResource(
                         R.string.food_entry_macros,

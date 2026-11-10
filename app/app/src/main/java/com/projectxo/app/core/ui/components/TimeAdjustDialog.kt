@@ -90,6 +90,7 @@ fun TimeAdjustDialog(
                 Spacer(Modifier.height(XoSpacing.s4))
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(clockText(pick), style = type.display, color = colors.ink)
+                    Spacer(Modifier.height(XoSpacing.textGap))
                     Text(dayWord(pick), style = type.caption, color = colors.muted, textAlign = TextAlign.Center)
                 }
                 Spacer(Modifier.height(XoSpacing.s3))

@@ -139,6 +139,7 @@ fun SleepScreen(state: SleepUiState, actions: SleepActions, modifier: Modifier =
     ) {
         Spacer(Modifier.height(XoSpacing.s5))
         Text(stringResource(R.string.module_sleep), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(formatToday(java.time.LocalDate.now()), style = type.caption, color = colors.muted)
         Spacer(Modifier.height(XoSpacing.s4))
 
@@ -150,6 +151,7 @@ fun SleepScreen(state: SleepUiState, actions: SleepActions, modifier: Modifier =
             stringResource(if (cur != null) R.string.sleep_state_night else R.string.sleep_state_last),
             style = type.caption, color = colors.muted,
         )
+        Spacer(Modifier.height(XoSpacing.textGap))
         Text(
             if (cur == null && last == null) stringResource(R.string.pick_weight_none) else formatMinutes(shownMs / 60_000L),
             style = type.display, color = colors.ink,
@@ -361,6 +363,7 @@ private fun ScheduleDialog(bedMin: Int, wakeMin: Int, onChange: (Int, Int) -> Un
                 Stepper(stringResource(R.string.sleep_wake_time), timeOfDay(wakeMin), { onChange(bedMin, wakeMin - STEP) }, { onChange(bedMin, wakeMin + STEP) })
                 Spacer(Modifier.height(XoSpacing.s3))
                 Text(stringResource(R.string.sleep_goal_line, formatMinutes(com.projectxo.app.core.model.SleepMath.goalMinutes(bedMin, wakeMin).toLong())), style = type.bodyStrong, color = colors.ink)
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(stringResource(R.string.sleep_goal_hint), style = type.caption, color = colors.muted)
             }
         },

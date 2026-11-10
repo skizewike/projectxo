@@ -9,10 +9,8 @@ import kotlin.random.Random
 
 class MotionStepDetectorTest {
     private val g = 9.81f
-    private val rateHz = 50
-
     /** Прогнать сигнал: [accel] — добавка к силе тяжести по вертикали в момент t (с). */
-    private fun run(seconds: Double, noise: Float = 0.15f, seed: Int = 1, accel: (Double) -> Double): Int {
+    private fun run(seconds: Double, noise: Float = 0.15f, seed: Int = 1, rateHz: Int = 50, accel: (Double) -> Double): Int {
         val d = MotionStepDetector()
         val rnd = Random(seed)
         var total = 0
@@ -63,5 +61,14 @@ class MotionStepDetectorTest {
         val steps = run(40.0) { t -> if (t < 15.0 || t > 25.0) 3.0 * sin(2 * PI * 2.0 * t) else 0.0 }
         // 30 + 30 шагов.
         assertTrue("got $steps", steps in 56..61)
+    }
+
+    @Test
+    fun `walk is counted on phones with fast and slow accelerometers`() {
+        // Частоту задаёт телефон, не приложение: от 15 до 200 показаний в секунду.
+        for (rate in listOf(15, 100, 200)) {
+            val steps = run(30.0, rateHz = rate) { t -> 3.0 * sin(2 * PI * 2.0 * t) }
+            assertTrue("rate $rate: got $steps", steps in 57..61)
+        }
     }
 }

@@ -113,6 +113,7 @@ private fun SheetHeader(state: CalendarUiState, detail: DayDetail) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
         Column(Modifier.weight(1f)) {
             Text(title, style = type.subtitle, color = colors.ink, modifier = Modifier.semantics { heading() })
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(sub, style = type.caption, color = colors.muted)
         }
         Row(
@@ -181,7 +182,7 @@ private fun Modules(state: CalendarUiState, detail: DayDetail) {
                         Text(ofText, style = type.caption, color = colors.muted, modifier = Modifier.align(Alignment.Bottom))
                     }
                 }
-                Spacer(Modifier.height(XoSpacing.s1))
+                Spacer(Modifier.height(XoSpacing.headGap))
                 Box(Modifier.fillMaxWidth().height(XoSize.bar).background(colors.track)) {
                     Box(Modifier.fillMaxWidth(fraction).height(XoSize.bar).background(colors.ink))
                 }

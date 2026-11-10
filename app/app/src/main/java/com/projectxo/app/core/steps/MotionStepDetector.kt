@@ -1,5 +1,6 @@
 package com.projectxo.app.core.steps
 
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -15,6 +16,7 @@ import kotlin.math.sqrt
  */
 class MotionStepDetector {
     private var gravity = Float.NaN
+    private var lastSampleNs = -1L
     private var smooth = 0f
     private var prev = 0f
     private var rising = false
@@ -32,8 +34,13 @@ class MotionStepDetector {
     fun onSample(timestampNs: Long, x: Float, y: Float, z: Float): Int {
         val m = sqrt(x * x + y * y + z * z)
         if (gravity.isNaN()) gravity = m
-        gravity += GRAVITY_ALPHA * (m - gravity)
-        smooth += SMOOTH_ALPHA * ((m - gravity) - smooth)
+        // Фильтры по времени, а не по числу показаний: телефоны присылают от 15 до 200 показаний в секунду,
+        // и на частых телефонах фильтр «по показаниям» гасил саму ходьбу.
+        val dtS = if (lastSampleNs < 0 || timestampNs <= lastSampleNs) NOMINAL_DT_S
+        else ((timestampNs - lastSampleNs) / 1e9f).coerceAtMost(MAX_DT_S)
+        lastSampleNs = timestampNs
+        gravity += alpha(dtS, GRAVITY_TAU_S) * (m - gravity)
+        smooth += alpha(dtS, SMOOTH_TAU_S) * ((m - gravity) - smooth)
         val s = smooth
 
         var counted = 0
@@ -59,6 +66,8 @@ class MotionStepDetector {
         }
         return counted
     }
+
+    private fun alpha(dtS: Float, tauS: Float): Float = 1f - exp(-dtS / tauS)
 
     private fun threshold(): Float = max(MIN_THRESHOLD, level * LEVEL_SHARE)
 
@@ -96,8 +105,11 @@ class MotionStepDetector {
         private const val START_LEVEL = 2.5f
         private const val LEVEL_SHARE = 0.45f
         private const val LEVEL_ALPHA = 0.2f
-        private const val GRAVITY_ALPHA = 0.02f
-        private const val SMOOTH_ALPHA = 0.35f
+        /** Постоянные времени фильтров, с: при 50 показаниях в секунду это прежние 0,02 и 0,35. */
+        private const val GRAVITY_TAU_S = 0.99f
+        private const val SMOOTH_TAU_S = 0.0464f
+        private const val NOMINAL_DT_S = 0.02f
+        private const val MAX_DT_S = 0.2f
         private const val NS_PER_MS = 1_000_000L
     }
 }

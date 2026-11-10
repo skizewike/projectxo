@@ -129,6 +129,7 @@ fun FastingScreen(state: FastingUiState, actions: FastingActions, modifier: Modi
     ) {
         Spacer(Modifier.height(XoSpacing.s5))
         Text(stringResource(R.string.module_fasting), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(formatToday(java.time.LocalDate.now()), style = type.caption, color = colors.muted)
         Spacer(Modifier.height(XoSpacing.s4))
 
@@ -148,6 +149,7 @@ fun FastingScreen(state: FastingUiState, actions: FastingActions, modifier: Modi
             )
             if (cur != null) {
                 Text(clockHms(elapsed / 1000), style = type.display, color = colors.ink)
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(
                     if (reached) stringResource(R.string.fast_cap_done, state.planHours.toString(), formatMinutes((elapsed - goalMs) / 60_000L))
                     else stringResource(R.string.fast_cap_left, formatMinutes((goalMs - elapsed + 59_999L) / 60_000L), state.planHours.toString()),
@@ -159,6 +161,7 @@ fun FastingScreen(state: FastingUiState, actions: FastingActions, modifier: Modi
                     if (l?.endMs != null) clockHms((l.endMs - l.startMs) / 1000).substring(0, 5) else stringResource(R.string.pick_weight_none),
                     style = type.display, color = colors.ink,
                 )
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(
                     if (l?.endMs != null) stringResource(R.string.fast_cap_last, dayWord(l.endMs), clockText(l.endMs))
                     else stringResource(R.string.fast_cap_none),
@@ -196,7 +199,7 @@ fun FastingScreen(state: FastingUiState, actions: FastingActions, modifier: Modi
         if (state.recent.isNotEmpty()) {
             Spacer(Modifier.height(XoSpacing.s5))
             Text(stringResource(R.string.fast_history), style = type.caption, color = colors.muted, modifier = Modifier.semantics { heading() })
-            Spacer(Modifier.height(XoSpacing.s1))
+            Spacer(Modifier.height(XoSpacing.headGap))
             state.recent.forEach { HistoryRow(it) }
         }
 

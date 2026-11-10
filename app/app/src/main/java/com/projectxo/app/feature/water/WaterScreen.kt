@@ -144,6 +144,7 @@ fun WaterScreen(
                 stringResource(R.string.tab_water), style = type.title, color = colors.ink,
                 modifier = Modifier.semantics { heading() },
             )
+            Spacer(Modifier.height(XoSpacing.headGap))
             Text(formatToday(state.date), style = type.caption, color = colors.muted)
             Spacer(Modifier.height(XoSpacing.s5))
 
@@ -173,7 +174,7 @@ fun WaterScreen(
                         .fillMaxHeight()
                         .verticalScroll(rememberScrollState()),
                 ) {
-                    Spacer(Modifier.height(XoSpacing.s1))
+                    Spacer(Modifier.height(XoSpacing.headGap))
                     WaterTotal(state, celebrationMs = { celebration.value })
                     Spacer(Modifier.height(XoSpacing.s5))
                     PortionTiles(onAdd)
@@ -250,6 +251,7 @@ private fun WaterTotal(state: WaterUiState, celebrationMs: () -> Float) {
             Text(firstLine, style = type.caption, color = colors.muted)
         } else {
             Text(firstLine, style = type.caption.copy(fontWeight = type.bodyStrong.fontWeight), color = colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(secondLine, style = type.caption, color = colors.muted)
         }
     }
@@ -310,7 +312,7 @@ private fun RecentEntries(state: WaterUiState, onDelete: (WaterEntry) -> Unit) {
         stringResource(R.string.water_list_title), style = type.caption, color = colors.muted,
         modifier = Modifier.semantics { heading() },
     )
-    Spacer(Modifier.height(XoSpacing.s2))
+    Spacer(Modifier.height(XoSpacing.s3))
     if (state.loaded && state.entries.isEmpty()) {
         Text(stringResource(R.string.water_empty, formatVolume(WaterPortions.primaryMl(LocalVolumeUnit.current).toLong())), style = type.body, color = colors.muted)
         return

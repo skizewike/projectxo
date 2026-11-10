@@ -168,6 +168,7 @@ private fun TodayHeader(date: LocalDate, onQuickAdd: (Long) -> Unit, onOpenSetti
                 stringResource(R.string.today_title), style = type.title, color = colors.ink,
                 modifier = Modifier.semantics { heading() },
             )
+            Spacer(Modifier.height(XoSpacing.headGap))
             Text(formatToday(date), style = type.caption, color = colors.muted)
         }
         SettingsButton(onOpenSettings)

@@ -114,12 +114,14 @@ fun BreathingScreen(
     ) {
         Spacer(Modifier.height(XoSpacing.s5))
         Text(stringResource(R.string.module_breathing), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(formatToday(state.date), style = type.caption, color = colors.muted)
         Spacer(Modifier.height(XoSpacing.s5))
 
         // Фаза и счёт секунд. Озвучивается TalkBack при смене.
         Column(Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }) {
             Text(phaseName, style = type.title, color = colors.ink)
+            Spacer(Modifier.height(XoSpacing.textGap))
             Text(phaseSub, style = type.body, color = colors.muted)
         }
         Spacer(Modifier.height(XoSpacing.s3))
@@ -176,6 +178,7 @@ fun BreathingScreen(
                     stringResource(R.string.breath_summary, formatCount((sum.seconds / 60).toLong()), pluralText(R.plurals.breath_cycles, sum.cycles, sum.cycles)),
                     style = type.bodyStrong, color = colors.ink,
                 )
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(stringResource(R.string.breath_summary_sub), style = type.caption, color = colors.muted)
             }
             XoHairline()
