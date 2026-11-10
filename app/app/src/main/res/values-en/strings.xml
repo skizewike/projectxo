@@ -121,11 +121,11 @@
     <string name="onb_privacy_accept">Accept and continue</string>
     <string name="policy_title">Privacy policy</string>
     <string name="policy_h1">In short</string>
-    <string name="policy_p1">Everything you enter in XO is stored only on your phone. We have no servers, accounts, ads or analytics. We cannot see your data and we share it with no one.</string>
+    <string name="policy_p1">Everything you enter in XO is stored only on your phone. We have no servers, accounts, ads or analytics. We cannot see your data and we share it with no one. The only exception: a photo of a dish is sent for recognition when you use Food from photo.</string>
     <string name="policy_h2">What data</string>
-    <string name="policy_p2">The profile you provide yourself: sex (optional), age, height, weight, workouts, goal. Water, food and step entries. Settings.</string>
+    <string name="policy_p2">The profile you provide yourself: sex (optional), age, height, weight, workouts, goal. Water, food and step entries. Photos of dishes if you logged food from a photo. Settings.</string>
     <string name="policy_h3">Where it is stored</string>
-    <string name="policy_p3">In the app’s private folder on the phone. Other apps cannot access it. The app needs no internet permission.</string>
+    <string name="policy_p3">In the app’s private folder on the phone. Other apps cannot access it. The internet is used only for Food from photo: the photo goes to Google Gemini through our server, which does not store it. After you save the entry the photo stays only on the phone and is deleted with the entry.</string>
     <string name="policy_h4">Permissions</string>
     <string name="policy_p4">Physical activity is needed to count steps and can be declined. Notifications are for reminders, if you turned them on.</string>
     <string name="policy_h5">Deletion</string>

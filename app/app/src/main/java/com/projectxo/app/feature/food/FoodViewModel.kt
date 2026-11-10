@@ -54,6 +54,8 @@ class FoodViewModel(
     goals: GoalsRepository,
     private val clock: AppClock,
     private val appScope: CoroutineScope,
+    /** Снимки записей: файл удаляется вместе с записью (Р71). */
+    private val photos: com.projectxo.app.core.data.photo.FoodPhotoStore? = null,
 ) : ViewModel() {
 
     private val today = clock.today()
@@ -112,7 +114,10 @@ class FoodViewModel(
         pending.value = null
         val job = commitJob
         commitJob = null
-        appScope.launch { food.delete(p.id) }
+        appScope.launch {
+            food.delete(p.id)
+            photos?.delete(p.photoFile)
+        }
         job?.cancel()
     }
 

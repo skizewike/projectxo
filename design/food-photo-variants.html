@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Еда по фото: варианты</title>
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3;
+  --accent:#2D64D2; --on-accent:#FFFFFF; --bezel:#1B1A18;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--on-accent:#141413;--bezel:#222120}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 var(--font);font-feature-settings:"tnum";-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{padding:20px 28px 4px}
+.top b{font-weight:600}
+.top p{margin:6px 0 0;color:var(--muted);max-width:760px}
+.flow{display:flex;gap:10px;flex-wrap:wrap;padding:12px 28px 0;color:var(--muted);font-size:13px}
+.flow span{border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.layout{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;padding:20px 28px 48px}
+.col{width:360px}
+.col h2{font-size:15px;font-weight:600;margin:0 0 2px}
+.col .sub{color:var(--muted);font-size:13px;margin:0 0 12px;min-height:54px}
+.device{width:360px;height:700px;padding:8px;border-radius:44px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--bg)}
+.scroll{position:absolute;inset:0;overflow-y:auto;padding:44px 20px 24px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.hd{display:flex;justify-content:space-between;align-items:center}
+.ttl{font-size:22px;font-weight:600;letter-spacing:-.015em}
+.x{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.x svg{width:16px;height:16px;stroke:var(--ink);stroke-width:1.6;fill:none;stroke-linecap:round}
+.photo{position:relative;margin:14px 0 0;height:150px;border-radius:18px;background:var(--track);overflow:hidden}
+.photo svg{width:100%;height:100%}
+.dot{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.big{font-size:52px;font-weight:500;letter-spacing:-.035em;line-height:1;margin-top:18px;display:flex;align-items:baseline;gap:6px}
+.big small{font-size:20px;color:var(--muted);font-weight:400;letter-spacing:0}
+.range{color:var(--muted);font-size:13px;margin-top:6px}
+.dish{font-size:15px;margin-top:2px}
+.bju{display:flex;gap:0;margin-top:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.bju div{flex:1;padding:10px 0}
+.bju div+div{padding-left:14px;border-left:1px solid var(--line)}
+.bju b{display:block;font-size:17px;font-weight:500}
+.bju span{font-size:12px;color:var(--muted)}
+.score{margin-top:16px}
+.score .row{display:flex;align-items:baseline;justify-content:space-between}
+.score b{font-size:22px;font-weight:500}
+.score small{color:var(--muted)}
+.ticks{display:flex;gap:4px;margin-top:8px}
+.ticks i{flex:1;height:6px;border-radius:2px;background:var(--track)}
+.ticks i.on{background:var(--ink)}
+.why{margin:10px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted);line-height:1.5}
+.why li+li{margin-top:3px}
+.note{font-size:12px;color:var(--muted);margin-top:12px}
+.sec{font-size:12px;color:var(--muted);margin:18px 0 4px;letter-spacing:.02em}
+.item{display:flex;align-items:center;gap:10px;min-height:56px;border-top:1px solid var(--line)}
+.item .nm{flex:1;min-width:0}
+.item .nm div{font-size:15px}
+.item .nm small{font-size:12px;color:var(--muted)}
+.step{display:flex;align-items:center;gap:2px}
+.step button{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;font-size:18px;line-height:1}
+.step output{min-width:52px;text-align:center;font-size:14px}
+.cta{display:block;width:100%;height:50px;border-radius:25px;background:var(--ink);color:var(--bg);font-weight:600;margin-top:18px}
+.ghost{display:block;width:100%;height:44px;border:1px solid var(--line);border-radius:22px;margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{height:38px;padding:0 14px;border:1px solid var(--line);border-radius:19px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.q{font-size:15px;margin-top:16px}
+.hint{font-size:13px;color:var(--muted)}
+.tabs{display:flex;gap:0;margin-top:14px;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;height:40px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);font-weight:600;border-color:var(--ink)}
+.pane{display:none}.pane.on{display:block}
+.plate{margin-top:14px}
+.plate svg{width:100%;height:auto;display:block}
+.legend{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+@media (prefers-reduced-motion:no-preference){.big output,.bju output{transition:opacity .15s}}
+</style>
+</head>
+<body>
+<div class="top">
+  <b>Еда по фото: три варианта экрана результата</b>
+  <p>Общий путь у всех трёх одинаковый. Различается экран после распознавания: как показать состав, как дать поправить ошибки и как подать оценку пользы. Граммы можно менять кнопками «−» и «+»: итог пересчитывается сразу, без нового запроса к ИИ.</p>
+</div>
+<div class="flow">
+  <span>1. Снять или выбрать фото</span>
+  <span>2. Подсказка: что внутри, сколько весит (по желанию)</span>
+  <span>3. ИИ раскладывает блюдо на составляющие</span>
+  <span>4. Проверить и поправить граммы</span>
+  <span>5. Записать в «Еду»</span>
+</div>
+
+<div class="layout">
+
+<!-- 01 -->
+<div class="col">
+  <h2>01 «Состав»</h2>
+  <p class="sub">Сверху итог и польза, ниже список составляющих с граммами. Самый простой и быстрый для правки.</p>
+  <div class="device"><div class="screen"><div class="scroll" id="v1">
+    <div class="hd"><div class="ttl">Проверьте блюдо</div><button class="x" aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="dish">Гречка с курицей и овощами</div>
+    <div class="big"><output data-k="kcal">0</output><small>ккал</small></div>
+    <div class="range">Вероятно <output data-k="range"></output></div>
+    <div class="bju">
+      <div><b><output data-k="p">0</output> г</b><span>белки</span></div>
+      <div><b><output data-k="f">0</output> г</b><span>жиры</span></div>
+      <div><b><output data-k="c">0</output> г</b><span>углеводы</span></div>
+    </div>
+    <div class="score">
+      <div class="row"><b>Польза 7 из 10</b><small>ориентир</small></div>
+      <div class="ticks"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <ul class="why"><li>Много белка, мало добавленного сахара</li><li>Масла чуть больше нормы</li><li>Овощей мало, добавьте горсть</li></ul>
+    </div>
+    <div class="sec">СОСТАВ, ГРАММЫ МОЖНО ПОПРАВИТЬ</div>
+    <div class="items"></div>
+    <button class="cta">Записать в «Еду»</button>
+    <button class="ghost">Снять заново</button>
+    <div class="note">Это оценка по фото, а не точный расчёт. Фото не сохраняется.</div>
+  </div></div></div>
+</div>
+
+<!-- 02 -->
+<div class="col">
+  <h2>02 «Тарелка»</h2>
+  <p class="sub">Фото сверху с номерами на составляющих. Две вкладки: «Итог» и «Состав». Нагляднее, видно, что именно ИИ нашёл.</p>
+  <div class="device"><div class="screen"><div class="scroll" id="v2">
+    <div class="hd"><div class="ttl">Проверьте блюдо</div><button class="x" aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="photo">
+      <svg viewBox="0 0 320 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="320" height="150" fill="currentColor" opacity=".04"/>
+        <circle cx="160" cy="75" r="68" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"/>
+        <circle cx="160" cy="75" r="54" fill="none" stroke="currentColor" stroke-width="1" opacity=".25"/>
+        <path d="M118 80c6-26 38-34 52-18 12 14 6 34-14 40-20 4-42-4-38-22z" fill="currentColor" opacity=".16"/>
+        <rect x="170" y="52" width="46" height="26" rx="10" fill="currentColor" opacity=".3"/>
+        <circle cx="132" cy="106" r="9" fill="currentColor" opacity=".38"/><circle cx="150" cy="112" r="7" fill="currentColor" opacity=".38"/><circle cx="116" cy="98" r="6" fill="currentColor" opacity=".38"/>
+      </svg>
+      <span class="dot" style="left:140px;top:58px">1</span>
+      <span class="dot" style="left:206px;top:46px">2</span>
+      <span class="dot" style="left:112px;top:110px">3</span>
+    </div>
+    <div class="tabs"><button class="on" data-t="a">Итог</button><button data-t="b">Состав</button></div>
+    <div class="pane on" data-p="a">
+      <div class="big"><output data-k="kcal">0</output><small>ккал</small></div>
+      <div class="range">Вероятно <output data-k="range"></output></div>
+      <div class="bju">
+        <div><b><output data-k="p">0</output> г</b><span>белки</span></div>
+        <div><b><output data-k="f">0</output> г</b><span>жиры</span></div>
+        <div><b><output data-k="c">0</output> г</b><span>углеводы</span></div>
+      </div>
+      <div class="score">
+        <div class="row"><b>Польза 7 из 10</b><small>ориентир</small></div>
+        <div class="ticks"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+        <ul class="why"><li>Много белка, мало добавленного сахара</li><li>Масла чуть больше нормы</li><li>Овощей мало, добавьте горсть</li></ul>
+      </div>
+    </div>
+    <div class="pane" data-p="b"><div class="items"></div></div>
+    <button class="cta">Записать в «Еду»</button>
+    <div class="note">Это оценка по фото, а не точный расчёт. Фото не сохраняется.</div>
+  </div></div></div>
+</div>
+
+<!-- 03 -->
+<div class="col">
+  <h2>03 «Уточнение»</h2>
+  <p class="sub">Перед результатом ИИ задаёт два коротких вопроса (масло, вес порции). Меньше всего ошибок, но на один шаг дольше.</p>
+  <div class="device"><div class="screen"><div class="scroll" id="v3">
+    <div class="hd"><div class="ttl">Пара вопросов</div><button class="x" aria-label="Закрыть"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="hint" style="margin-top:6px">Гречка, курица, овощи. Чтобы не ошибиться, уточните:</div>
+    <div class="q">Чем готовили?</div>
+    <div class="chips" data-g="oil"><button class="chip">Без масла</button><button class="chip on">Немного масла</button><button class="chip">Много масла</button><button class="chip">Не знаю</button></div>
+    <div class="q">Сколько весит порция?</div>
+    <div class="chips" data-g="w"><button class="chip">Меньше 300 г</button><button class="chip on">300–400 г</button><button class="chip">Больше 400 г</button><button class="chip">Взвесил: ввести</button></div>
+    <div class="sec" style="margin-top:22px">РЕЗУЛЬТАТ</div>
+    <div class="big" style="margin-top:6px"><output data-k="kcal">0</output><small>ккал</small></div>
+    <div class="range">Вероятно <output data-k="range"></output></div>
+    <div class="bju">
+      <div><b><output data-k="p">0</output> г</b><span>белки</span></div>
+      <div><b><output data-k="f">0</output> г</b><span>жиры</span></div>
+      <div><b><output data-k="c">0</output> г</b><span>углеводы</span></div>
+    </div>
+    <div class="score">
+      <div class="row"><b>Польза 7 из 10</b><small>ориентир</small></div>
+      <div class="ticks"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <ul class="why"><li>Много белка, мало добавленного сахара</li><li>Овощей мало, добавьте горсть</li></ul>
+    </div>
+    <button class="cta">Записать в «Еду»</button>
+    <button class="ghost">Править состав</button>
+    <div class="note">Это оценка по фото, а не точный расчёт. Фото не сохраняется.</div>
+  </div></div></div>
+</div>
+
+</div>
+
+<script>
+// на 100 г готового продукта: ккал, белки, жиры, углеводы
+const FOODS=[
+  {n:"Гречка варёная",g:180,k:110,p:4.2,f:1.1,c:21},
+  {n:"Куриная грудка",g:120,k:165,p:31,f:3.6,c:0},
+  {n:"Овощи, салат",g:100,k:45,p:1.5,f:2.5,c:5},
+  {n:"Растительное масло",g:10,k:900,p:0,f:100,c:0}
+];
+const STEP={"Растительное масло":5};
+const r=n=>Math.round(n);
+function calc(scale){
+  let t={k:0,p:0,f:0,c:0};
+  FOODS.forEach(x=>{const m=x.g*scale/100;t.k+=x.k*m;t.p+=x.p*m;t.f+=x.f*m;t.c+=x.c*m});
+  return t;
+}
+function paint(root,scale){
+  const t=calc(scale);
+  const s=(k,v)=>root.querySelectorAll('[data-k="'+k+'"]').forEach(o=>o.textContent=v);
+  s("kcal",r(t.k));s("p",r(t.p));s("f",r(t.f));s("c",r(t.c));
+  s("range",r(t.k*.88/10)*10+"–"+r(t.k*1.14/10)*10);
+}
+function items(root,scale){
+  const box=root.querySelector(".items"); if(!box) return;
+  box.innerHTML="";
+  FOODS.forEach((x,i)=>{
+    const d=document.createElement("div");d.className="item";
+    d.innerHTML='<div class="nm"><div>'+(root.id==="v2"?(i<3?(i+1)+". ":"")+x.n:x.n)+'</div><small>'+r(x.k*x.g/100)+' ккал</small></div>'+
+      '<div class="step"><button aria-label="Меньше">−</button><output>'+x.g+' г</output><button aria-label="Больше">+</button></div>';
+    const st=STEP[x.n]||10,o=d.querySelector("output"),b=d.querySelectorAll("button");
+    const up=v=>{x.g=Math.max(0,x.g+v);o.textContent=x.g+" г";d.querySelector("small").textContent=r(x.k*x.g/100)+" ккал";all()};
+    b[0].onclick=()=>up(-st);b[1].onclick=()=>up(st);
+    box.appendChild(d);
+  });
+}
+let scales={v1:1,v2:1,v3:1};
+function all(){
+  ["v1","v2","v3"].forEach(id=>paint(document.getElementById(id),scales[id]));
+}
+["v1","v2"].forEach(id=>items(document.getElementById(id),1));
+// вариант 3: ответы меняют итог
+const base3=FOODS.map(x=>x.g);
+document.querySelectorAll('#v3 .chips').forEach(g=>{
+  g.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+    g.querySelectorAll(".chip").forEach(o=>o.classList.remove("on"));c.classList.add("on");
+    const oil=[...document.querySelectorAll('#v3 [data-g="oil"] .chip')].findIndex(o=>o.classList.contains("on"));
+    const w=[...document.querySelectorAll('#v3 [data-g="w"] .chip')].findIndex(o=>o.classList.contains("on"));
+    scales.v3=[0.8,1,1.2,1][w>=0?w:1]*(1+[-0.06,0,0.12,0][oil>=0?oil:1]);
+    all();
+  });
+});
+// вкладки
+document.querySelectorAll("#v2 .tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#v2 .tabs button").forEach(o=>o.classList.toggle("on",o===b));
+  document.querySelectorAll("#v2 .pane").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));
+});
+all();
+</script>
+</body>
+</html>

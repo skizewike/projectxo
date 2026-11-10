@@ -103,7 +103,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 /** Страницы настроек. Внутри одного экрана: «назад» с подстраницы ведёт на главную страницу. */
-private enum class Page { Main, Profile, ProfileEdit, Plan, Modules, Theme, Text, Language, Units, Notifications }
+private enum class Page { Main, Profile, ProfileEdit, Plan, Modules, Theme, Text, Language, Units, Notifications, FoodAi }
 
 /** Куда ведёт «назад»: правка профиля возвращает на графики, остальное — на главную. */
 private fun Page.parent(): Page = if (this == Page.ProfileEdit) Page.Profile else Page.Main
@@ -172,6 +172,7 @@ fun SettingsEntry(container: AppContainer, onBack: () -> Unit, modifier: Modifie
                     Page.Language -> LanguagePage(vm, settings)
                     Page.Units -> UnitsPage(vm, settings)
                     Page.Notifications -> NotificationsPage(vm, settings, container::showExampleReminder)
+                    Page.FoodAi -> FoodAiPage(vm, settings)
                 }
                 Spacer(Modifier.height(XoSpacing.s7))
             }
@@ -318,6 +319,16 @@ private fun MainPage(s: AppSettings, onOpen: (Page) -> Unit, onPolicy: () -> Uni
     XoHairline()
 
     GroupTitle(stringResource(R.string.set_group_data))
+    SettingsRow(
+        XoIcons.Grid, stringResource(R.string.set_foodai),
+        stringResource(
+            when {
+                s.foodAiKey.isNotEmpty() -> R.string.set_foodai_on
+                BuildConfig.FOOD_AI_PROXY_URL.isNotBlank() -> R.string.set_foodai_shared
+                else -> R.string.set_foodai_off
+            },
+        ),
+    ) { onOpen(Page.FoodAi) }
     SettingsRow(XoIcons.Doc, stringResource(R.string.set_export), stringResource(R.string.set_export_sub), onExport)
     SettingsRow(XoIcons.Trash, stringResource(R.string.set_delete), stringResource(R.string.set_delete_sub), onDelete)
     XoHairline()
@@ -611,6 +622,19 @@ private fun UnitsPage(vm: SettingsViewModel, s: AppSettings) {
     XoSegmented(
         listOf(VolumeUnit.Ml to stringResource(R.string.unit_water_ml), VolumeUnit.Oz to stringResource(R.string.unit_water_oz)),
         s.units.volume, { vm.setUnits(s.units.copy(volume = it)) },
+    )
+}
+
+// ——— ключ для еды по фото (Р69) ———
+
+@Composable
+private fun FoodAiPage(vm: SettingsViewModel, s: AppSettings) {
+    var keyError by remember { mutableStateOf(false) }
+    PageTitle(R.string.set_foodai, if (BuildConfig.FOOD_AI_PROXY_URL.isNotBlank()) R.string.fp_key_optional else null)
+    com.projectxo.app.feature.food.FoodAiKeyPanel(
+        keyError = keyError,
+        onSave = { keyError = !vm.setFoodAiKey(it) },
+        onRemove = if (s.foodAiKey.isNotEmpty()) ({ vm.removeFoodAiKey() }) else null,
     )
 }
 

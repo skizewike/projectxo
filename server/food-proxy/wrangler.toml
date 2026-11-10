@@ -1,0 +1,15 @@
+name = "xo-food-proxy"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+# Адреса предпросмотра версий не нужны: открытым остаётся только основной адрес.
+preview_urls = false
+
+# Лимиты на сутки (UTC). Общий лимит держите ниже дневного лимита бесплатного ключа Google.
+[vars]
+PER_USER_DAILY = "15"
+GLOBAL_DAILY = "300"
+
+# Счётчики запросов. id подставляется командой из README.md, шаг 3.
+[[kv_namespaces]]
+binding = "COUNTERS"
+id = "d5824592b94c46aeb71b5214fd52a34f"

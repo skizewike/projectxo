@@ -95,6 +95,12 @@ object XoSize {
     val foodTickLong = 10.dp
     val foodSwatch = 9.dp
     val chipHeight = 36.dp
+    /** Кнопка-значок «Камера» в ряду шаблонов «Еды» (Р71). */
+    val photoChipWidth = 44.dp
+    val photoChipIcon = 22.dp
+    /** Миниатюра снимка в строке записи еды (Р71). */
+    val entryThumb = 44.dp
+    val entryThumbRadius = 10.dp
     val chipGap = 8.dp
     val chipRadius = 18.dp
     const val FOOD_MID_TONE = 0.45f

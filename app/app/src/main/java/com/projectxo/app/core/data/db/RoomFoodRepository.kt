@@ -23,6 +23,7 @@ class RoomFoodRepository(private val dao: FoodDao) : FoodRepository {
             FoodEntryEntity(
                 ts = timestampMs, localDate = date.toString(), name = draft.name,
                 kcal = draft.kcal, protein = draft.proteinG, fat = draft.fatG, carbs = draft.carbsG,
+                photoFile = draft.photoFile, healthScore = draft.healthScore,
             ),
         )
 
@@ -31,5 +32,6 @@ class RoomFoodRepository(private val dao: FoodDao) : FoodRepository {
     private fun FoodEntryEntity.toModel() = FoodEntry(
         id = id, timestampMs = ts, localDate = LocalDate.parse(localDate),
         name = name, kcal = kcal, proteinG = protein, fatG = fat, carbsG = carbs,
+        photoFile = photoFile, healthScore = healthScore,
     )
 }

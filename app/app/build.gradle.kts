@@ -34,8 +34,11 @@ android {
         applicationId = "com.projectxo.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "0.3.0"
+        versionCode = 4
+        versionName = "0.4.0"
+        // Адрес общего посредника «Еды по фото» (server/food-proxy, Р70). Пусто: работает только свой ключ пользователя.
+        val proxy = (project.findProperty("foodAiProxyUrl") as String?).orEmpty().trim()
+        buildConfigField("String", "FOOD_AI_PROXY_URL", "\"$proxy\"")
     }
 
     signingConfigs {
@@ -103,6 +106,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.exifinterface)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

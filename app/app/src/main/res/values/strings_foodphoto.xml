@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Еда по фото (Р69). Тексты без грамматического рода (Р45). -->
+    <string name="fp_title">Еда по фото</string>
+    <string name="fp_lead">Снимите блюдо сверху, чтобы тарелка была в кадре целиком. Приложение разложит его на составляющие, а граммы вы проверите сами.</string>
+    <string name="fp_ai_language">Russian</string>
+    <string name="fp_hint_label">Что внутри, по желанию</string>
+    <string name="fp_hint_support">Например: гречка, курица, ложка масла</string>
+    <string name="fp_camera">Снять</string>
+    <string name="fp_gallery">Выбрать из галереи</string>
+    <string name="food_entry_photo_a11y">%1$s, %2$s ккал, в %3$s. Открыть фото</string>
+    <string name="food_sheet_close">Закрыть</string>
+    <string name="food_sheet_delete">Удалить запись</string>
+    <string name="food_sheet_photo_a11y">Фото блюда: %1$s</string>
+    <string name="fp_privacy">Фото уйдёт в Google Gemini для оценки. После записи в «Еду» снимок остаётся только на этом телефоне.</string>
+    <string name="fp_disclaimer">Оценка по фото, а не точный расчёт.</string>
+
+    <string name="fp_key_body">Бесплатный ключ выдаёт Google AI Studio. Войдите в аккаунт Google, нажмите «Create API key» и вставьте ключ сюда. Он хранится только на этом телефоне.</string>
+    <string name="fp_key_open">Открыть Google AI Studio</string>
+    <string name="fp_key_label">Ключ</string>
+    <string name="fp_key_save">Сохранить ключ</string>
+    <string name="fp_key_bad">Похоже, ключ неполный. Скопируйте его целиком.</string>
+    <string name="fp_key_remove">Удалить ключ</string>
+    <string name="fp_key_open_failed">Не удалось открыть браузер. Адрес: aistudio.google.com/apikey</string>
+
+    <string name="fp_working">Считаем</string>
+    <string name="fp_working_m1">Смотрим на блюдо</string>
+    <string name="fp_working_m2">Раскладываем состав</string>
+    <string name="fp_working_m3">Считаем калории</string>
+
+    <string name="fp_q_oil">Чем готовили?</string>
+    <string name="fp_oil_none">Без масла</string>
+    <string name="fp_oil_some">Немного масла</string>
+    <string name="fp_oil_lots">Много масла</string>
+    <string name="fp_oil_asphoto">Как на фото</string>
+    <string name="fp_oil_name">Масло при готовке</string>
+    <string name="fp_q_weight">Сколько весит порция?</string>
+    <string name="fp_w_small">Меньше 300 г</string>
+    <string name="fp_w_mid">300–400 г</string>
+    <string name="fp_w_big">Больше 400 г</string>
+    <string name="fp_w_custom">Свой вес</string>
+    <string name="fp_w_asphoto">Как на фото</string>
+    <string name="fp_custom_label">Вес порции, г</string>
+    <string name="fp_custom_support">От %1$s до %2$s г</string>
+
+    <string name="fp_result">Результат</string>
+    <string name="fp_range">Вероятно %1$s–%2$s ккал</string>
+    <string name="fp_score">Польза %1$s из 10</string>
+    <string name="fp_score_note">ориентир</string>
+    <string name="fp_score_a11y">Польза %1$s из 10, ориентир. %2$s</string>
+    <string name="fp_result_a11y">%1$s ккал, вероятно %2$s–%3$s. Белки %4$s г, жиры %5$s г, углеводы %6$s г</string>
+
+    <string name="fp_save">Записать в «Еду»</string>
+    <string name="fp_edit">Править состав</string>
+    <string name="fp_edit_done">Готово</string>
+    <string name="fp_retake">Снять заново</string>
+    <string name="fp_less_a11y">Меньше: %1$s</string>
+    <string name="fp_more_a11y">Больше: %1$s</string>
+    <string name="fp_item_kcal">%1$s ккал</string>
+    <string name="fp_grams">%1$s г</string>
+
+    <string name="fp_err_net">Нет связи. Проверьте интернет и повторите.</string>
+    <string name="fp_err_quota">Лимит распознавания на сегодня закончился. Попробуйте завтра, добавьте блюдо вручную или вставьте свой ключ в настройках.</string>
+    <string name="fp_err_key">Ключ не подошёл. Вставьте его заново.</string>
+    <string name="fp_err_photo">Не удалось открыть фото. Выберите другое или снимите заново.</string>
+    <string name="fp_no_camera">Не удалось открыть камеру. Выберите фото из галереи.</string>
+    <string name="fp_err_bad">Не удалось разобрать ответ. Повторите или добавьте блюдо вручную.</string>
+    <string name="fp_err_busy">Сервис Google сейчас занят. Повторите чуть позже.</string>
+    <string name="fp_not_food">На фото не видно еды. Снимите блюдо ближе и сверху.</string>
+    <string name="fp_retry">Повторить</string>
+
+    <string name="set_foodai">Ключ для еды по фото</string>
+    <string name="set_foodai_on">ключ сохранён</string>
+    <string name="set_foodai_off">ключа нет</string>
+    <string name="set_foodai_shared">работает и без ключа</string>
+    <string name="fp_key_optional">Ключ не обязателен: «Еда по фото» работает и без него. Свой ключ снимает общий дневной лимит.</string>
+</resources>

@@ -76,6 +76,16 @@ class SettingsViewModel(
     fun setReduceMotion(on: Boolean) = repo.update { it.copy(reduceMotion = on) }
     fun setUnits(u: Units) = repo.update { it.copy(units = u) }
 
+    /** Ключ для «Еды по фото»: пробелы и переводы строк убираются; пустой или неполный не сохраняется. */
+    fun setFoodAiKey(raw: String): Boolean {
+        val key = raw.filterNot(Char::isWhitespace)
+        if (key.length !in 30..80) return false
+        repo.update { it.copy(foodAiKey = key) }
+        return true
+    }
+
+    fun removeFoodAiKey() = repo.update { it.copy(foodAiKey = "") }
+
     fun setLanguage(l: com.projectxo.app.core.model.AppLanguage) = repo.update { it.copy(language = l) }
 
     /** Нужен хотя бы один модуль. */

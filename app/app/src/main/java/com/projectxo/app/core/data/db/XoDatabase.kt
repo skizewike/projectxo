@@ -23,7 +23,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         WorkoutProgramEntity::class,
         WorkoutSessionEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class XoDatabase : RoomDatabase() {
@@ -39,6 +39,14 @@ abstract class XoDatabase : RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
 
     companion object {
+        /** Еда по фото (Р71): имя файла снимка и оценка пользы у записи еды. Старые записи остаются без фото. */
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `food_entry` ADD COLUMN `photoFile` TEXT")
+                db.execSQL("ALTER TABLE `food_entry` ADD COLUMN `healthScore` INTEGER")
+            }
+        }
+
         /** Добавляет модули волны 2: сон, голодание, дыхание, привычки, тренировки. */
         val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -96,7 +104,7 @@ abstract class XoDatabase : RoomDatabase() {
 
         fun build(context: Context): XoDatabase =
             Room.databaseBuilder(context, XoDatabase::class.java, "xo.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                 .build()
     }
 }

@@ -96,4 +96,8 @@ data class AppSettings(
     val notificationPermissionAsked: Boolean = false,
     /** День первого запуска, epoch day. Дни раньше в календаре недоступны (Р41). */
     val startEpochDay: Long? = null,
+    /** Свой бесплатный ключ Google AI Studio для «Еды по фото» (Р69, В7). Только на телефоне. Пусто — ключа нет. */
+    val foodAiKey: String = "",
+    /** Случайный номер установки для счётчика лимитов общего посредника «Еды по фото» (Р70). Личных данных в нём нет. */
+    val installId: String = "",
 )

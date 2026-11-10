@@ -54,6 +54,12 @@ object XoIcons {
     // Календарь и настройки (design/calendar.html, design/settings.html).
     val Close = icon("close", "M6 6l12 12M18 6L6 18" to W)
     val Plus = icon("plus", "M12 5v14M5 12h14" to W)
+    // Еда по фото (design/food-photo-button.html, вариант 01 «Камера»).
+    val Camera = icon(
+        "camera",
+        "M4 8.5A1.5 1.5 0 0 1 5.5 7h2.2l1.1-1.6A1 1 0 0 1 9.6 5h4.8a1 1 0 0 1 .8.4L16.3 7h2.2A1.5 1.5 0 0 1 20 8.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5z" to W,
+        "M8.8 12.5a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0" to W,
+    )
     val Search = icon("search", "M4.5 11a6.5 6.5 0 1 0 13 0a6.5 6.5 0 1 0 -13 0M16 16l4 4" to W)
     val Chevron = icon("chevron", "M9 5l7 7-7 7" to W)
     val Calendar = icon("calendar", "M4.5 6.5h15v13h-15zM4.5 10.5h15M8.5 4v4M15.5 4v4" to W)

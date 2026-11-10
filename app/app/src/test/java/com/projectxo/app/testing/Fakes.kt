@@ -53,7 +53,7 @@ class FakeFoodRepository : FoodRepository {
 
     override suspend fun add(draft: FoodDraft, timestampMs: Long, date: LocalDate): Long {
         val id = nextId++
-        all.value = all.value + FoodEntry(id, timestampMs, date, draft.name, draft.kcal, draft.proteinG, draft.fatG, draft.carbsG)
+        all.value = all.value + FoodEntry(id, timestampMs, date, draft.name, draft.kcal, draft.proteinG, draft.fatG, draft.carbsG, draft.photoFile, draft.healthScore)
         return id
     }
 

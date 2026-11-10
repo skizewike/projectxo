@@ -31,6 +31,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -74,6 +75,7 @@ import com.projectxo.app.core.ui.format.formatCount
 import com.projectxo.app.core.ui.format.formatToday
 import com.projectxo.app.core.ui.format.rememberFormatLocale
 import com.projectxo.app.core.ui.motion.LocalReducedMotion
+import com.projectxo.app.core.ui.icons.XoIcons
 import com.projectxo.app.core.ui.motion.pressScale
 import com.projectxo.app.core.ui.theme.XoMotion
 import com.projectxo.app.core.ui.theme.XoSize
@@ -96,12 +98,16 @@ fun FoodScreen(
     onDelete: (FoodEntry) -> Unit,
     onUndoDelete: () -> Unit,
     modifier: Modifier = Modifier,
+    onOpenPhoto: () -> Unit = {},
+    photos: com.projectxo.app.core.data.photo.FoodPhotoStore? = null,
 ) {
     val colors = XoTheme.colors
     val type = XoTheme.type
     val reduced = LocalReducedMotion.current
     val haptic = LocalHapticFeedback.current
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    // Открытая запись с фото (Р71): лист закрывается сам, если запись удалили.
+    var openId by rememberSaveable { mutableStateOf<Long?>(null) }
 
     // Анимация выполненной цели: только в момент перехода через цель, пока экран открыт.
     val celebration = remember { Animatable(-1f) }
@@ -155,9 +161,9 @@ fun FoodScreen(
                 }
             }
             Spacer(Modifier.height(XoSpacing.s5))
-            Chips(onTemplate = add, onCustom = { showDialog = true })
+            Chips(onTemplate = add, onCustom = { showDialog = true }, onPhoto = onOpenPhoto)
             Spacer(Modifier.height(XoSpacing.s5))
-            Entries(state, onDelete, Modifier.padding(horizontal = XoSpacing.screenGutter))
+            Entries(state, onDelete, photos, onOpen = { openId = it.id }, Modifier.padding(horizontal = XoSpacing.screenGutter))
             // Запас под полосу «Вернуть», чтобы она не закрывала последнюю запись.
             Spacer(Modifier.height(XoSpacing.s8))
         }
@@ -170,6 +176,13 @@ fun FoodScreen(
             modifier = Modifier.align(Alignment.BottomCenter),
         )
     }
+
+    FoodEntrySheet(
+        entry = state.entries.firstOrNull { it.id == openId && it.photoFile != null },
+        photos = photos,
+        onDismiss = { openId = null },
+        onDelete = onDelete,
+    )
 
     if (showDialog) {
         FoodEntryDialog(
@@ -347,13 +360,15 @@ private fun templateName(id: Int): String = when (id) {
 }
 
 @Composable
-private fun Chips(onTemplate: (FoodDraft) -> Unit, onCustom: () -> Unit) {
+private fun Chips(onTemplate: (FoodDraft) -> Unit, onCustom: () -> Unit, onPhoto: () -> Unit) {
     Row(
         Modifier
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = XoSpacing.screenGutter),
         horizontalArrangement = Arrangement.spacedBy(XoSize.chipGap),
     ) {
+        // Кнопка-значок «Камера» первой: путь в отдельный экран распознавания (Р69, Р71), остальной модуль без изменений.
+        PhotoChip(onPhoto)
         FoodTemplates.ALL.forEach { tpl -> TemplateChip(tpl, onTemplate) }
         CustomChip(onCustom)
     }
@@ -392,6 +407,30 @@ private fun TemplateChip(tpl: FoodTemplate, onTemplate: (FoodDraft) -> Unit) {
 }
 
 @Composable
+private fun PhotoChip(onPhoto: () -> Unit) {
+    val colors = XoTheme.colors
+    val interaction = remember { MutableInteractionSource() }
+    val label = stringResource(R.string.fp_title)
+    Box(
+        Modifier
+            .size(XoSize.touchMin)
+            .pressScale(interaction)
+            .clickable(interactionSource = interaction, indication = null, onClick = onPhoto)
+            .clearAndSetSemantics { contentDescription = label; role = Role.Button },
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            Modifier
+                .size(width = XoSize.photoChipWidth, height = XoSize.chipHeight)
+                .border(XoSize.hairline, colors.ink, RoundedCornerShape(XoSize.chipRadius)),
+            contentAlignment = Alignment.Center,
+        ) {
+            androidx.compose.material3.Icon(XoIcons.Camera, null, tint = colors.ink, modifier = Modifier.size(XoSize.photoChipIcon))
+        }
+    }
+}
+
+@Composable
 private fun CustomChip(onCustom: () -> Unit) {
     val colors = XoTheme.colors
     val type = XoTheme.type
@@ -416,7 +455,13 @@ private fun CustomChip(onCustom: () -> Unit) {
 }
 
 @Composable
-private fun Entries(state: FoodUiState, onDelete: (FoodEntry) -> Unit, modifier: Modifier = Modifier) {
+private fun Entries(
+    state: FoodUiState,
+    onDelete: (FoodEntry) -> Unit,
+    photos: com.projectxo.app.core.data.photo.FoodPhotoStore?,
+    onOpen: (FoodEntry) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = XoTheme.colors
     val type = XoTheme.type
     val reduced = LocalReducedMotion.current
@@ -443,6 +488,8 @@ private fun Entries(state: FoodUiState, onDelete: (FoodEntry) -> Unit, modifier:
                     entry = entry,
                     isLast = i == state.entries.lastIndex,
                     onDelete = { onDelete(entry) },
+                    photos = photos,
+                    onOpen = { onOpen(entry) },
                     modifier = Modifier.graphicsLayer { alpha = appear.value; translationY = (1f - appear.value) * -size.height / 3f },
                 )
             }
@@ -452,7 +499,14 @@ private fun Entries(state: FoodUiState, onDelete: (FoodEntry) -> Unit, modifier:
 }
 
 @Composable
-private fun EntryRow(entry: FoodEntry, isLast: Boolean, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+private fun EntryRow(
+    entry: FoodEntry,
+    isLast: Boolean,
+    onDelete: () -> Unit,
+    photos: com.projectxo.app.core.data.photo.FoodPhotoStore?,
+    onOpen: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = XoTheme.colors
     val type = XoTheme.type
     val density = LocalDensity.current
@@ -465,7 +519,9 @@ private fun EntryRow(entry: FoodEntry, isLast: Boolean, onDelete: () -> Unit, mo
         formatter.format(Instant.ofEpochMilli(entry.timestampMs).atZone(ZoneId.systemDefault()))
     }
     val kcal = formatCount(entry.kcal.toLong())
-    val rowA11y = stringResource(R.string.food_entry_a11y, entry.name, kcal, time)
+    val hasPhoto = entry.photoFile != null
+    val rowA11y = if (hasPhoto) stringResource(R.string.food_entry_photo_a11y, entry.name, kcal, time)
+    else stringResource(R.string.food_entry_a11y, entry.name, kcal, time)
     val deleteA11y = stringResource(R.string.food_delete_a11y, entry.name, kcal)
 
     Row(
@@ -479,11 +535,19 @@ private fun EntryRow(entry: FoodEntry, isLast: Boolean, onDelete: () -> Unit, mo
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
-            Modifier.weight(1f).padding(vertical = XoSpacing.s2).clearAndSetSemantics { contentDescription = rowA11y },
+            Modifier
+                .weight(1f)
+                .then(if (hasPhoto) Modifier.clickable(role = Role.Button, onClick = onOpen) else Modifier)
+                .padding(vertical = XoSpacing.s2)
+                .clearAndSetSemantics { contentDescription = rowA11y; if (hasPhoto) role = Role.Button },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(time, style = type.caption, color = colors.muted)
             Spacer(Modifier.width(XoSpacing.s4))
+            if (hasPhoto) {
+                StoredPhoto(photos, entry.photoFile, maxSidePx = 160, modifier = Modifier.size(XoSize.entryThumb).clip(RoundedCornerShape(XoSize.entryThumbRadius)))
+                Spacer(Modifier.width(XoSpacing.s3))
+            }
             Column(Modifier.weight(1f)) {
                 Text(entry.name, style = type.body, color = colors.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Spacer(Modifier.height(XoSpacing.textGap))

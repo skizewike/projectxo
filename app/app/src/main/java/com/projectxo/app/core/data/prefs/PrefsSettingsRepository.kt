@@ -109,6 +109,8 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
                 ),
                 notificationPermissionAsked = p.getBoolean("notif_asked", false),
                 startEpochDay = if (p.contains("start_day")) p.getLong("start_day", 0) else null,
+                foodAiKey = p.getString("food_ai_key", "").orEmpty(),
+                installId = p.getString("install_id", "").orEmpty(),
             )
         }
 
@@ -143,6 +145,8 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
             putInt("r_quiet_to", s.reminders.quietToMin)
             putBoolean("notif_asked", s.notificationPermissionAsked)
             if (s.startEpochDay != null) putLong("start_day", s.startEpochDay) else remove("start_day")
+            if (s.foodAiKey.isNotEmpty()) putString("food_ai_key", s.foodAiKey) else remove("food_ai_key")
+            if (s.installId.isNotEmpty()) putString("install_id", s.installId) else remove("install_id")
             val pr = s.profile
             if (pr == null) {
                 listOf("p_sex", "p_age", "p_height", "p_weight", "p_activity", "p_goal").forEach(::remove)

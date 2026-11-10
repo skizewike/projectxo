@@ -64,6 +64,8 @@ class AppContainer(context: Context) {
     val clock: AppClock = SystemClock
     val water: WaterRepository by lazy { RoomWaterRepository(db.waterDao()) }
     val food: FoodRepository by lazy { RoomFoodRepository(db.foodDao()) }
+    /** Снимки записей еды по фото (Р71): только в закрытой папке приложения. */
+    val foodPhotos by lazy { com.projectxo.app.core.data.photo.FoodPhotoStore(java.io.File(appContext.filesDir, "food_photos")) }
     val sleep: SleepRepository by lazy { RoomSleepRepository(db.sleepDao()) }
     val fasting: FastingRepository by lazy { RoomFastingRepository(db.fastingDao()) }
     val breathing: BreathingRepository by lazy { RoomBreathingRepository(db.breathingDao()) }
@@ -74,6 +76,19 @@ class AppContainer(context: Context) {
     val steps: StepsRepository by lazy { RoomStepsRepository(db.stepsDao()) }
     /** Читается сразу при запуске: тема и «онбординг пройден» нужны до первого кадра. */
     val settings: SettingsRepository = PrefsSettingsRepository(context)
+    /** Еда по фото (Р69, Р70): свой ключ из настроек или общий посредник из сборки. */
+    val foodAiShared: Boolean = BuildConfig.FOOD_AI_PROXY_URL.isNotBlank()
+    val foodPhoto: com.projectxo.app.core.data.foodai.FoodPhotoAnalyzer by lazy {
+        com.projectxo.app.core.data.foodai.GeminiFoodAnalyzer(
+            apiKey = { settings.settings.value.foodAiKey },
+            proxyUrl = BuildConfig.FOOD_AI_PROXY_URL,
+            installId = {
+                settings.settings.value.installId.ifEmpty {
+                    java.util.UUID.randomUUID().toString().also { id -> settings.update { it.copy(installId = id) } }
+                }
+            },
+        )
+    }
     val history by lazy {
         BalanceHistory(water, food, steps, goals, HistoryExtras(sleep, fasting, breathing, habits, settings) { clock.nowMs() })
     }
@@ -99,7 +114,10 @@ class AppContainer(context: Context) {
     /** «Удалить все данные»: записи, цели и настройки. После этого приложение стартует как новое. */
     fun deleteAllData() {
         appScope.launch {
-            withContext(Dispatchers.IO) { db.clearAllTables() }
+            withContext(Dispatchers.IO) {
+                db.clearAllTables()
+                foodPhotos.deleteAll()
+            }
             settings.update { AppSettings() }
         }
     }

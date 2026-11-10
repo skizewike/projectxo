@@ -84,6 +84,9 @@ import com.projectxo.app.feature.calendar.CalendarViewModel
 import com.projectxo.app.feature.home.WeekViewModel
 import com.projectxo.app.feature.settings.SettingsEntry
 import java.time.LocalDate
+import com.projectxo.app.feature.food.FoodPhotoActions
+import com.projectxo.app.feature.food.FoodPhotoScreen
+import com.projectxo.app.feature.food.FoodPhotoViewModel
 import com.projectxo.app.feature.food.FoodScreen
 import com.projectxo.app.feature.food.FoodViewModel
 import com.projectxo.app.feature.water.WaterScreen
@@ -99,6 +102,7 @@ import kotlinx.serialization.Serializable
 /** Экраны поверх вкладок: без нижней панели, «назад» возвращает на вкладку. */
 @Serializable data class CalendarKey(val epochDay: Long) : NavKey
 @Serializable data object SettingsKey : NavKey
+@Serializable data object FoodPhotoKey : NavKey
 
 @Serializable data object FastingKey : NavKey
 @Serializable data object SleepKey : NavKey
@@ -211,11 +215,32 @@ fun XoNavHost(
                     val vm: FoodViewModel = viewModel(
                         key = "food-$date",
                         factory = viewModelFactory {
-                            initializer { FoodViewModel(container.food, container.goals, container.clock, container.appScope) }
+                            initializer { FoodViewModel(container.food, container.goals, container.clock, container.appScope, container.foodPhotos) }
                         },
                     )
                     val state by vm.state.collectAsStateWithLifecycle()
-                    FoodScreen(state, onAdd = vm::add, onDelete = vm::delete, onUndoDelete = vm::undoDelete)
+                    FoodScreen(
+                        state, onAdd = vm::add, onDelete = vm::delete, onUndoDelete = vm::undoDelete,
+                        onOpenPhoto = { backStack.add(FoodPhotoKey) }, photos = container.foodPhotos,
+                    )
+                }
+                entry<FoodPhotoKey> {
+                    val vm: FoodPhotoViewModel = viewModel(
+                        key = "foodphoto-$date",
+                        factory = viewModelFactory {
+                            initializer { FoodPhotoViewModel(container.foodPhoto, container.settings, container.food, container.clock, container.appScope, container.foodAiShared, container.foodPhotos) }
+                        },
+                    )
+                    val st by vm.state.collectAsStateWithLifecycle()
+                    FoodPhotoScreen(
+                        st,
+                        FoodPhotoActions(
+                            onHint = vm::setHint, onSaveKey = vm::saveKey, onAnalyze = vm::analyze, onRetake = vm::retake,
+                            onOil = vm::chooseOil, onPortion = vm::choosePortion, onCustomGrams = vm::setCustomGrams,
+                            onEditing = vm::setEditing, onStep = vm::step, onSave = vm::save, setFatName = vm::setFatName, onReset = vm::reset, onRetry = vm::retry,
+                        ),
+                        onBack = ::pop, onSaved = ::pop,
+                    )
                 }
                 entry<StepsKey> { StepsEntry(container, date) }
                 entry<BreathingKey> {

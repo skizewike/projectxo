@@ -15,6 +15,9 @@
     <!-- Мягкие напоминания (Р58). Разрешение просим один раз после первого запуска, если напоминания включены. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Еда по фото (Р69): сеть только для одного запроса к Google Gemini, когда пользователь сам нажал «Снять» или выбрал фото. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Резервное копирование выключено, пока владелец не ответит на вопрос В6 (docs/DECISIONS.md). -->
     <application
         android:name=".XoApplication"
@@ -35,6 +38,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Снимок для «Еды по фото»: камера пишет во временную папку приложения, файл удаляется после отправки. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <!-- Виджет «Баланс дня» (Р59). -->
         <receiver

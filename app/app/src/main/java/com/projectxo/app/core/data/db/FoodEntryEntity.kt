@@ -16,6 +16,9 @@ data class FoodEntryEntity(
     val protein: Int,
     val fat: Int,
     val carbs: Int,
+    /** Имя файла снимка (Р71). null — записи без фото. */
+    val photoFile: String? = null,
+    val healthScore: Int? = null,
 )
 
 /** Результат суммирующего запроса по дню. */

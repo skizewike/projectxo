@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Food from photo (D69). -->
+    <string name="fp_title">Food from photo</string>
+    <string name="fp_lead">Shoot the dish from above with the whole plate in the frame. The app splits it into components, and you check the grams.</string>
+    <string name="fp_ai_language">English</string>
+    <string name="fp_hint_label">What is inside, optional</string>
+    <string name="fp_hint_support">For example: buckwheat, chicken, a spoon of oil</string>
+    <string name="fp_camera">Take photo</string>
+    <string name="fp_gallery">Choose from gallery</string>
+    <string name="food_entry_photo_a11y">%1$s, %2$s kcal, at %3$s. Open photo</string>
+    <string name="food_sheet_close">Close</string>
+    <string name="food_sheet_delete">Delete entry</string>
+    <string name="food_sheet_photo_a11y">Photo of the dish: %1$s</string>
+    <string name="fp_privacy">The photo goes to Google Gemini for the estimate. After you add it to Food, the photo stays only on this phone.</string>
+    <string name="fp_disclaimer">An estimate from a photo, not an exact calculation.</string>
+
+    <string name="fp_key_body">Google AI Studio gives a free key. Sign in to your Google account, tap “Create API key” and paste the key here. It is stored only on this phone.</string>
+    <string name="fp_key_open">Open Google AI Studio</string>
+    <string name="fp_key_label">Key</string>
+    <string name="fp_key_save">Save key</string>
+    <string name="fp_key_bad">The key looks incomplete. Copy all of it.</string>
+    <string name="fp_key_remove">Remove key</string>
+    <string name="fp_key_open_failed">Could not open the browser. Address: aistudio.google.com/apikey</string>
+
+    <string name="fp_working">Working it out</string>
+    <string name="fp_working_m1">Looking at the dish</string>
+    <string name="fp_working_m2">Splitting it into components</string>
+    <string name="fp_working_m3">Counting calories</string>
+
+    <string name="fp_q_oil">What was it cooked in?</string>
+    <string name="fp_oil_none">No oil</string>
+    <string name="fp_oil_some">A little oil</string>
+    <string name="fp_oil_lots">A lot of oil</string>
+    <string name="fp_oil_asphoto">As in the photo</string>
+    <string name="fp_oil_name">Cooking oil</string>
+    <string name="fp_q_weight">How much does the portion weigh?</string>
+    <string name="fp_w_small">Under 300 g</string>
+    <string name="fp_w_mid">300–400 g</string>
+    <string name="fp_w_big">Over 400 g</string>
+    <string name="fp_w_custom">Own weight</string>
+    <string name="fp_w_asphoto">As in the photo</string>
+    <string name="fp_custom_label">Portion weight, g</string>
+    <string name="fp_custom_support">From %1$s to %2$s g</string>
+
+    <string name="fp_result">Result</string>
+    <string name="fp_range">Likely %1$s–%2$s kcal</string>
+    <string name="fp_score">Healthiness %1$s of 10</string>
+    <string name="fp_score_note">a guide</string>
+    <string name="fp_score_a11y">Healthiness %1$s of 10, a guide. %2$s</string>
+    <string name="fp_result_a11y">%1$s kcal, likely %2$s–%3$s. Protein %4$s g, fat %5$s g, carbs %6$s g</string>
+
+    <string name="fp_save">Add to Food</string>
+    <string name="fp_edit">Edit components</string>
+    <string name="fp_edit_done">Done</string>
+    <string name="fp_retake">Retake</string>
+    <string name="fp_less_a11y">Less: %1$s</string>
+    <string name="fp_more_a11y">More: %1$s</string>
+    <string name="fp_item_kcal">%1$s kcal</string>
+    <string name="fp_grams">%1$s g</string>
+
+    <string name="fp_err_net">No connection. Check the internet and try again.</string>
+    <string name="fp_err_quota">Today’s recognition limit is used up. Try tomorrow, add the dish by hand, or paste your own key in settings.</string>
+    <string name="fp_err_key">The key was not accepted. Paste it again.</string>
+    <string name="fp_err_photo">Could not open the photo. Choose another or take a new one.</string>
+    <string name="fp_no_camera">Could not open the camera. Choose a photo from the gallery.</string>
+    <string name="fp_err_bad">Could not read the answer. Try again or add the dish by hand.</string>
+    <string name="fp_err_busy">Google’s service is busy right now. Try again a bit later.</string>
+    <string name="fp_not_food">No food is visible in the photo. Shoot the dish closer and from above.</string>
+    <string name="fp_retry">Try again</string>
+
+    <string name="set_foodai">Key for food from photo</string>
+    <string name="set_foodai_on">key saved</string>
+    <string name="set_foodai_off">no key</string>
+    <string name="set_foodai_shared">works without a key</string>
+    <string name="fp_key_optional">A key is optional: Food from photo works without one. Your own key removes the shared daily limit.</string>
+</resources>

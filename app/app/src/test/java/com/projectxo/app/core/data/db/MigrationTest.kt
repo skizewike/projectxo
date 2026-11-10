@@ -112,6 +112,31 @@ class MigrationTest {
     }
 
     @Test
+    fun migrate5To6KeepsFoodAndAddsPhotoColumns() {
+        val name = InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath("migration-test-6").absolutePath
+        helper.createDatabase(name, 5).apply {
+            execSQL("INSERT INTO food_entry(ts, localDate, name, kcal, protein, fat, carbs) VALUES(1, '2026-05-01', 'Овсянка', 320, 10, 6, 58)")
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(name, 6, true, XoDatabase.MIGRATION_5_6)
+
+        db.query("SELECT name, kcal, photoFile, healthScore FROM food_entry").use {
+            assertEquals(true, it.moveToFirst())
+            assertEquals("Овсянка", it.getString(0))
+            assertEquals(320, it.getInt(1))
+            assertEquals(true, it.isNull(2))
+            assertEquals(true, it.isNull(3))
+        }
+        db.execSQL("INSERT INTO food_entry(ts, localDate, name, kcal, protein, fat, carbs, photoFile, healthScore) VALUES(2, '2026-05-01', 'Печень', 621, 61, 36, 11, 'a.jpg', 7)")
+        db.query("SELECT photoFile, healthScore FROM food_entry WHERE id = 2").use {
+            assertEquals(true, it.moveToFirst())
+            assertEquals("a.jpg", it.getString(0))
+            assertEquals(7, it.getInt(1))
+        }
+    }
+
+    @Test
     fun migrate3To4KeepsDataAndAddsDayLog() {
         val name = InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath("migration-test-4").absolutePath
         helper.createDatabase(name, 3).apply {

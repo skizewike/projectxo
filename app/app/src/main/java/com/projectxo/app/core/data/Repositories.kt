@@ -71,13 +71,20 @@ data class FoodEntry(
     val proteinG: Int,
     val fatG: Int,
     val carbsG: Int,
+    /** Имя файла снимка в [com.projectxo.app.core.data.photo.FoodPhotoStore], если запись сделана по фото (Р71). */
+    val photoFile: String? = null,
+    /** Оценка пользы 1..10 от ИИ, только у записей по фото. */
+    val healthScore: Int? = null,
 )
 
 /** Итоги дня по еде. */
 data class FoodTotals(val kcal: Int = 0, val proteinG: Int = 0, val fatG: Int = 0, val carbsG: Int = 0)
 
 /** То, что вводит пользователь; время и день добавляет репозиторий. */
-data class FoodDraft(val name: String, val kcal: Int, val proteinG: Int, val fatG: Int, val carbsG: Int)
+data class FoodDraft(
+    val name: String, val kcal: Int, val proteinG: Int, val fatG: Int, val carbsG: Int,
+    val photoFile: String? = null, val healthScore: Int? = null,
+)
 
 interface FoodRepository {
     /** Записи за день, новые сверху. */

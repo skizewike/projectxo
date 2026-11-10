@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Еда по фото: ожидание</title>
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3; --accent:#2D64D2; --bezel:#1B1A18;
+  --p:#171614; --f:#7a766d; --c:#2D64D2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--p:#ECE9E2;--f:#8C887F;--c:#6E9BEB}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.top{padding:20px 28px 0;max-width:860px}.top p{margin:6px 0 0;color:var(--muted)}
+.layout{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;padding:20px 28px 48px}
+.col{width:360px}
+.col h2{font-size:15px;font-weight:600;margin:0 0 2px}
+.col .sub{color:var(--muted);font-size:13px;margin:0 0 12px;min-height:58px}
+.device{width:360px;height:640px;padding:8px;border-radius:44px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--bg)}
+.back{position:absolute;left:24px;top:50px;color:var(--muted);font-size:13px}
+.stage{position:absolute;left:0;right:0;top:110px;display:flex;flex-direction:column;align-items:center}
+.ttl{font-size:26px;font-weight:600;letter-spacing:-.015em;margin-top:30px}
+.msgs{position:relative;height:22px;width:280px;margin-top:8px;color:var(--muted);font-size:13px;text-align:center}
+.msgs span{position:absolute;inset:0;opacity:0;animation:msg 7.2s infinite}
+.msgs span:nth-child(2){animation-delay:2.4s}.msgs span:nth-child(3){animation-delay:4.8s}
+@keyframes msg{0%{opacity:0;transform:translateY(6px)}6%,30%{opacity:1;transform:none}36%,100%{opacity:0;transform:translateY(-6px)}}
+svg{display:block}
+.stroke{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round}
+.track{fill:none;stroke:var(--line);stroke-width:1.5}
+
+/* 01 кольцо-тарелка */
+.v1 .arc{transform-origin:100px 100px;animation:spin 1.6s linear infinite}
+.v1 .arc2{transform-origin:100px 100px;animation:spin 2.6s linear infinite reverse}
+.v1 .arc circle,.v1 .arc2 circle{animation:breathe 2.4s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{stroke-dasharray:60 400}50%{stroke-dasharray:240 400}}
+.v1 .dot{fill:var(--ink);opacity:0;transform-origin:center;animation:dot 3.6s infinite}
+.v1 .dot:nth-of-type(2){animation-delay:.9s}.v1 .dot:nth-of-type(3){animation-delay:1.8s}
+@keyframes dot{0%{opacity:0;transform:scale(.2)}12%{opacity:1;transform:scale(1.25)}20%,78%{opacity:1;transform:scale(1)}92%,100%{opacity:0;transform:scale(.2)}}
+
+/* 02 квадрат слоями */
+.v2 .box{position:relative;width:150px;height:150px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--bg)}
+.v2 .layer{position:absolute;left:0;right:0;bottom:var(--b);height:0;animation:fill 4.8s cubic-bezier(.2,0,0,1) infinite}
+.v2 .l1{background:var(--p);animation-delay:0s}.v2 .l2{background:var(--f);animation-delay:.5s}.v2 .l3{background:var(--c);animation-delay:1s}
+@keyframes fill{0%{height:0;opacity:1}38%{height:var(--h);opacity:1}78%{height:var(--h);opacity:1}92%{height:var(--h);opacity:0}100%{height:0;opacity:0}}
+.v2 .l1{--h:34%;--b:0%}.v2 .l2{--h:24%;--b:34%}.v2 .l3{--h:24%;--b:58%}
+.v2 .ticks{position:absolute;right:0;top:0;bottom:0;width:8px;display:flex;flex-direction:column;justify-content:space-between;padding:10px 0}
+.v2 .ticks i{height:1px;background:var(--ink);opacity:.5}
+
+/* 03 скан по фото */
+.v3 .shot{position:relative;width:300px;height:300px;border-radius:18px;overflow:hidden;background:var(--track)}
+.v3 .shot svg.ph{position:absolute;inset:0;width:100%;height:100%;opacity:.55;color:var(--ink)}
+.v3 .line{position:absolute;left:0;right:0;height:2px;background:var(--ink);top:0;animation:scan 2.8s cubic-bezier(.45,0,.2,1) infinite;box-shadow:0 0 0 0 transparent}
+.v3 .veil{position:absolute;left:0;right:0;top:0;background:var(--bg);opacity:.35;animation:veil 2.8s cubic-bezier(.45,0,.2,1) infinite;height:0}
+@keyframes scan{0%{top:0}50%{top:calc(100% - 2px)}100%{top:0}}
+@keyframes veil{0%{height:0}50%{height:100%}100%{height:0}}
+.v3 .c{position:absolute;width:22px;height:22px;border:1.5px solid var(--ink)}
+.v3 .c.tl{left:12px;top:12px;border-right:0;border-bottom:0;border-radius:6px 0 0 0}
+.v3 .c.tr{right:12px;top:12px;border-left:0;border-bottom:0;border-radius:0 6px 0 0}
+.v3 .c.bl{left:12px;bottom:12px;border-right:0;border-top:0;border-radius:0 0 0 6px}
+.v3 .c.br{right:12px;bottom:12px;border-left:0;border-top:0;border-radius:0 0 6px 0}
+.v3 .pt{position:absolute;width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink);background:var(--bg);opacity:0;transform:scale(.3)}
+.v3 .pt.a{left:34%;top:34%;animation:p1 2.8s infinite}.v3 .pt.b{left:62%;top:44%;animation:p2 2.8s infinite}.v3 .pt.d{left:44%;top:66%;animation:p3 2.8s infinite}
+@keyframes p1{0%,14%{opacity:0;transform:scale(.3)}22%,88%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes p2{0%,26%{opacity:0;transform:scale(.3)}34%,88%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes p3{0%,38%{opacity:0;transform:scale(.3)}46%,88%{opacity:1;transform:scale(1)}100%{opacity:0}}
+
+@media (prefers-reduced-motion: reduce){
+  .v1 .arc,.v1 .arc2,.v1 .arc circle,.v1 .arc2 circle,.v2 .layer,.v3 .line,.v3 .veil{animation:none}
+  .v1 .arc circle{stroke-dasharray:140 400}.v1 .arc2 circle{stroke-dasharray:90 400}
+  .v2 .layer{height:var(--h)}.v3 .line{top:50%}
+  .msgs span{animation:none;opacity:0}.msgs span:first-child{opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <b>Еда по фото: экран «Считаем»</b>
+  <p>Три варианта анимации ожидания (обычно до 20 секунд). Все идут по кругу, пока ИИ отвечает, подписи меняются каждые 2–3 секунды. При включённом «меньше анимаций» остаётся статичный кадр с первой подписью.</p>
+</div>
+<div class="layout">
+
+<div class="col">
+  <h2>01 «Кольцо»</h2>
+  <p class="sub">Две тонких дуги с дыханием вокруг тарелки, внутри по очереди появляются точки-составляющие. Родня кольца «Баланса дня» и заставки.</p>
+  <div class="device"><div class="screen v1">
+    <div class="back">‹ Назад</div>
+    <div class="stage">
+      <svg width="200" height="200" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="track" cx="100" cy="100" r="86"/>
+        <g class="arc"><circle class="stroke" cx="100" cy="100" r="86" stroke-dasharray="60 400"/></g>
+        <circle class="track" cx="100" cy="100" r="62"/>
+        <g class="arc2"><circle class="stroke" cx="100" cy="100" r="62" stroke-dasharray="60 400"/></g>
+        <circle class="dot" cx="86" cy="92" r="5"/><circle class="dot" cx="118" cy="100" r="5"/><circle class="dot" cx="98" cy="122" r="5"/>
+      </svg>
+      <div class="ttl">Считаем</div>
+      <div class="msgs"><span>Смотрим на блюдо</span><span>Раскладываем состав</span><span>Считаем калории</span></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="col">
+  <h2>02 «Квадрат»</h2>
+  <p class="sub">Знакомый квадрат дня из «Еды»: белки, жиры и углеводы поднимаются слоями и опускаются. Намёк на то, что именно считается.</p>
+  <div class="device"><div class="screen v2">
+    <div class="back">‹ Назад</div>
+    <div class="stage" style="top:130px">
+      <div class="box" aria-hidden="true"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="ticks"><i></i><i></i><i></i><i></i></div></div>
+      <div class="ttl">Считаем</div>
+      <div class="msgs"><span>Смотрим на блюдо</span><span>Раскладываем состав</span><span>Считаем калории</span></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="col">
+  <h2>03 «Скан»</h2>
+  <p class="sub">Ваш снимок остаётся на экране: тонкая линия проходит по нему, а на тарелке по очереди появляются точки, найденные составляющие.</p>
+  <div class="device"><div class="screen v3">
+    <div class="back">‹ Назад</div>
+    <div class="stage" style="top:96px">
+      <div class="shot" aria-hidden="true">
+        <svg class="ph" viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice"><circle cx="160" cy="160" r="116" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><circle cx="160" cy="160" r="92" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"/>
+        <path d="M100 170c10-48 70-64 96-30 22 28 8 62-30 72-36 8-76-8-66-42z" fill="currentColor" opacity=".25"/><rect x="176" y="112" width="64" height="36" rx="14" fill="currentColor" opacity=".35"/><circle cx="126" cy="214" r="12" fill="currentColor" opacity=".4"/><circle cx="154" cy="226" r="9" fill="currentColor" opacity=".4"/></svg>
+        <div class="veil"></div><div class="line"></div>
+        <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+        <i class="pt a"></i><i class="pt b"></i><i class="pt d"></i>
+      </div>
+      <div class="ttl" style="margin-top:24px">Считаем</div>
+      <div class="msgs"><span>Смотрим на блюдо</span><span>Раскладываем состав</span><span>Считаем калории</span></div>
+    </div>
+  </div></div>
+</div>
+
+</div>
+</body>
+</html>

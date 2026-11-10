@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Еда: кнопка фото</title>
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3; --accent:#2D64D2; --bezel:#1B1A18;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 var(--font);font-feature-settings:"tnum";-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{padding:20px 28px 0;max-width:820px}
+.top p{margin:6px 0 0;color:var(--muted)}
+.layout{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;padding:20px 28px 48px}
+.col{width:360px}
+.col h2{font-size:15px;font-weight:600;margin:0 0 2px}
+.col .sub{color:var(--muted);font-size:13px;margin:0 0 12px;min-height:40px}
+.device{width:360px;height:520px;padding:8px;border-radius:44px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--bg)}
+.pad{padding:50px 24px 0}
+.hd{display:flex;justify-content:space-between;align-items:flex-start}
+.ttl{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.acts{display:flex;gap:2px;margin-right:-4px}
+.round{width:48px;height:48px;display:flex;align-items:center;justify-content:center;transition:transform .18s cubic-bezier(.2,0,0,1)}
+.round>span{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.round:active{transform:scale(.94)}
+svg{width:22px;height:22px;stroke:var(--ink);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.plus svg{width:18px;height:18px;stroke-width:1.6}
+.big{font-size:56px;font-weight:500;letter-spacing:-.035em;line-height:1;margin-top:26px;display:flex;align-items:baseline;gap:6px}
+.big small{font-size:22px;color:var(--muted);font-weight:400;letter-spacing:0}
+.cap{font-size:13px;color:var(--muted);margin-top:10px}
+.block{height:120px;margin-top:22px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
+.chips{display:flex;gap:8px;margin-top:18px;overflow:hidden;align-items:center}
+.chip{flex:0 0 auto;height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;display:flex;align-items:center;white-space:nowrap}
+.chip small{color:var(--muted);font-size:12px;margin-left:6px}
+.chip.cust{border-color:var(--ink)}
+/* кнопки фото */
+.pb{flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:transform .18s cubic-bezier(.2,0,0,1)}
+.pb:active{transform:scale(.94)}
+.pb.out{width:48px;height:48px}
+.pb.out>span{width:44px;height:36px;border:1px solid var(--ink);border-radius:18px;display:flex;align-items:center;justify-content:center}
+.pb.fill>span{width:44px;height:36px;background:var(--ink);border-radius:18px;display:flex;align-items:center;justify-content:center}
+.pb.fill svg{stroke:var(--bg)}
+.toast{position:absolute;left:16px;right:16px;bottom:26px;height:46px;border-radius:14px;background:var(--ink);color:var(--bg);display:flex;align-items:center;padding:0 18px;font-size:14px;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .3s cubic-bezier(.2,0,0,1);pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.legend{margin-top:12px;display:flex;gap:18px;align-items:center;color:var(--muted);font-size:12px}
+.legend svg{width:26px;height:26px}
+</style>
+</head>
+<body>
+<div class="top">
+  <b>Еда: кнопка «По фото» значком</b>
+  <p>Три варианта: каждый со своим значком и местом. Нажмите на кнопку, чтобы увидеть отклик. Подпись для TalkBack («Еда по фото») есть у всех.</p>
+</div>
+
+<div class="layout">
+
+<!-- 01 -->
+<div class="col">
+  <h2>01 «Камера»</h2>
+  <p class="sub">Контурная кнопка с камерой первой в ряду шаблонов. Рамка цвета ink, как у «Своё…».</p>
+  <div class="device"><div class="screen"><div class="pad">
+    <div class="hd"><div><div class="ttl">Еда</div><div class="date">Вторник, 10 ноября</div></div>
+      <div class="acts"><button class="round plus" aria-label="Добавить запись"><span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button></div></div>
+    <div class="big">940<small>ккал</small></div><div class="cap">ещё 1 060 до 2 000</div>
+    <div class="block">квадрат дня и граммы</div>
+    <div class="chips" style="margin-left:-24px;padding-left:24px">
+      <button class="pb out" data-t="Камера" aria-label="Еда по фото"><span>
+        <svg viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.2l1.1-1.6A1 1 0 0 1 9.6 5h4.8a1 1 0 0 1 .8.4L16.3 7h2.2A1.5 1.5 0 0 1 20 8.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.5" r="3.2"/></svg></span></button>
+      <span class="chip">Овсянка с бананом<small>320</small></span><span class="chip">Курица с рисом<small>540</small></span>
+    </div>
+  </div><div class="toast"></div></div></div>
+</div>
+
+<!-- 02 -->
+<div class="col">
+  <h2>02 «Рамка»</h2>
+  <p class="sub">Заливка ink: единственное главное действие экрана. Значок видоискателя с тарелкой.</p>
+  <div class="device"><div class="screen"><div class="pad">
+    <div class="hd"><div><div class="ttl">Еда</div><div class="date">Вторник, 10 ноября</div></div>
+      <div class="acts"><button class="round plus" aria-label="Добавить запись"><span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button></div></div>
+    <div class="big">940<small>ккал</small></div><div class="cap">ещё 1 060 до 2 000</div>
+    <div class="block">квадрат дня и граммы</div>
+    <div class="chips" style="margin-left:-24px;padding-left:24px">
+      <button class="pb fill" data-t="Рамка" aria-label="Еда по фото"><span>
+        <svg viewBox="0 0 24 24"><path d="M4 8.5V6.5A1.5 1.5 0 0 1 5.5 5H8M16 5h2.5A1.5 1.5 0 0 1 20 6.5v2M20 15.5v2a1.5 1.5 0 0 1-1.5 1.5H16M8 19H5.5A1.5 1.5 0 0 1 4 17.5v-2"/><circle cx="12" cy="12" r="3.6"/><circle cx="12" cy="12" r="1" /></svg></span></button>
+      <span class="chip">Овсянка с бананом<small>320</small></span><span class="chip">Курица с рисом<small>540</small></span>
+    </div>
+  </div><div class="toast"></div></div></div>
+</div>
+
+<!-- 03 -->
+<div class="col">
+  <h2>03 «В шапке»</h2>
+  <p class="sub">Рядом с «+» в шапке, круглая кнопка того же размера. Значок: тарелка со вспышкой. Ряд шаблонов остаётся как был.</p>
+  <div class="device"><div class="screen"><div class="pad">
+    <div class="hd"><div><div class="ttl">Еда</div><div class="date">Вторник, 10 ноября</div></div>
+      <div class="acts">
+        <button class="round" data-t="Тарелка" aria-label="Еда по фото"><span>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="13" r="6"/><circle cx="11" cy="13" r="3"/><path d="M18.5 4v3M17 5.5h3"/></svg></span></button>
+        <button class="round plus" aria-label="Добавить запись"><span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+      </div></div>
+    <div class="big">940<small>ккал</small></div><div class="cap">ещё 1 060 до 2 000</div>
+    <div class="block">квадрат дня и граммы</div>
+    <div class="chips" style="margin-left:-24px;padding-left:24px">
+      <span class="chip">Овсянка с бананом<small>320</small></span><span class="chip">Курица с рисом<small>540</small></span><span class="chip">Творог 5 %<small>180</small></span>
+    </div>
+  </div><div class="toast"></div></div></div>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.closest('.screen').querySelector('.toast');
+  t.textContent='Откроется «Еда по фото»';t.classList.add('show');
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1400);
+}));
+</script>
+</body>
+</html>
