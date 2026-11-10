@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Еда: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3;
+  --accent:#2D64D2; --on-accent:#FFFFFF; --bezel:#1B1A18; --scrim:rgba(23,22,20,.32);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422;
+    --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120; --scrim:rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422;
+  --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120; --scrim:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+::selection{background:var(--accent);color:var(--on-accent)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600;letter-spacing:-.01em}
+.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.ghost:hover{border-color:var(--muted)}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--ink);margin:0}
+
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);color:var(--ink);user-select:none;-webkit-user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:30}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:30}
+
+.hd{position:absolute;left:24px;right:24px;top:58px;z-index:2}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.add{position:absolute;right:20px;top:60px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);z-index:3;display:flex;align-items:center;justify-content:center}
+.add svg{width:18px;height:18px;stroke:var(--ink);stroke-width:1.6;fill:none;stroke-linecap:round}
+.total{position:absolute;left:24px;right:24px;top:122px;z-index:2}
+.big{font-weight:500;letter-spacing:-.035em;line-height:1;display:flex;align-items:baseline;gap:6px;font-size:56px;transform-origin:0 100%}
+.unit{font-weight:400;letter-spacing:0;color:var(--muted);font-size:22px}
+.cap{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.45}
+.cap .done{color:var(--ink);font-weight:500}
+.art{position:absolute;left:0;top:0;width:360px;height:780px;pointer-events:none;z-index:1}
+
+.roll{display:inline-flex;flex-direction:row-reverse}
+.slot{position:relative;display:inline-block;overflow:hidden;height:1.12em;line-height:1.12em}
+.slot span{display:block;white-space:pre}
+.slot span.out{position:absolute;left:0;top:0}
+
+/* макросы (DOM-подписи, положение задаёт вариант) */
+.macro{position:absolute;z-index:2}
+.mrow{display:flex;align-items:baseline;gap:8px;font-size:13px}
+.mrow .nm{color:var(--muted)}
+.mrow b{font-weight:500;margin-left:auto;font-size:15px}
+.mrow small{color:var(--muted);font-size:12px}
+.sw{width:9px;height:9px;flex:0 0 9px;align-self:center}
+.t1{background:var(--ink)}
+.t2{background:color-mix(in srgb,var(--ink) 45%,var(--bg))}
+.t3{background:var(--accent)}
+.v1 .mrow{flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--line)}
+.v1 .mrow:last-child{border-bottom:1px solid var(--line)}
+.v1 .mrow{padding:8px 0}
+.v1 .vv{flex-basis:100%;margin-left:17px;line-height:1.3}
+.v1 .vv b{font-size:17px;font-weight:500}
+.v2 .mrow{position:absolute;left:0;right:0}
+.v3 .ratio{display:flex;justify-content:space-between;font-size:13px}
+.v3 .ratio span{display:flex;align-items:center;gap:7px}
+.v3 .goalr{font-size:12px;color:var(--muted);margin-top:4px}
+
+.chips{position:absolute;left:0;right:0;z-index:3;display:flex;gap:8px;overflow-x:auto;padding:0 24px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.chip small{color:var(--muted);font-size:12px}
+.chip:active{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.list{position:absolute;left:24px;right:24px;z-index:2}
+.entry{display:flex;align-items:center;gap:12px;height:52px;border-top:1px solid var(--line);width:100%;text-align:left}
+.entry .tm{width:40px;flex:0 0 40px;font-size:13px;color:var(--muted)}
+.entry .nm{flex:1;min-width:0}
+.entry .nm div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}
+.entry .nm small{display:block;font-size:12px;color:var(--muted)}
+.entry b{font-weight:500;font-size:15px}
+.entry.new{animation:inrow .42s cubic-bezier(.2,0,0,1)}
+@keyframes inrow{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.more{font-size:12px;color:var(--muted);padding-top:8px;border-top:1px solid var(--line)}
+.empty{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;line-height:1.5}
+
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;z-index:4;background:var(--bg)}
+.nav span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted)}
+.nav span::before{content:"";width:4px;height:4px;border-radius:50%;background:transparent}
+.nav span.on{color:var(--ink);font-weight:500}
+.nav span.on::before{background:var(--ink)}
+
+.toast{position:absolute;left:16px;right:16px;top:640px;height:52px;border-radius:14px;background:var(--ink);color:var(--bg);z-index:8;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 18px;font-size:14px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .32s cubic-bezier(.2,0,0,1)}
+.toast.show{opacity:1;transform:none;pointer-events:auto}
+.toast button{height:40px;padding:0 12px;font-weight:600;color:var(--bg)}
+
+/* лист добавления */
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:10;opacity:0;pointer-events:none;transition:opacity .28s}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:11;background:var(--bg);border-radius:24px 24px 0 0;padding:12px 24px 34px;transform:translateY(102%);transition:transform .36s cubic-bezier(.2,0,0,1)}
+.sheet.show{transform:none}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 16px}
+.sheet h3{margin:0 0 16px;font-size:20px;font-weight:600;letter-spacing:-.01em}
+.f{display:block;margin-bottom:12px}
+.f span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.f input{width:100%;height:46px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--ink);font:inherit;font-size:16px;padding:0 14px;font-feature-settings:"tnum"}
+.f input:focus{border-color:var(--ink);outline:0}
+.row3{display:flex;gap:10px}
+.row3 .f{flex:1}
+.sheet .chk{margin:4px 0 18px}
+.sbtns{display:flex;gap:10px}
+.sbtns button{flex:1;height:48px;border-radius:999px;font-weight:500}
+.sbtns .ok{background:var(--ink);color:var(--bg)}
+.sbtns .no{border:1px solid var(--line)}
+.hint{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+
+/* Панель */
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{padding:6px 16px;border-radius:999px;font-size:13px}
+.seg button.on{background:var(--ink);color:var(--page)}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.primary-btn{background:var(--ink);color:var(--page);border-radius:999px;padding:9px 18px;font-weight:500}
+.desc h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+
+@media (max-width:900px){
+  .layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}
+  .panel{width:100%;max-width:380px;flex-basis:auto}
+  .top{padding:16px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>Project XO</b><span>Экран «Еда»: три варианта, обычный и кето</span></div>
+  <div class="ctrls">
+    <label class="chk"><input type="checkbox" id="slow"> Замедлить ×4</label>
+    <label class="chk"><input type="checkbox" id="rm"> Меньше анимаций</label>
+    <button class="ghost" id="theme" type="button">Тёмная тема</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="device-box" id="deviceBox">
+    <div class="device" id="device">
+      <div class="screen" id="screen">
+        <div class="status"><span>14:20</span><span>100 %</span></div>
+        <canvas class="art" id="art" width="360" height="780" aria-hidden="true"></canvas>
+        <div class="hd"><div class="title">Еда</div><div class="date" id="date"></div></div>
+        <button class="add" id="addBtn" type="button" aria-label="Добавить запись"><svg viewBox="0 0 18 18"><path d="M9 2v14M2 9h14"/></svg></button>
+        <div class="total"><div class="big" id="big"><span class="roll" id="roll"></span><span class="unit">ккал</span></div><div class="cap" id="cap"></div></div>
+        <div class="macro" id="macro"></div>
+        <div class="chips" id="chips"></div>
+        <div class="list" id="list"></div>
+        <div class="toast" id="toast"><span>Запись удалена</span><button type="button" id="undo">Вернуть</button></div>
+        <nav class="nav" aria-hidden="true"><span>Сегодня</span><span>Вода</span><span class="on">Еда</span><span>Ходьба</span></nav>
+        <div class="scrim" id="scrim"></div>
+        <form class="sheet" id="sheet" autocomplete="off">
+          <div class="grab"></div>
+          <h3>Новая запись</h3>
+          <label class="f"><span>Название</span><input id="iName" placeholder="Например, гречка с курицей"></label>
+          <label class="f"><span>Калории, ккал</span><input id="iK" inputmode="numeric" placeholder="0"></label>
+          <div class="row3">
+            <label class="f"><span>Белки, г</span><input id="iP" inputmode="numeric" placeholder="0"></label>
+            <label class="f"><span>Жиры, г</span><input id="iF" inputmode="numeric" placeholder="0"></label>
+            <label class="f"><span id="iCl">Углеводы, г</span><input id="iC" inputmode="numeric" placeholder="0"></label>
+          </div>
+          <p class="hint" id="iHint">Калории можно не вводить: посчитаем по БЖУ.</p>
+          <label class="chk"><input type="checkbox" id="iTpl"> Сохранить как шаблон</label>
+          <div class="sbtns"><button type="button" class="no" id="iNo">Отмена</button><button type="submit" class="ok">Добавить</button></div>
+        </form>
+        <div class="gesture"></div><div class="punch"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="group">
+      <div class="label">Вариант</div>
+      <div class="variants" id="variants"></div>
+    </div>
+    <div class="group">
+      <div class="label">Режим питания (меняется в настройках)</div>
+      <div class="seg" id="mode"><button type="button" data-m="norm">Обычный</button><button type="button" data-m="keto">Кето</button></div>
+    </div>
+    <div class="group acts">
+      <button class="primary-btn" id="addTpl" type="button">Съесть шаблон</button>
+      <button class="ghost" id="own" type="button">Своя запись</button>
+      <button class="ghost" id="reset" type="button">Сначала</button>
+      <button class="ghost" id="empty" type="button">Пустой день</button>
+    </div>
+    <div class="desc">
+      <h2 id="dName"></h2>
+      <p id="dIdea"></p>
+      <ul class="pc" id="dPc"></ul>
+    </div>
+    <p class="note">Касание шаблона добавляет запись сразу. Касание записи удаляет её с «Вернуть» на 4 с (как у воды). Цель: обычный 2 000 ккал, кето 1 800 ккал и углеводы до 25 г. При цели по калориям — утверждённая «Обход и шкала», переложенная на каждый вариант. Перебор не красится и не ругает: только цифры. Кето здесь — только другие цели по БЖУ; кетоз не определяем, медицинских обещаний нет. Клавиши 1–3.</p>
+  </aside>
+</main>
+
+<script>
+(function(){
+'use strict';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+function bezier(x1,y1,x2,y2){
+  const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+  const sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,dx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t);if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t-=e/d;}
+    if(!(t>=0&&t<=1)||Math.abs(sx(t)-x)>1e-4){let lo=0,hi=1;t=x;for(let i=0;i<40;i++){if(sx(t)<x)lo=t;else hi=t;t=(lo+hi)/2;}}return sy(t);};
+}
+const std=bezier(.2,0,0,1);
+class Spr{constructor(v,z,k){this.x=v;this.v=0;this.t=v;this.z=z;this.k=k;}
+  to(t,instant){this.t=t;if(instant){this.x=t;this.v=0;}}
+  step(dt){if(this.x===this.t&&this.v===0)return;const c=2*this.z*Math.sqrt(this.k),n=Math.max(1,Math.ceil(dt/.004)),h=dt/n;
+    for(let i=0;i<n;i++){const a=-this.k*(this.x-this.t)-c*this.v;this.v+=a*h;this.x+=this.v*h;}
+    if(Math.abs(this.x-this.t)<.05&&Math.abs(this.v)<.05){this.x=this.t;this.v=0;}}}
+
+const $=id=>document.getElementById(id);
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ | /g,' ');
+const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+
+/* ---------- данные ---------- */
+const MODES={
+  norm:{kcal:2000,g:{p:100,f:70,c:250},limitC:false,ratio:[20,30,50],
+    tpl:[['Овсянка с бананом',320,10,6,58],['Курица с рисом',540,42,12,64],['Творог 5 %',180,24,8,4],['Яблоко',80,0,0,19],['Гречка с котлетой',610,34,24,62]],
+    base:[[490,'Овсянка с бананом',320,10,6,58],[700,'Яблоко',80,0,0,19],[785,'Курица с рисом',540,42,12,64]]},
+  keto:{kcal:1800,g:{p:110,f:140,c:25},limitC:true,ratio:[25,70,5],
+    tpl:[['Яйца с беконом',410,24,34,1],['Авокадо',240,3,22,3],['Лосось с брокколи',520,38,36,6],['Сыр, 50 г',180,12,14,0],['Кофе со сливками',90,1,9,1]],
+    base:[[510,'Яйца с беконом',410,24,34,1],[690,'Сыр, 50 г',180,12,14,0],[800,'Лосось с брокколи',520,38,36,6]]},
+};
+const MN={p:'Белки',f:'Жиры',c:'Углеводы'};
+const st={v:0,mode:'norm',slow:1,reduced:false,cel:-1,entries:[],seq:0,clock:860,lastId:-1,removed:null,toastT:0,tplN:0};
+const M=()=>MODES[st.mode];
+function load(empty){st.seq=0;st.clock=860;st.tplN=0;st.entries=empty?[]:M().base.map(([t,n,k,p,f,c])=>({id:st.seq++,t,name:n,k,p,f,c}));st.lastId=-1;st.cel=-1;}
+const tot=()=>st.entries.reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,f:a.f+e.f,c:a.c+e.c}),{k:0,p:0,f:0,c:0});
+const sk=new Spr(0,.9,200),sp=new Spr(0,.9,200),sf=new Spr(0,.9,200),sc=new Spr(0,.9,200);
+const order=()=>st.mode==='keto'?['f','p','c']:['p','f','c'];
+const tone={p:'t1',f:'t2',c:'t3'};
+
+/* перекатка цифр */
+function Roller(el){this.el=el;this.slots=[];this.val=null;}
+Roller.prototype.set=function(text,v){
+  const anim=this.val!==null&&!st.reduced,up=this.val===null||v>=this.val;this.val=v;const n=text.length;
+  while(this.slots.length<n){const s=document.createElement('span');s.className='slot';const c=document.createElement('span');s.appendChild(c);this.el.appendChild(s);this.slots.push({el:s,cur:c,ch:''});}
+  while(this.slots.length>n){this.slots.pop().el.remove();}
+  for(let i=0;i<n;i++){const ch=text[n-1-i],s=this.slots[i];if(s.ch===ch)continue;s.ch=ch;
+    if(!anim||!s.cur.textContent){s.cur.textContent=ch;continue;}
+    const old=s.cur,nw=document.createElement('span');nw.textContent=ch;old.classList.add('out');s.el.appendChild(nw);s.cur=nw;
+    const d=i*45*st.slow,dur=420*st.slow,fd=140*st.slow,ease='cubic-bezier(.2,1.25,.4,1)';
+    old.animate([{transform:'translateY(0)'},{transform:`translateY(${up?-100:100}%)`}],{duration:dur,delay:d,easing:ease,fill:'forwards'});
+    old.animate([{opacity:1},{opacity:0}],{duration:fd,delay:d,fill:'forwards'}).onfinish=()=>setTimeout(()=>old.remove(),dur);
+    nw.animate([{transform:`translateY(${up?100:-100}%)`},{transform:'translateY(0)'}],{duration:dur,delay:d,easing:ease,fill:'backwards'});
+    nw.animate([{opacity:0},{opacity:1}],{duration:fd,delay:d,fill:'backwards'});}
+};
+const roller=new Roller($('roll'));
+
+/* ---------- раскладка по вариантам ---------- */
+const LAY=[
+  {macro:{left:212,top:226,width:124},chips:432,list:490},
+  {macro:{left:24,top:240,width:312},chips:448,list:500},
+  {macro:{left:24,top:398,width:312},chips:450,list:504},
+];
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function macroValue(k,v){
+  const g=M().g[k];
+  if(k==='c'&&M().limitC){return v>g?[`${fmt(v)} г`,`лимит ${g} г, сверх на ${fmt(v-g)}`]:[`${fmt(v)} г`,`лимит ${g} г`];}
+  return [`${fmt(v)} г`,`из ${g}`];
+}
+function renderMacro(){
+  const box=$('macro'),T=tot(),L=LAY[st.v];box.className='macro v'+(st.v+1);Object.assign(box.style,{left:L.macro.left+'px',top:L.macro.top+'px',width:L.macro.width+'px'});
+  box.textContent='';
+  if(st.v===2){
+    const E=T.p*4+T.f*9+T.c*4,r=el('div','ratio');
+    order().forEach(k=>{const s=el('span');s.append(el('i','sw '+tone[k]),`${MN[k]} ${E?Math.round((k==='f'?9:4)*T[k]/E*100):0} %`);r.appendChild(s);});
+    const rt=M().ratio,ri={p:rt[0],f:rt[1],c:rt[2]};
+    box.append(r,el('div','goalr','ориентир '+order().map(k=>ri[k]).join(' · ')+' %'+(st.mode==='keto'?` · углеводы ${fmt(T.c)} г, лимит ${M().g.c} г`:'')));
+    return;
+  }
+  order().forEach((k,i)=>{const [a,b]=macroValue(k,T[k]),r=el('div','mrow');r.append(el('i','sw '+tone[k]),el('span','nm',MN[k]));
+    if(st.v===0){const vv=el('div','vv');vv.append(el('b',null,a),' ',el('small',null,b));r.appendChild(vv);}
+    else{r.append(el('b',null,a),el('small',null,b));r.style.top=(i*64)+'px';}
+    box.appendChild(r);});
+}
+function renderChips(){
+  const box=$('chips');box.style.top=LAY[st.v].list-54+'px';box.textContent='';
+  M().tpl.forEach((t,i)=>{const b=el('button','chip');b.type='button';b.append(t[0],el('small',null,fmt(t[1])));b.onclick=()=>eat(i);box.appendChild(b);});
+  const o=el('button','chip');o.type='button';o.append('Своё…');o.onclick=openSheet;box.appendChild(o);
+}
+function renderList(){
+  const box=$('list'),L=LAY[st.v];box.style.top=L.list+'px';box.textContent='';
+  const es=st.entries.slice().sort((a,b)=>b.t-a.t);
+  if(!es.length){box.appendChild(el('div','empty',st.mode==='keto'?'Пока пусто. Добавьте первый приём пищи шаблоном выше или кнопкой «+». Лимит углеводов виден сразу.':'Пока пусто. Добавьте первый приём пищи шаблоном выше или кнопкой «+».'));return;}
+  const fit=Math.floor((700-L.list-24)/52),show=es.length>fit?es.slice(0,fit-0):es;
+  show.forEach(e=>{const b=el('button','entry'+(e.id===st.lastId?' new':''));b.type='button';b.setAttribute('aria-label',`${e.name}, ${e.k} ккал. Удалить`);
+    const nm=el('span','nm');nm.append(el('div',null,e.name),el('small',null,`Б ${e.p} · Ж ${e.f} · У ${e.c}`));
+    b.append(el('span','tm',hm(e.t)),nm,el('b',null,fmt(e.k)));b.onclick=()=>remove(e.id);box.appendChild(b);});
+  if(es.length>show.length)box.appendChild(el('div','more',`и ещё ${es.length-show.length} — в истории дня`));
+}
+function sync(instant){
+  const T=tot(),G=M().kcal,left=Math.max(0,G-T.k);
+  roller.set(fmt(T.k),T.k);
+  const cap=$('cap');cap.textContent='';
+  if(T.k<G)cap.append(`ещё ${fmt(left)} до ${fmt(G)} ккал`);
+  else{cap.append(el('span','done','Цель дня выполнена'),el('br'),T.k>G?`+${fmt(T.k-G)} ккал сверх цели`:`ровно ${fmt(G)} ккал`);}
+  const ins=instant||st.reduced;sk.to(T.k,ins);sp.to(T.p,ins);sf.to(T.f,ins);sc.to(T.c,ins);
+  $('date').textContent='Понедельник, 9 ноября'+(st.mode==='keto'?' · кето':'');
+  $('iCl').textContent='Углеводы, г';
+  renderMacro();renderList();
+}
+function add(e){
+  const before=tot().k;st.clock=Math.min(1430,st.clock+35);e.id=st.seq++;e.t=st.clock;st.entries.push(e);st.lastId=e.id;sync(false);
+  const after=tot().k,G=M().kcal;
+  if(before<G&&after>=G&&!st.reduced){st.cel=performance.now();
+    $('big').animate([{transform:'translateY(0)'},{transform:'translateY(4px) scaleY(.97)',offset:.22},{transform:'translateY(-3px)',offset:.55},{transform:'translateY(0)'}],{duration:620*st.slow,delay:520*st.slow,easing:'cubic-bezier(.2,0,0,1)'});}
+}
+function eat(i){const t=M().tpl[i];add({name:t[0],k:t[1],p:t[2],f:t[3],c:t[4]});}
+function remove(id){
+  const i=st.entries.findIndex(e=>e.id===id);if(i<0)return;st.removed=st.entries.splice(i,1)[0];st.lastId=-1;sync(false);
+  $('toast').classList.add('show');clearTimeout(st.toastT);st.toastT=setTimeout(()=>{$('toast').classList.remove('show');st.removed=null;},4000*st.slow);
+}
+$('undo').onclick=()=>{if(!st.removed)return;st.entries.push(st.removed);st.lastId=st.removed.id;st.removed=null;$('toast').classList.remove('show');sync(false);};
+
+/* лист */
+const num=id=>{const v=parseFloat(($(id).value||'').replace(',','.'));return isFinite(v)&&v>=0?Math.round(v):0;};
+function openSheet(){['iName','iK','iP','iF','iC'].forEach(i=>$(i).value='');$('iTpl').checked=false;$('scrim').classList.add('show');$('sheet').classList.add('show');setTimeout(()=>$('iName').focus({preventScroll:true}),st.reduced?0:360);}
+function closeSheet(){$('scrim').classList.remove('show');$('sheet').classList.remove('show');}
+$('addBtn').onclick=openSheet;$('own').onclick=openSheet;$('scrim').onclick=closeSheet;$('iNo').onclick=closeSheet;
+$('sheet').onsubmit=ev=>{ev.preventDefault();const p=num('iP'),f=num('iF'),c=num('iC');let k=num('iK');if(!k)k=p*4+f*9+c*4;
+  if(!k){$('iK').focus();return;}
+  const name=($('iName').value||'').trim()||'Без названия';
+  if($('iTpl').checked){M().tpl.unshift([name,k,p,f,c]);renderChips();}
+  closeSheet();add({name,k,p,f,c});};
+
+$('addTpl').onclick=()=>{eat(st.tplN%M().tpl.length);st.tplN++;};
+$('reset').onclick=()=>{load(false);sync(true);};
+$('empty').onclick=()=>{load(true);sync(true);};
+
+/* ---------- рисование ---------- */
+const DPR=Math.min(2,window.devicePixelRatio||1);
+const g=(()=>{const c=$('art');c.width=360*DPR;c.height=780*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return x;})();
+const celT=now=>st.cel>0?(now-st.cel)/st.slow:-1;
+const bump=(t,i,step)=>{const k=(t-500-i*step)/300;return (k>0&&k<1)?Math.sin(Math.PI*k):0;};
+const toneCol=k=>k==='p'?C.ink:k==='f'?mix():C.accent;
+let _mix=null,_mixKey='';function mix(){const key=C.ink+C.bg;if(key!==_mixKey){_mixKey=key;_mix=getComputedStyle(document.querySelector('.t2')||document.body).backgroundColor;}return _mix;}
+function trailPath(t,P,draw){ // след 110 dp, 14 частей, 900 мс + 200 мс угасание
+  if(t<0||t>=1100)return;const L=110,head=std(clamp(t/900))*(P+L),fade=1-clamp((t-900)/200);g.save();g.strokeStyle=C.ink;g.lineWidth=2.5;g.lineCap='round';
+  for(let k=0;k<14;k++){const a0=clamp(head-L*(k+1)/14,0,P),a1=clamp(head-L*k/14,0,P);if(a1<=a0)continue;g.globalAlpha=(1-k/14)*fade;draw(a0,a1);}g.restore();}
+
+// 01 Квадрат: квадрат — метка еды; заполняется снизу по калориям, слои по энергии из БЖУ
+const SQ={x:24,y:226,s:172,r:6};
+function sqPt(d){const s=SQ.s,x=SQ.x,y=SQ.y;d=((d%(4*s))+4*s)%(4*s);
+  if(d<s)return[x+d,y];if(d<2*s)return[x+s,y+d-s];if(d<3*s)return[x+s-(d-2*s),y+s];return[x,y+s-(d-3*s)];}
+function drawA(now){
+  const t=celT(now),G=M().kcal,f=clamp(sk.x/G),s=SQ.s;
+  g.save();g.beginPath();g.roundRect(SQ.x,SQ.y,s,s,SQ.r);g.clip();
+  g.fillStyle=C.track;g.fillRect(SQ.x,SQ.y,s,s);
+  const e={p:Math.max(0,sp.x)*4,f:Math.max(0,sf.x)*9,c:Math.max(0,sc.x)*4},E=e.p+e.f+e.c,h=s*f;let y=SQ.y+s;
+  if(E>0)['p','f','c'].forEach(k=>{const hh=h*e[k]/E;g.fillStyle=toneCol(k);g.fillRect(SQ.x,y-hh,s,hh+.5);y-=hh;});
+  // тонкий просвет между слоями
+  if(E>0){g.fillStyle=C.bg;let yy=SQ.y+s;['p','f'].forEach(k=>{yy-=h*e[k]/E;if(h*e[k]/E>2)g.fillRect(SQ.x,yy-.75,s,1.5);});}
+  g.restore();
+  // шкала справа внутри квадрата, каждые 10 %
+  for(let i=1;i<10;i++){const yy=SQ.y+s-s*i/10,b=t>=0?bump(t,i,40):0,len=(i===5?10:6)+6*b;g.strokeStyle=i/10<=f?C.bg:C.muted;g.globalAlpha=i/10<=f?.9:.7;g.lineWidth=1;g.beginPath();g.moveTo(SQ.x+s-len,yy);g.lineTo(SQ.x+s,yy);g.stroke();}
+  g.globalAlpha=1;
+  // контур цели: пунктир до цели, сплошной после
+  g.strokeStyle=C.ink;g.lineWidth=1.2;g.setLineDash(f>=1?[]:[4,4]);g.beginPath();g.roundRect(SQ.x-.5,SQ.y-.5,s+1,s+1,SQ.r);g.stroke();g.setLineDash([]);
+  // подписи 0 и цель
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textBaseline='top';g.textAlign='left';g.fillText('0',SQ.x,SQ.y+s+8);g.textAlign='right';g.fillText(fmt(G),SQ.x+s,SQ.y+s+8);g.textAlign='left';
+  // кето: лимит углеводов — маленький квадрат-счётчик у угла не нужен, лимит в подписи справа
+  trailPath(t,4*s,(a0,a1)=>{g.beginPath();const p0=sqPt(a0);g.moveTo(p0[0],p0[1]);for(let d=Math.ceil(a0/s)*s;d<a1;d+=s){const p=sqPt(d);g.lineTo(p[0],p[1]);}const p1=sqPt(a1);g.lineTo(p1[0],p1[1]);g.stroke();});
+  if(t>1500)st.cel=-1;
+}
+// 02 Линейки: линия калорий и три линейки БЖУ с целью или лимитом
+const RL={x:24,w:312,ky:212,y0:240,gap:64};
+function drawB(now){
+  const t=celT(now),G=M().kcal,f=clamp(sk.x/G);
+  // калории
+  g.fillStyle=C.track;g.fillRect(RL.x,RL.ky,RL.w,3);g.fillStyle=C.accent;g.fillRect(RL.x,RL.ky,RL.w*f,3);
+  trailPath(t,RL.w,(a0,a1)=>{g.beginPath();g.moveTo(RL.x+a0,RL.ky-7);g.lineTo(RL.x+a1,RL.ky-7);g.stroke();});
+  const val={p:sp.x,f:sf.x,c:sc.x};
+  order().forEach((k,i)=>{const y=RL.y0+i*RL.gap+30,goal=M().g[k],isLim=k==='c'&&M().limitC,max=goal/.75,fr=clamp(val[k]/max),gx=RL.x+RL.w*.75;
+    g.fillStyle=C.track;g.beginPath();g.roundRect(RL.x,y,RL.w,6,3);g.fill();
+    if(fr>0){g.fillStyle=k==='c'?C.accent:C.ink;g.globalAlpha=k==='f'?.55:1;g.beginPath();g.roundRect(RL.x,y,Math.max(6,RL.w*fr),6,3);g.fill();g.globalAlpha=1;}
+    // деления под линейкой
+    for(let j=0;j<=20;j++){const x=RL.x+RL.w*j/20,b=t>=0?bump(t,j+i*3,22):0,len=(j%5===0?6:3)+4*b;g.strokeStyle=j/20<=fr?C.ink:C.line;g.lineWidth=1;g.beginPath();g.moveTo(x+.5,y+11);g.lineTo(x+.5,y+11+len);g.stroke();}
+    // отметка цели или лимита
+    g.strokeStyle=C.ink;g.lineWidth=isLim?2:1.2;g.beginPath();g.moveTo(gx,y-5);g.lineTo(gx,y+11);g.stroke();
+    if(isLim){g.fillStyle=C.ink;g.beginPath();g.moveTo(gx-4,y-9);g.lineTo(gx+4,y-9);g.lineTo(gx,y-4);g.closePath();g.fill();}
+  });
+  if(t>1500)st.cel=-1;
+}
+// 03 Приёмы: квадраты на шкале дня (размер по ккал) и полоса энергии БЖУ с ориентиром
+const TL={x:24,w:312,y:338,t0:360,t1:1440},EB={x:24,y:372,w:312,h:12};
+const tx=m=>TL.x+(m-TL.t0)/(TL.t1-TL.t0)*TL.w;
+function drawC(now){
+  const t=celT(now);
+  g.strokeStyle=C.line;g.lineWidth=1;g.beginPath();g.moveTo(TL.x,TL.y+.5);g.lineTo(TL.x+TL.w,TL.y+.5);g.stroke();
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textBaseline='top';g.textAlign='center';
+  for(let h=6;h<=24;h+=3){const x=tx(h*60);g.fillRect(x-.5,TL.y,1,4);g.fillText(String(h).padStart(2,'0'),x,TL.y+8);}
+  // сейчас
+  const nx=tx(st.clock);g.strokeStyle=C.muted;g.setLineDash([2,3]);g.beginPath();g.moveTo(nx+.5,TL.y-96);g.lineTo(nx+.5,TL.y);g.stroke();g.setLineDash([]);
+  // квадраты приёмов
+  const es=st.entries.slice().sort((a,b)=>a.t-b.t);
+  es.forEach((e,i)=>{const side=clamp(10+26*Math.sqrt(e.k/600),12,44),b=t>=0?bump(t,i,70):0,lift=8*b,x=tx(e.t)-side/2,y=TL.y-6-side-lift;
+    g.fillStyle=e.id===st.lastId?C.accent:C.ink;g.globalAlpha=e.id===st.lastId?1:.86;g.beginPath();g.roundRect(x,y,side,side,3);g.fill();g.globalAlpha=1;});
+  // полоса энергии
+  const e={p:Math.max(0,sp.x)*4,f:Math.max(0,sf.x)*9,c:Math.max(0,sc.x)*4},E=e.p+e.f+e.c;
+  g.fillStyle=C.track;g.beginPath();g.roundRect(EB.x,EB.y,EB.w,EB.h,3);g.fill();
+  if(E>0){let x=EB.x;g.save();g.beginPath();g.roundRect(EB.x,EB.y,EB.w,EB.h,3);g.clip();
+    order().forEach((k,i)=>{const w=EB.w*e[k]/E;g.fillStyle=toneCol(k);g.fillRect(x,EB.y,w,EB.h);x+=w;if(i<2){g.fillStyle=C.bg;g.fillRect(x-1,EB.y,2,EB.h);}});g.restore();}
+  // ориентир: треугольники над полосой на границах долей
+  const rt=M().ratio,ri={p:rt[0],f:rt[1],c:rt[2]};let acc=0;g.fillStyle=C.ink;
+  order().slice(0,2).forEach(k=>{acc+=ri[k];const x=EB.x+EB.w*acc/100;g.beginPath();g.moveTo(x-4,EB.y-8);g.lineTo(x+4,EB.y-8);g.lineTo(x,EB.y-3);g.closePath();g.fill();});
+  trailPath(t,EB.w,(a0,a1)=>{g.beginPath();g.moveTo(EB.x+a0,EB.y+EB.h+6);g.lineTo(EB.x+a1,EB.y+EB.h+6);g.stroke();});
+  g.textAlign='left';
+  if(t>1500)st.cel=-1;
+}
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000)/st.slow;last=now;[sk,sp,sf,sc].forEach(s=>s.step(dt));g.clearRect(0,0,360,780);
+  [drawA,drawB,drawC][st.v](now);requestAnimationFrame(loop);}
+
+/* ---------- панель ---------- */
+const V=[
+ {name:'Квадрат',idea:'Квадрат — метка еды в приложении — заполняется снизу по калориям. Внутри три слоя: сколько энергии дали белки, жиры и углеводы. Справа граммы с целью; в кето углеводы показаны как лимит. При цели след обходит квадрат, деления шкалы вытягиваются волной, пунктир становится сплошным.',
+  pc:[['Плюсы','Прямая родня «Мерному сосуду» воды: один язык во всём приложении. Состав дня виден одним взглядом.'],['Минусы','Слои показывают доли энергии, а не граммы — нужна короткая подсказка при первом открытии.'],['В коде','Canvas, как сосуд; слои из БЖУ × 4/9/4.']]},
+ {name:'Линейки',idea:'Сверху тонкая линия калорий акцентом. Ниже три линейки БЖУ с делениями и отметкой цели на ¾ длины, так перебор тоже виден. В кето первыми идут жиры, а у углеводов отметка-лимит с треугольником. При цели по линии калорий бежит след, деления подпрыгивают волной.',
+  pc:[['Плюсы','Самый точный и «приборный», лучше всего для кето, где важны граммы углеводов.'],['Минусы','Меньше образа, больше цифр; ближе к обычным трекерам.'],['В коде','Три одинаковых компонента линейки; проще всего тестировать.']]},
+ {name:'Приёмы',idea:'Шкала дня 06–24: каждый приём пищи — квадрат на своём времени, размер по калориям, последний акцентом. Под ней одна полоса: доли энергии белков, жиров и углеводов и треугольники-ориентиры (обычный 20/30/50, кето 25/70/5). При цели квадраты подпрыгивают волной, под полосой бежит след.',
+  pc:[['Плюсы','Видно ритм еды за день — пригодится для будущего таймера голодания. Перекликается с «Часами дня» в ходьбе.'],['Минусы','Нет прибора «сколько осталось» — только число и подпись; ориентир по долям сложнее понять.'],['В коде','Нужен час записи (уже есть); Canvas шкалы и полосы.']]},
+];
+const vw=$('variants');
+V.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="n">0${i+1}</span><span></span>`;b.lastChild.textContent=v.name;b.onclick=()=>setV(i);vw.appendChild(b);});
+function setV(i){st.v=i;[...vw.children].forEach((b,k)=>b.classList.toggle('on',k===i));
+  const v=V[i];$('dName').textContent=v.name;$('dIdea').textContent=v.idea;
+  const pc=$('dPc');pc.textContent='';v.pc.forEach(([a,b])=>{const li=document.createElement('li');li.append(el('b',null,a),el('span',null,b));pc.appendChild(li);});
+  renderChips();renderMacro();renderList();}
+function setMode(m){st.mode=m;[...$('mode').children].forEach(b=>b.classList.toggle('on',b.dataset.m===m));load(false);renderChips();sync(true);}
+[...$('mode').children].forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key>='1'&&e.key<='3')setV(+e.key-1);if(e.key==='Escape')closeSheet();});
+$('slow').onchange=e=>{st.slow=e.target.checked?4:1;};
+const mq=matchMedia('(prefers-reduced-motion: reduce)');$('rm').checked=mq.matches;st.reduced=mq.matches;$('rm').onchange=e=>{st.reduced=e.target.checked;};
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';readColors();_mixKey='';}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);
+  $('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);
+fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+st.mode='norm';[...$('mode').children].forEach(b=>b.classList.toggle('on',b.dataset.m==='norm'));load(false);sync(true);setV(0);requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

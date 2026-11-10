@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Мерный сосуд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3;
+  --accent:#2D64D2; --on-accent:#FFFFFF; --bezel:#1B1A18;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422;
+    --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422;
+  --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+::selection{background:var(--accent);color:var(--on-accent)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600;letter-spacing:-.01em}
+.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.ghost:hover{border-color:var(--muted)}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--ink);margin:0}
+
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);color:var(--ink);user-select:none;-webkit-user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:12}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:12}
+
+.view{position:absolute;inset:0}
+.view[hidden]{display:none}
+.hd{position:absolute;left:24px;right:24px;top:58px}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.big{font-weight:500;letter-spacing:-.035em;line-height:1;display:flex;align-items:baseline;gap:4px;font-size:48px}
+.unit{font-weight:400;letter-spacing:0;color:var(--muted);font-size:22px}
+.cap{font-size:13px;color:var(--muted);margin-top:10px}
+.art{position:absolute;left:0;top:0;width:360px;height:780px;pointer-events:none}
+.vessel{position:absolute;cursor:ns-resize;touch-action:none;z-index:3}
+
+.roll{display:inline-flex;flex-direction:row-reverse}
+.slot{position:relative;display:inline-block;overflow:hidden;height:1.12em;line-height:1.12em}
+.slot span{display:block;white-space:pre}
+.slot span.out{position:absolute;left:0;top:0}
+
+.press{transition:transform 160ms cubic-bezier(.2,0,0,1)}
+.press:active{transform:scale(.96)}
+.ico{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
+.ico .w{stroke:var(--accent)}
+.lbl{font-size:13px;color:var(--muted)}
+.entry{display:flex;align-items:center;height:52px;border-top:1px solid var(--line)}
+.entry:last-child{border-bottom:1px solid var(--line)}
+.entry .t{font-size:13px;color:var(--muted);width:52px}
+.entry .v{flex:1;font-weight:500;font-size:15px}
+.entry button{width:48px;height:48px;display:grid;place-items:center;color:var(--muted);margin-right:-14px}
+.entry button svg{width:12px;height:12px}
+.empty{font-size:14px;color:var(--muted);padding:12px 0}
+
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;z-index:4;background:var(--bg)}
+.nav span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted)}
+.nav span::before{content:"";width:4px;height:4px;border-radius:50%;background:transparent}
+.nav span.on{color:var(--ink);font-weight:500}
+.nav span.on::before{background:var(--ink)}
+
+.undo{position:absolute;left:16px;right:16px;bottom:72px;min-height:56px;border-radius:16px;background:var(--ink);color:var(--bg);display:flex;align-items:center;padding-left:16px;transform:translateY(140%);opacity:0;transition:transform 150ms cubic-bezier(.3,0,.8,.15),opacity 150ms;z-index:9}
+.undo.show{transform:none;opacity:1;transition:transform 280ms cubic-bezier(.05,.7,.1,1),opacity 280ms}
+.undo span{flex:1;font-size:15px}
+.undo button{height:48px;padding:0 16px;font-weight:500;color:var(--bg);font-size:15px}
+#ink{position:absolute;left:0;top:0;width:360px;height:780px;pointer-events:none;z-index:10}
+
+/* 01 Колонка: сосуд слева, справа число, плитки 2×2, список */
+#v1 .total{position:absolute;left:128px;right:24px;top:132px}
+#v1 .tiles{position:absolute;left:128px;right:24px;top:240px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{height:88px;border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:14px}
+.tile.primary{border-color:var(--ink);font-weight:600}
+#v1 .list{position:absolute;left:128px;right:24px;top:456px}
+#v1 .list .lbl{margin-bottom:6px}
+
+/* 02 По центру */
+#v2 .total{position:absolute;left:24px;right:24px;top:118px;text-align:center}
+#v2 .big{justify-content:center;font-size:56px}
+#v2 .unit{font-size:26px}
+#v2 .row4{position:absolute;left:24px;right:24px;top:540px;display:flex;justify-content:space-between}
+.chip{width:72px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0;font-size:13px;border-radius:16px}
+.chip.primary{font-weight:600}
+.chip.primary .ico{color:var(--ink)}
+#v2 .lastline{position:absolute;left:24px;right:24px;top:636px}
+
+/* 03 Полка */
+#v3 .total{position:absolute;left:144px;right:24px;top:132px}
+#v3 .shelf{position:absolute;left:144px;right:24px;top:236px}
+.srow{display:flex;align-items:center;gap:14px;width:100%;height:64px;border-top:1px solid var(--line);font-size:17px;text-align:left}
+.srow:last-child{border-bottom:1px solid var(--line)}
+.srow.primary{font-weight:600}
+.srow .plus{margin-left:auto;color:var(--muted);font-size:20px;font-weight:300}
+#v3 .hist{position:absolute;left:144px;right:24px;top:520px;display:flex;justify-content:space-between;align-items:center;height:48px;font-size:14px;color:var(--muted)}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:420px;background:var(--bg);border-top:1px solid var(--line);border-radius:24px 24px 0 0;z-index:11;padding:14px 24px 24px;transform:translateY(105%);transition:transform 300ms cubic-bezier(.05,.7,.1,1)}
+.sheet.show{transform:none}
+.sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 16px}
+.sheet h3{margin:0 0 10px;font-size:20px;font-weight:600;letter-spacing:-.01em}
+.scrim{position:absolute;inset:0;background:var(--ink);opacity:0;pointer-events:none;transition:opacity 300ms;z-index:10}
+.scrim.show{opacity:.25;pointer-events:auto}
+
+/* Панель */
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:24px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.desc h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.try{font-size:13px;border-left:2px solid var(--ink);padding:2px 0 2px 12px}
+.icons{display:flex;gap:18px;margin:6px 0 0;color:var(--ink)}
+.icons div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+
+@media (max-width:900px){
+  .layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}
+  .panel{width:100%;max-width:380px;flex-basis:auto}
+  .top{padding:16px}
+}
+</style>
+</head>
+<body>
+<!-- Иконки порций: один штрих 1,5, скругления, вода внутри — акцентная линия. Высота растёт с объёмом. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i150" viewBox="0 0 28 28"><path d="M9.5 13h9l-1 10.5h-7z"/><path class="w" d="M10 17.5h8"/></symbol>
+  <symbol id="i250" viewBox="0 0 28 28"><path d="M8.5 6h11l-1.4 17.5h-8.2z"/><path class="w" d="M9.3 13h9.4"/></symbol>
+  <symbol id="i350" viewBox="0 0 28 28"><path d="M6.5 8.5h12v12.5a2.5 2.5 0 0 1-2.5 2.5h-7a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M18.5 11.5h1.8a2.7 2.7 0 0 1 0 5.4h-1.8"/><path class="w" d="M6.5 13.5h12"/></symbol>
+  <symbol id="i500" viewBox="0 0 28 28"><path d="M12 2.5h4v3.2l2.3 3.3v13a2.5 2.5 0 0 1-2.5 2.5h-3.6a2.5 2.5 0 0 1-2.5-2.5V9l2.3-3.3z"/><path class="w" d="M9.7 14h8.6"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="brand"><b>Project XO</b><span>«Вода»: мерный сосуд, проще</span></div>
+  <div class="ctrls">
+    <label class="chk"><input type="checkbox" id="slow"> Замедлить ×4</label>
+    <label class="chk"><input type="checkbox" id="rm"> Меньше анимаций</label>
+    <button class="ghost" id="theme" type="button">Тёмная тема</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="device-box" id="deviceBox">
+    <div class="device" id="device">
+      <div class="screen" id="screen">
+        <div class="status"><span>14:20</span><span>100 %</span></div>
+        <canvas class="art" id="art" width="360" height="780" aria-hidden="true"></canvas>
+
+        <section class="view" id="v1" aria-label="Вариант 1">
+          <div class="hd"><div class="title">Вода</div><div class="date">Понедельник, 9 ноября</div></div>
+          <div class="vessel" data-vessel role="slider" aria-label="Своя порция: потяните вверх" tabindex="0"></div>
+          <div class="total"><div class="big"><span class="roll" data-roll></span><span class="unit">мл</span></div><div class="cap" data-cap></div></div>
+          <div class="tiles">
+            <button class="tile press" data-ml="150" type="button" aria-label="Добавить 150 мл"><svg class="ico"><use href="#i150"/></svg>150 мл</button>
+            <button class="tile press primary" data-ml="250" type="button" aria-label="Добавить 250 мл"><svg class="ico"><use href="#i250"/></svg>250 мл</button>
+            <button class="tile press" data-ml="350" type="button" aria-label="Добавить 350 мл"><svg class="ico"><use href="#i350"/></svg>350 мл</button>
+            <button class="tile press" data-ml="500" type="button" aria-label="Добавить 500 мл"><svg class="ico"><use href="#i500"/></svg>500 мл</button>
+          </div>
+          <div class="list"><div class="lbl">Сегодня</div><div data-list="3"></div></div>
+        </section>
+
+        <section class="view" id="v2" hidden aria-label="Вариант 2">
+          <div class="hd"><div class="title">Вода</div><div class="date">Понедельник, 9 ноября</div></div>
+          <div class="total"><div class="big"><span class="roll" data-roll></span><span class="unit">мл</span></div><div class="cap" data-cap></div></div>
+          <div class="vessel" data-vessel role="slider" aria-label="Своя порция: потяните вверх" tabindex="0"></div>
+          <div class="row4">
+            <button class="chip press" data-ml="150" type="button" aria-label="Добавить 150 мл"><svg class="ico"><use href="#i150"/></svg>150</button>
+            <button class="chip press primary" data-ml="250" type="button" aria-label="Добавить 250 мл"><svg class="ico"><use href="#i250"/></svg>250</button>
+            <button class="chip press" data-ml="350" type="button" aria-label="Добавить 350 мл"><svg class="ico"><use href="#i350"/></svg>350</button>
+            <button class="chip press" data-ml="500" type="button" aria-label="Добавить 500 мл"><svg class="ico"><use href="#i500"/></svg>500</button>
+          </div>
+          <div class="lastline"><div data-list="1"></div></div>
+        </section>
+
+        <section class="view" id="v3" hidden aria-label="Вариант 3">
+          <div class="hd"><div class="title">Вода</div><div class="date">Понедельник, 9 ноября</div></div>
+          <div class="vessel" data-vessel role="slider" aria-label="Своя порция: потяните вверх" tabindex="0"></div>
+          <div class="total"><div class="big"><span class="roll" data-roll></span><span class="unit">мл</span></div><div class="cap" data-cap></div></div>
+          <div class="shelf">
+            <button class="srow press" data-ml="150" type="button" aria-label="Добавить 150 мл"><svg class="ico"><use href="#i150"/></svg>150 мл<span class="plus">+</span></button>
+            <button class="srow press primary" data-ml="250" type="button" aria-label="Добавить 250 мл"><svg class="ico"><use href="#i250"/></svg>250 мл<span class="plus">+</span></button>
+            <button class="srow press" data-ml="350" type="button" aria-label="Добавить 350 мл"><svg class="ico"><use href="#i350"/></svg>350 мл<span class="plus">+</span></button>
+            <button class="srow press" data-ml="500" type="button" aria-label="Добавить 500 мл"><svg class="ico"><use href="#i500"/></svg>500 мл<span class="plus">+</span></button>
+          </div>
+          <button class="hist" id="histBtn" type="button"><span id="histCount"></span><span aria-hidden="true">›</span></button>
+        </section>
+
+        <nav class="nav" aria-hidden="true"><span>Сегодня</span><span class="on">Вода</span><span>Еда</span><span>Ходьба</span></nav>
+        <div class="scrim" id="scrim"></div>
+        <div class="sheet" id="sheet" role="dialog" aria-label="Записи за сегодня"><div class="grab"></div><h3>Сегодня</h3><div data-list="6"></div></div>
+        <div class="undo" id="undo" role="status"><span id="undoMsg"></span><button id="undoBtn" type="button"></button></div>
+        <canvas id="ink" width="360" height="780" aria-hidden="true"></canvas>
+        <div class="gesture"></div><div class="punch"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="group">
+      <div class="label">Компоновка</div>
+      <div class="variants" id="variants"></div>
+    </div>
+    <div class="desc">
+      <h2 id="dName"></h2>
+      <p id="dIdea"></p>
+      <div class="try" id="dTry"></div>
+    </div>
+    <div class="group" style="margin-top:22px">
+      <div class="label">Иконки порций</div>
+      <div class="icons">
+        <div><svg class="ico"><use href="#i150"/></svg>150</div>
+        <div><svg class="ico"><use href="#i250"/></svg>250</div>
+        <div><svg class="ico"><use href="#i350"/></svg>350</div>
+        <div><svg class="ico"><use href="#i500"/></svg>500</div>
+      </div>
+    </div>
+    <p class="note">Подписи шкалы теперь внутри сосуда, ничего не налезает. Своя порция во всех трёх: потяните сосуд вверх. Клавиши 1–3 переключают компоновки.</p>
+  </aside>
+</main>
+
+<script>
+(function(){
+'use strict';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+function bezier(x1,y1,x2,y2){
+  const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+  const sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,dx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t);if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t-=e/d;}
+    if(!(t>=0&&t<=1)||Math.abs(sx(t)-x)>1e-4){let lo=0,hi=1;t=x;for(let i=0;i<40;i++){if(sx(t)<x)lo=t;else hi=t;t=(lo+hi)/2;}}return sy(t);};
+}
+const fosi=bezier(.4,0,.2,1);
+class Spr{constructor(v,z,k){this.x=v;this.v=0;this.t=v;this.z=z;this.k=k;}
+  to(t,instant){this.t=t;if(instant){this.x=t;this.v=0;}}
+  step(dt){if(this.x===this.t&&this.v===0)return;const c=2*this.z*Math.sqrt(this.k),n=Math.max(1,Math.ceil(dt/.004)),h=dt/n;
+    for(let i=0;i<n;i++){const a=-this.k*(this.x-this.t)-c*this.v;this.v+=a*h;this.x+=this.v*h;}
+    if(Math.abs(this.x-this.t)<.05&&Math.abs(this.v)<.05){this.x=this.t;this.v=0;}}}
+const INK={COUNT:56,SPREAD:240,TRAVEL:600,TOTAL:840,ARRIVE:360,CLOUD:18,END:3,RMIN:.9,RMAX:1.6,CMIN:.18,CMAX:.28,FIN:.10,FOUT:.18};
+function particles(seed){
+  let s=(Math.imul(seed,747796405)+(2891336453|0))|0;
+  const next=()=>{s=(Math.imul(s,747796405)+1442695041)|0;let w=Math.imul(((s>>>((s>>>28)+4))^s),277803737);w=(w>>>22)^w;return (w>>>8)/16777216;};
+  const disk=()=>{const r=Math.sqrt(next()),a=2*Math.PI*next();return [r*Math.cos(a),r*Math.sin(a)];};
+  const side=next()<.5?-1:1,P=[];
+  for(let i=0;i<INK.COUNT;i++){const base=Math.pow(i/INK.COUNT,1.4);const d=clamp(base+(next()-.5)*.04)*INK.SPREAD,a=disk(),b=disk();
+    P.push({d,sx:a[0],sy:a[1],ex:b[0],ey:b[1],c:lerp(INK.CMIN,INK.CMAX,next()),r:lerp(INK.RMIN,INK.RMAX,next())});}
+  return {side,P};
+}
+function dot(f,p,t){const l=(t-p.d)/INK.TRAVEL;if(l<=0||l>=1)return null;const e=fosi(l);
+  const sx=f.x0+p.sx*INK.CLOUD,sy=f.y0+p.sy*INK.CLOUD,ex=f.x1+p.ex*INK.END,ey=f.y1+p.ey*INK.END;
+  const dx=ex-sx,dy=ey-sy,len=Math.max(1,Math.hypot(dx,dy)),bend=p.c*len*f.side;
+  const cx=(sx+ex)/2-dy/len*bend,cy=(sy+ey)/2+dx/len*bend,u=1-e;
+  return {x:u*u*sx+2*u*e*cx+e*e*ex,y:u*u*sy+2*u*e*cy+e*e*ey,r:p.r*lerp(1,.7,e),a:l<INK.FIN?l/INK.FIN:(l>1-INK.FOUT?(1-l)/INK.FOUT:1)};}
+
+const $=id=>document.getElementById(id);
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const GOAL=2000;
+const DAY0=Date.parse('2026-11-09T00:00:00'),at=(h,m)=>DAY0+(h*60+m)*60000;
+const START=performance.now(),NOW0=at(14,20),demoNow=()=>NOW0+(performance.now()-START);
+const st={v:0,slow:1,reduced:false,seed:1,id:1,flows:[],entries:[],hi:-1,drag:null};
+[[7,10,600],[9,40,350],[11,5,250],[12,30,300]].forEach(([h,m,ml])=>st.entries.push({id:st.id++,ml,time:at(h,m)}));
+const total=()=>st.entries.reduce((a,e)=>a+e.ml,0);
+const level=new Spr(total(),.82,220);
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ');
+const hm=t=>new Date(t).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+
+/* Сосуды трёх компоновок */
+const VS=[{x:24,y:128,w:84,h:548},{x:122,y:228,w:116,h:286},{x:24,y:128,w:100,h:548}];
+const vs=()=>VS[st.v];
+// Шкала растёт, если перелили: всегда видно цель и запас над ней.
+const cap=()=>Math.max(2500,Math.ceil((Math.max(total(),level.x)+250)/500)*500);
+const yOf=ml=>{const r=vs();return r.y+r.h-r.h*clamp(ml/cap());};
+
+function Roller(el){this.el=el;this.slots=[];this.val=null;}
+Roller.prototype.set=function(text,val){
+  const anim=this.val!==null&&!st.reduced,up=this.val===null||val>=this.val;this.val=val;const n=text.length;
+  while(this.slots.length<n){const s=document.createElement('span');s.className='slot';const c=document.createElement('span');s.appendChild(c);this.el.appendChild(s);this.slots.push({el:s,cur:c,ch:''});}
+  while(this.slots.length>n){this.slots.pop().el.remove();}
+  for(let i=0;i<n;i++){const ch=text[n-1-i],s=this.slots[i];if(s.ch===ch)continue;s.ch=ch;
+    if(!anim||!s.cur.textContent){s.cur.textContent=ch;continue;}
+    const old=s.cur,nw=document.createElement('span');nw.textContent=ch;old.classList.add('out');s.el.appendChild(nw);s.cur=nw;
+    const d=i*45*st.slow,dur=420*st.slow,fd=140*st.slow,ease='cubic-bezier(.2,1.25,.4,1)';
+    old.animate([{transform:'translateY(0)'},{transform:`translateY(${up?-100:100}%)`}],{duration:dur,delay:d,easing:ease,fill:'forwards'});
+    old.animate([{opacity:1},{opacity:0}],{duration:fd,delay:d,fill:'forwards'}).onfinish=()=>setTimeout(()=>old.remove(),dur);
+    nw.animate([{transform:`translateY(${up?100:-100}%)`},{transform:'translateY(0)'}],{duration:dur,delay:d,easing:ease,fill:'backwards'});
+    nw.animate([{opacity:0},{opacity:1}],{duration:fd,delay:d,fill:'backwards'});}
+};
+const rollers=[...document.querySelectorAll('[data-roll]')].map(el=>new Roller(el));
+
+function centerOf(el){const b=el.getBoundingClientRect(),s=$('screen').getBoundingClientRect(),k=s.width/360;return [(b.left-s.left+b.width/2)/k,(b.top-s.top+b.height/2)/k];}
+let undoTimer=0;
+function showUndo(msg,act,fn){$('undoMsg').textContent=msg;$('undoBtn').textContent=act;$('undoBtn').onclick=()=>{fn();hideUndo();};
+  $('undo').classList.add('show');clearTimeout(undoTimer);undoTimer=setTimeout(hideUndo,4000*st.slow);}
+function hideUndo(){$('undo').classList.remove('show');}
+function sync(){
+  const t=total(),left=Math.max(0,GOAL-t);
+  rollers.forEach(r=>r.set(fmt(t),t));
+  document.querySelectorAll('[data-cap]').forEach(c=>c.textContent=left===0?`цель ${fmt(GOAL)} мл есть`:`ещё ${fmt(left)} из ${fmt(GOAL)} мл`);
+  $('histCount').textContent=`Записи за сегодня · ${st.entries.length}`;
+  level.to(t,st.reduced);renderLists();
+}
+function add(ml,from){
+  const flying=!st.reduced;
+  if(flying){const r=vs();st.flows.push({...particles(st.seed++),x0:from[0],y0:from[1],x1:r.x+r.w/2,y1:yOf(level.x),t0:performance.now()});}
+  setTimeout(()=>{const e={id:st.id++,ml,time:demoNow()};st.entries.push(e);st.hi=e.id;sync();
+    showUndo(`Добавлено ${fmt(ml)} мл`,'Отменить',()=>{st.entries=st.entries.filter(x=>x.id!==e.id);sync();});},(flying?INK.ARRIVE:0)*st.slow);
+}
+function remove(id){const e=st.entries.find(x=>x.id===id);if(!e)return;st.entries=st.entries.filter(x=>x.id!==id);sync();
+  showUndo('Запись удалена','Вернуть',()=>{st.entries.push(e);sync();});}
+function renderLists(){
+  const sorted=[...st.entries].sort((a,b)=>b.time-a.time);
+  document.querySelectorAll('[data-list]').forEach(box=>{
+    const n=+box.dataset.list;box.textContent='';
+    if(!sorted.length){const p=document.createElement('div');p.className='empty';p.textContent='Пока пусто.';box.appendChild(p);return;}
+    sorted.slice(0,n).forEach(e=>{const r=document.createElement('div');r.className='entry';
+      const t=document.createElement('span');t.className='t';t.textContent=hm(e.time);
+      const v=document.createElement('span');v.className='v';v.textContent=fmt(e.ml)+' мл';
+      const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',`Удалить ${e.ml} мл в ${hm(e.time)}`);
+      b.innerHTML='<svg viewBox="0 0 12 12"><path d="M0 0L12 12M12 0L0 12" stroke="currentColor" stroke-width="1.6"/></svg>';b.onclick=()=>remove(e.id);
+      r.append(t,v,b);box.appendChild(r);
+      if(e.id===st.hi&&!st.reduced){r.animate([{height:'0px',opacity:0},{height:'52px',opacity:1}],{duration:280*st.slow,easing:'cubic-bezier(.05,.7,.1,1)'});}});
+  });
+  st.hi=-1;
+}
+document.querySelectorAll('[data-ml]').forEach(b=>b.onclick=()=>add(+b.dataset.ml,centerOf(b)));
+
+/* Сосуд: потянуть вверх = своя порция (шаг 10 мл) */
+function placeVessels(){document.querySelectorAll('[data-vessel]').forEach((el,i)=>{const r=VS[i];Object.assign(el.style,{left:r.x+'px',top:r.y+'px',width:r.w+'px',height:r.h+'px'});
+  el.setAttribute('aria-valuemin','0');el.setAttribute('aria-valuemax',String(cap()));el.setAttribute('aria-valuenow',String(total()));});}
+function mlAt(ev){const s=$('screen').getBoundingClientRect(),k=s.width/360,y=(ev.clientY-s.top)/k,r=vs();return clamp((r.y+r.h-y)/r.h)*cap();}
+document.querySelectorAll('[data-vessel]').forEach(el=>{
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);st.drag={ml:mlAt(e)};});
+  el.addEventListener('pointermove',e=>{if(st.drag)st.drag.ml=mlAt(e);});
+  el.addEventListener('pointerup',()=>{if(!st.drag)return;const amt=Math.round((st.drag.ml-total())/10)*10,y=yOf(st.drag.ml);st.drag=null;
+    if(amt>=10){const r=vs();add(Math.min(3000,amt),[r.x+r.w/2,y]);}});
+  el.addEventListener('keydown',e=>{if(e.key==='ArrowUp'){const r=vs();add(50,[r.x+r.w/2,yOf(total())-24]);e.preventDefault();}});
+});
+
+/* Рисование */
+const DPR=Math.min(2,window.devicePixelRatio||1);
+const g=(()=>{const c=$('art');c.width=360*DPR;c.height=780*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return x;})();
+const gi=(()=>{const c=$('ink');c.width=360*DPR;c.height=780*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return x;})();
+function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function drawVessel(){
+  g.clearRect(0,0,360,780);
+  const {x,y,w,h}=vs(),r=Math.min(22,w/4),sy=yOf(level.x),sag=clamp(level.v*.004,-6,6),top=cap();
+  g.save();rr(x,y,w,h,r);g.clip();
+  g.fillStyle=C.track;g.fillRect(x,y,w,h);
+  g.fillStyle=C.accent;g.beginPath();g.moveTo(x,sy);g.quadraticCurveTo(x+w/2,sy+sag,x+w,sy);g.lineTo(x+w,y+h);g.lineTo(x,y+h);g.closePath();g.fill();
+  // шкала внутри сосуда: штрихи справа, числа слева, цвет меняется на воде
+  g.font='400 11px Inter, sans-serif';g.textBaseline='middle';g.lineWidth=1;
+  const step=top>3000?1000:500;
+  for(let ml=step;ml<top;ml+=step){const ty=Math.round(yOf(ml))+.5,under=ty>sy,goal=ml===GOAL;
+    const col=under?C.bg:C.muted;g.strokeStyle=col;g.fillStyle=col;g.globalAlpha=under?.85:1;
+    if(goal){g.setLineDash([3,3]);g.beginPath();g.moveTo(x,ty);g.lineTo(x+w,ty);g.stroke();g.setLineDash([]);}
+    else{g.beginPath();g.moveTo(x+w-12,ty);g.lineTo(x+w,ty);g.stroke();}
+    // подпись не спорит с поверхностью и ручкой
+    if(Math.abs(ty-sy)>12){g.font=`${goal?600:400} 11px Inter, sans-serif`;g.fillText(fmt(ml),x+10,ty-(goal?9:0));}g.globalAlpha=1;}
+  // ручка на поверхности: подсказка «можно тянуть»
+  if(!st.drag){g.fillStyle=C.bg;g.globalAlpha=.9;rr(x+w/2-12,sy-7,24,3,1.5);g.fill();g.globalAlpha=1;}
+  g.restore();
+  g.strokeStyle=C.line;rr(x+.5,y+.5,w-1,h-1,r);g.stroke();
+  if(st.drag){const dy=yOf(st.drag.ml),amt=Math.round((st.drag.ml-total())/10)*10;
+    g.setLineDash([3,3]);g.strokeStyle=C.ink;g.beginPath();g.moveTo(x-4,dy);g.lineTo(x+w+4,dy);g.stroke();g.setLineDash([]);
+    const txt=amt>0?`+${fmt(amt)} мл`:'выше уровня';g.font='600 13px Inter, sans-serif';const tw=g.measureText(txt).width;
+    g.fillStyle=C.ink;rr(x+w/2-tw/2-8,dy-30,tw+16,22,11);g.fill();g.fillStyle=C.bg;g.textBaseline='middle';g.fillText(txt,x+w/2-tw/2,dy-19);}
+}
+function drawInk(now){gi.clearRect(0,0,360,780);gi.fillStyle=C.ink;
+  st.flows=st.flows.filter(f=>(now-f.t0)/st.slow<=INK.TOTAL);
+  for(const f of st.flows){const t=(now-f.t0)/st.slow;for(const p of f.P){const d=dot(f,p,t);if(!d)continue;gi.globalAlpha=d.a;gi.beginPath();gi.arc(d.x,d.y,d.r,0,2*Math.PI);gi.fill();}}
+  gi.globalAlpha=1;}
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000)/st.slow;last=now;level.step(dt);drawVessel();drawInk(now);requestAnimationFrame(loop);}
+
+/* История (вариант 3) */
+function sheet(open){$('sheet').classList.toggle('show',open);$('scrim').classList.toggle('show',open);}
+$('histBtn').onclick=()=>sheet(true);$('scrim').onclick=()=>sheet(false);
+
+/* Панель */
+const V=[
+ {name:'Колонка',idea:'Сосуд слева во всю высоту. Справа сверху вниз: сколько выпито, четыре плитки с иконками 2×2, три последние записи. Каждый блок в своей зоне с воздухом между ними.',tr:'Нажмите плитку или потяните сосуд вверх.'},
+ {name:'По центру',idea:'Самое простое. Число сверху, сосуд по центру, под ним четыре иконки в ряд, ниже только последняя запись. Ничего лишнего на экране.',tr:'Иконки под сосудом; сосуд тоже можно тянуть.'},
+ {name:'Полка',idea:'Сосуд слева, справа полка из четырёх строк «иконка, объём, плюс», крупные зоны нажатия. Список записей не занимает экран: открывается снизу по «Записи за сегодня».',tr:'Нажмите строку; откройте «Записи за сегодня».'},
+];
+const vw=$('variants');
+V.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="n">0${i+1}</span><span></span>`;b.lastChild.textContent=v.name;b.onclick=()=>setV(i);vw.appendChild(b);});
+function setV(i){st.v=i;['v1','v2','v3'].forEach((id,k)=>$(id).hidden=k!==i);[...vw.children].forEach((b,k)=>b.classList.toggle('on',k===i));
+  const v=V[i];$('dName').textContent=v.name;$('dIdea').textContent=v.idea;$('dTry').textContent=v.tr;hideUndo();sheet(false);placeVessels();}
+document.addEventListener('keydown',e=>{if(e.target.matches&&e.target.matches('[data-vessel]'))return;if(e.key>='1'&&e.key<='3')setV(+e.key-1);});
+$('slow').onchange=e=>{st.slow=e.target.checked?4:1;};
+const mq=matchMedia('(prefers-reduced-motion: reduce)');$('rm').checked=mq.matches;st.reduced=mq.matches;$('rm').onchange=e=>{st.reduced=e.target.checked;};
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';readColors();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);
+  $('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);
+fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');sync();setV(0);requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

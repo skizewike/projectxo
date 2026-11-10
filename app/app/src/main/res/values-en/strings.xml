@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">XO</string>
+
+    <!-- Number and date locale. -->
+    <string name="format_locale" translatable="false" tools:ignore="ExtraTranslation">en</string>
+
+    <!-- Tabs -->
+    <string name="tab_today">Today</string>
+    <string name="tab_water">Water</string>
+    <string name="tab_food">Food</string>
+    <string name="tab_steps">Walking</string>
+
+    <!-- Today -->
+    <string name="today_title">Today</string>
+    <string name="day_balance">Day balance</string>
+    <plurals name="day_balance_a11y">
+        <item quantity="one">Day balance, %d percent</item>
+        <item quantity="other">Day balance, %d percent</item>
+    </plurals>
+    <string name="quick_add">Add %1$s of water</string>
+
+    <!-- Modules -->
+    <string name="module_water">Water</string>
+    <string name="module_food">Food</string>
+    <string name="module_steps">Walking</string>
+    <string name="of_ml">of %1$s</string>
+    <string name="of_kcal">of %1$s kcal</string>
+    <plurals name="of_steps">
+        <item quantity="one">of %1$s step</item>
+        <item quantity="other">of %1$s steps</item>
+    </plurals>
+    <string name="module_row_a11y">%1$s, %2$s %3$s</string>
+
+    <!-- Water -->
+    <string name="water_left">%1$s more of %2$s</string>
+    <string name="water_done_title">Daily goal reached</string>
+    <string name="water_over">+%1$s over %2$s</string>
+    <string name="water_exact">exactly %1$s</string>
+    <string name="water_total_a11y">Drunk %1$s %2$s</string>
+    <string name="portion_add_a11y">Add %1$s</string>
+    <string name="water_list_title">Today</string>
+    <string name="vessel_a11y">Vessel: %1$s of %2$s. Drag up to pour your own amount.</string>
+    <string name="vessel_custom_action">Custom amount</string>
+    <string name="vessel_drag_amount">+%1$s</string>
+    <string name="vessel_drag_higher">above the level</string>
+    <string name="water_empty">Nothing yet. Tap “%1$s” to log the first glass.</string>
+    <string name="water_entry_a11y">%1$s at %2$s</string>
+    <string name="delete_entry_a11y">Delete entry: %1$s at %2$s</string>
+    <string name="custom_portion_title">Custom amount</string>
+    <string name="custom_portion_label">Amount, %1$s</string>
+    <string name="custom_portion_error">From %1$s to %2$s</string>
+    <string name="custom_portion_add">Add</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Walking -->
+    <plurals name="steps_unit">
+        <item quantity="one">step</item>
+        <item quantity="other">steps</item>
+    </plurals>
+    <string name="steps_left">%1$s more to %2$s</string>
+    <string name="steps_over">+%1$s over %2$s</string>
+    <string name="steps_exact">exactly %1$s</string>
+    <string name="goal_done_title">Daily goal reached</string>
+    <string name="steps_total_a11y">Steps today: %1$s. %2$s</string>
+    <string name="steps_hours_a11y">Steps by hour. Most at %1$s.</string>
+    <string name="steps_hours_empty_a11y">Steps by hour. No steps yet.</string>
+    <string name="steps_distance">Distance</string>
+    <string name="steps_distance_value">≈ %1$s km</string>
+    <string name="steps_active_hours">Active hours</string>
+    <string name="steps_best_hour">Peak hour</string>
+    <string name="steps_perm_title">Steps are counted by the phone’s sensor</string>
+    <string name="steps_perm_text">To see your steps for the day, allow the app to recognise physical activity. Data stays on the phone.</string>
+    <string name="steps_perm_allow">Allow</string>
+    <string name="steps_perm_settings">Open settings</string>
+    <string name="steps_no_sensor_title">This phone has no step sensor</string>
+    <string name="steps_no_sensor_text">You can add steps manually. Water and food work as usual.</string>
+    <string name="motion_text">XO can count steps from the phone’s motion. Keep the phone with you, in a pocket or in your hand. While counting, a notification stays in the shade.</string>
+    <string name="motion_start">Count steps</string>
+    <string name="motion_on">Steps are counted from the phone’s motion</string>
+    <string name="motion_stop">Stop counting</string>
+    <string name="motion_channel">Step counting</string>
+    <string name="motion_notif_title">Counting steps</string>
+    <string name="motion_notif_text_start">Counting while the phone is with you</string>
+    <string name="motion_notif_text">Today: %1$s %2$s</string>
+    <string name="steps_manual_add">Add steps</string>
+    <string name="steps_manual_open">Add steps manually</string>
+    <string name="steps_manual_title">Add steps</string>
+    <string name="steps_manual_label">Number of steps</string>
+    <string name="steps_manual_hint">Saved to the current hour</string>
+    <string name="steps_manual_added">Added: %1$s %2$s</string>
+
+    <!-- Undo -->
+    <string name="undo_deleted">Entry deleted</string>
+    <string name="undo_restore">Undo</string>
+    <string name="undo_added">Added %1$s</string>
+    <string name="undo_cancel">Undo</string>
+
+    <!-- Splash -->
+    <string name="splash_tagline">water · food · walking</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="less">Less</string>
+    <string name="more">More</string>
+    <string name="got_it">Got it</string>
+
+    <!-- First run: privacy -->
+    <string name="onb_privacy_title">Your data stays with you</string>
+    <string name="onb_privacy_lead">XO is a diary of water, food and movement. Here is how it treats what you enter.</string>
+    <string name="onb_privacy_1_t">On the phone only</string>
+    <string name="onb_privacy_1_s">No servers and no accounts. The app does not even need the internet.</string>
+    <string name="onb_privacy_2_t">No ads, no tracking</string>
+    <string name="onb_privacy_2_s">No analytics, no ad identifiers, nothing shared with third parties.</string>
+    <string name="onb_privacy_3_t">Delete any time</string>
+    <string name="onb_privacy_3_s">“Delete all data” in settings erases everything at once.</string>
+    <string name="onb_privacy_full">Full privacy policy</string>
+    <string name="onb_privacy_accept">Accept and continue</string>
+    <string name="policy_title">Privacy policy</string>
+    <string name="policy_h1">In short</string>
+    <string name="policy_p1">Everything you enter in XO is stored only on your phone. We have no servers, accounts, ads or analytics. We cannot see your data and we share it with no one.</string>
+    <string name="policy_h2">What data</string>
+    <string name="policy_p2">The profile you provide yourself: sex (optional), age, height, weight, workouts, goal. Water, food and step entries. Settings.</string>
+    <string name="policy_h3">Where it is stored</string>
+    <string name="policy_p3">In the app’s private folder on the phone. Other apps cannot access it. The app needs no internet permission.</string>
+    <string name="policy_h4">Permissions</string>
+    <string name="policy_p4">Physical activity is needed to count steps and can be declined. Notifications are for reminders, if you turned them on.</string>
+    <string name="policy_h5">Deletion</string>
+    <string name="policy_p5">“Delete all data” in settings erases everything at once, with no recovery. Uninstalling the app also erases everything.</string>
+    <string name="policy_h6">Adults only</string>
+    <string name="policy_p6">The calorie calculation is designed for people aged 18 and over.</string>
+    <string name="policy_h7">Not medical advice</string>
+    <string name="policy_p7">XO is a diary and a calculator of guidelines, not a medical device. If you have an illness, are pregnant or take medication, talk to a doctor before changing your diet.</string>
+    <string name="policy_h8">Contact</string>
+    <string name="policy_p8">varcolinz@gmail.com</string>
+
+    <!-- First run: comfort -->
+    <string name="onb_comfort_title">Easy to read</string>
+    <string name="onb_comfort_lead">Set it up your way. You can change everything later in settings.</string>
+    <string name="onb_text_size">Text size</string>
+    <string name="text_size_small">Small</string>
+    <string name="text_size_normal">Normal</string>
+    <string name="text_size_large">Large</string>
+    <string name="text_size_huge">Very large</string>
+    <string name="onb_theme">Theme</string>
+    <string name="theme_warm">Warm</string>
+    <string name="theme_acid">Acid</string>
+    <string name="theme_volt">Volt</string>
+    <string name="theme_blood">Red</string>
+    <string name="onb_contrast">High contrast</string>
+    <string name="onb_contrast_sub">Darker lines and labels</string>
+    <string name="onb_motion">Reduce motion</string>
+    <string name="onb_motion_sub">No movement, only a gentle fade</string>
+    <string name="onb_preview_caption">850 more to 2,300 ml</string>
+
+    <!-- First run: modules -->
+    <string name="onb_modules_title">What to track?</string>
+    <string name="onb_modules_lead">Turn on what you need. “Day balance” counts only the enabled ones.</string>
+    <string name="module_water_sub">how much you drank today</string>
+    <string name="module_food_sub">calories, protein, fat, carbs</string>
+    <string name="module_steps_sub">steps from the phone’s sensor</string>
+    <string name="onb_modules_need_one">At least one module is needed.</string>
+
+    <!-- First run: about you -->
+    <string name="onb_about_title">A little about you</string>
+    <string name="onb_about_lead">To calculate calories, water and steps. Stored only on the phone.</string>
+    <string name="onb_sex">Sex</string>
+    <string name="onb_sex_hint">used in the metabolism formula</string>
+    <string name="sex_male">Male</string>
+    <string name="sex_female">Female</string>
+    <string name="sex_unspecified">Prefer not to say</string>
+    <string name="onb_age">Age</string>
+    <string name="onb_age_hint">18 and over</string>
+    <string name="onb_height">Height</string>
+    <string name="onb_weight">Weight</string>
+    <string name="unit_years">years</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_ml">ml</string>
+    <string name="unit_oz">fl oz</string>
+    <string name="unit_water_ml">Millilitres</string>
+    <string name="unit_water_oz">Ounces</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_lb">lb</string>
+    <string name="unit_ft">ft</string>
+    <string name="onb_bmi_line">BMI %1$s · %2$s</string>
+    <string name="onb_hold_hint">Hold “+” or “−” to scroll faster.</string>
+    <string name="stepper_a11y">%1$s: %2$s %3$s</string>
+    <string name="bmi_under">below normal</string>
+    <string name="bmi_normal">normal</string>
+    <string name="bmi_over">above normal</string>
+    <string name="bmi_obese1">obesity class I</string>
+    <string name="bmi_obese2">obesity class II</string>
+    <string name="bmi_obese3">obesity class III</string>
+
+    <!-- First run: workouts and goal -->
+    <string name="onb_activity_title">How many times a week do you work out?</string>
+    <string name="onb_activity_lead">Any activity of 30 minutes or more: gym, running, swimming, dancing, brisk walking.</string>
+    <string name="act_none">I don’t work out</string>
+    <string name="act_none_sub">mostly a sedentary day</string>
+    <string name="act_low">Sometimes</string>
+    <string name="act_low_sub">1–2 workouts a week</string>
+    <string name="act_mid">Regularly</string>
+    <string name="act_mid_sub">3–4 workouts a week</string>
+    <string name="act_high">Often</string>
+    <string name="act_high_sub">5–6 workouts a week</string>
+    <string name="act_daily">Every day</string>
+    <string name="act_daily_sub">or heavy physical work</string>
+    <string name="onb_goal_title">Your goal</string>
+    <string name="onb_goal_lead">BMI %1$s — %2$s. We made a suggestion, but the choice is yours.</string>
+    <string name="goal_lose">Lose weight</string>
+    <string name="goal_lose_sub">a gentle calorie deficit</string>
+    <string name="goal_lose_disabled">unavailable at BMI below 18.5</string>
+    <string name="goal_keep">Maintain weight</string>
+    <string name="goal_keep_sub">calories at maintenance level</string>
+    <string name="goal_gain">Gain weight</string>
+    <string name="goal_gain_sub">a small surplus</string>
+    <string name="goal_suggested">suggested</string>
+    <string name="goal_under_note">If your weight drops for no reason, see a doctor.</string>
+
+    <!-- First run: reminders -->
+    <string name="onb_rem_title">Gentle reminders</string>
+    <string name="onb_rem_lead">Optional. No reminders during quiet hours.</string>
+    <string name="rem_water">Water</string>
+    <string name="rem_water_sub">every 2 hours, if nothing was logged for a while</string>
+    <string name="rem_summary">Day summary</string>
+    <string name="rem_summary_sub">at 21:00, in one line</string>
+    <string name="rem_quiet">Quiet hours</string>
+    <string name="rem_quiet_sub">%1$s–%2$s · no sound or vibration</string>
+    <string name="onb_rem_cta">Calculate my plan</string>
+
+    <!-- First run: calculation and plan -->
+    <string name="onb_calc_title">Calculating your plan</string>
+    <string name="onb_calc_1">Height, weight, age and workouts…</string>
+    <string name="onb_calc_2">Resting metabolism by the Mifflin–St Jeor formula…</string>
+    <string name="onb_calc_3">Water and steps…</string>
+    <string name="onb_calc_4">Done</string>
+    <string name="onb_plan_title">Your plan</string>
+    <string name="onb_plan_lead">Calculated from height, weight, age and workouts. You can change everything in settings.</string>
+    <string name="onb_bmi_note">BMI is a rough estimate: it does not tell muscle from fat and can read high for athletes.</string>
+    <string name="plan_kcal">Calories</string>
+    <string name="plan_kcal_value">%1$s kcal</string>
+    <string name="plan_macros">P %1$d · F %2$d · C %3$d g</string>
+    <string name="plan_pace_lose">≈ −%1$s kg a week</string>
+    <string name="plan_pace_gain">≈ +%1$s kg a week</string>
+    <string name="plan_pace_keep">at maintenance level</string>
+    <string name="plan_water">Water</string>
+    <string name="plan_water_sub">+%1$s on workout days</string>
+    <string name="plan_steps">Walking</string>
+    <string name="plan_steps_value">%1$s steps</string>
+    <string name="plan_steps_sub">≈ %1$s km</string>
+    <string name="plan_how">How it was calculated</string>
+    <string name="plan_how_1">Resting metabolism (Mifflin–St Jeor formula): %1$s kcal.</string>
+    <string name="plan_how_2">Daily expenditure: metabolism × %1$s = %2$s kcal.</string>
+    <string name="plan_how_keep">Goal “maintain”: calories equal expenditure.</string>
+    <string name="plan_how_gain">Goal “gain”: expenditure + 10 %.</string>
+    <string name="plan_how_lose">Goal “lose”: expenditure − %1$d %%, but not below %2$s kcal.</string>
+    <string name="plan_how_4">Protein: %1$s g per kg × %2$s kg. Fat: 30 %% of calories. Carbs: the rest.</string>
+    <string name="plan_how_5">Water: 30 ml per kg of weight, but not less than the EFSA adequate intake for drinking.</string>
+    <string name="plan_how_6">Steps: the benefit grows up to 8,000–10,000 a day under 60 and up to 6,000–8,000 over 60 (Paluch et al., 2022).</string>
+    <string name="plan_how_7">These are guidelines, not medical advice.</string>
+    <string name="onb_plan_accept">Accept the plan</string>
+    <string name="onb_step_a11y">Step %1$d of %2$d</string>
+
+    <!-- Food -->
+    <string name="food_unit">kcal</string>
+    <string name="food_left">%1$s more to %2$s</string>
+    <string name="food_done_title">Daily goal reached</string>
+    <string name="food_over">+%1$s kcal over the goal</string>
+    <string name="food_exact">exactly %1$s kcal</string>
+    <string name="food_total_a11y">Eaten %1$s kcal. %2$s</string>
+    <string name="food_square_a11y">Eaten %1$s of %2$s kcal</string>
+    <string name="food_add_a11y">Add an entry</string>
+    <string name="macro_protein">Protein</string>
+    <string name="macro_fat">Fat</string>
+    <string name="macro_carbs">Carbs</string>
+    <string name="macro_grams">%1$s g</string>
+    <string name="macro_of">of %1$s</string>
+    <string name="macro_a11y">%1$s: %2$s of %3$s g</string>
+    <string name="food_entry_macros">P %1$s · F %2$s · C %3$s</string>
+    <string name="food_list_title">Today</string>
+    <string name="food_empty">Nothing yet. Add the first meal with a template above or the “+” button.</string>
+    <string name="food_entry_a11y">%1$s, %2$s kcal, at %3$s</string>
+    <string name="food_delete_a11y">Delete entry: %1$s, %2$s kcal</string>
+    <string name="food_unnamed">Untitled</string>
+    <string name="food_custom_chip">Custom…</string>
+    <string name="food_template_a11y">Add: %1$s, %2$s kcal</string>
+    <string name="food_more">and %1$s more</string>
+    <string name="food_dialog_title">Meal</string>
+    <string name="food_name_label">Name</string>
+    <string name="food_kcal_label">Calories, kcal</string>
+    <string name="food_kcal_estimate">≈ %1$s from protein, fat and carbs</string>
+    <string name="food_kcal_error">From 1 to 5,000 kcal</string>
+    <string name="food_macro_error">Up to 500 g</string>
+    <string name="food_protein_label">Protein, g</string>
+    <string name="food_fat_label">Fat, g</string>
+    <string name="food_carbs_label">Carbs, g</string>
+    <string name="food_tpl_1">Oatmeal with banana</string>
+    <string name="food_tpl_2">Chicken with rice</string>
+    <string name="food_tpl_3">Cottage cheese 5 %</string>
+    <string name="food_tpl_4">Apple</string>
+    <string name="food_tpl_5">Buckwheat with a patty</string>
+
+    <!-- Calendar -->
+    <string name="calendar_close">Close calendar</string>
+    <string name="calendar_mode_month">Month</string>
+    <string name="calendar_mode_year">Year</string>
+    <string name="calendar_today_tag">TODAY</string>
+    <string name="calendar_day_a11y">%1$s, balance %2$s %%</string>
+    <string name="calendar_day_logged_a11y">%1$s, balance %2$s %%, has a note</string>
+    <string name="calendar_day_off_a11y">%1$s, unavailable</string>
+    <string name="calendar_month_a11y">%1$s: open month</string>
+    <string name="calendar_sheet_expand">Expand day</string>
+    <string name="calendar_sheet_collapse">Collapse day</string>
+    <string name="day_title_today">%1$s · today</string>
+    <string name="day_title">%1$s · %2$s</string>
+    <string name="day_first">first day with XO</string>
+    <string name="day_number">day %1$s with XO</string>
+    <string name="day_balance_a11y">Day balance %1$s percent</string>
+    <string name="day_modules">Modules</string>
+    <string name="day_wellbeing">How you feel</string>
+    <string name="day_edit">Edit</string>
+    <string name="day_add_prompt">How do you feel? Weight, note</string>
+    <string name="day_records">Entries for the day</string>
+    <string name="day_records_empty_today">Nothing logged yet today.</string>
+    <string name="day_records_empty">No entries for this day.</string>
+    <string name="day_record_water">Water</string>
+    <string name="day_weight_kg">%1$s kg</string>
+    <string name="day_weight_lb">%1$s lb</string>
+
+    <!-- How you feel -->
+    <string name="pick_title_today">Today</string>
+    <string name="pick_close">Close</string>
+    <string name="pick_search">Search</string>
+    <string name="pick_search_a11y">Search how you feel</string>
+    <string name="pick_nothing_found">Nothing found</string>
+    <string name="pick_overall">How are you overall?</string>
+    <string name="pick_frequent">Often logged</string>
+    <string name="pick_weight">Weight</string>
+    <string name="pick_weight_none_a11y">Weight not set</string>
+    <string name="pick_weight_less">Less</string>
+    <string name="pick_weight_more">More</string>
+    <string name="pick_weight_clear">Clear weight</string>
+    <string name="pick_note">Note</string>
+    <string name="pick_note_hint">What mattered today? For example: little sleep, hard workout</string>
+    <string name="pick_save">Save</string>
+    <string name="feel_0">Bad</string>
+    <string name="feel_1">So-so</string>
+    <string name="feel_2">Okay</string>
+    <string name="feel_3">Good</string>
+    <string name="feel_4">Great</string>
+    <string name="group_energy">Energy</string>
+    <string name="group_pain">Pain</string>
+    <string name="group_mood">Mood</string>
+    <string name="group_digestion">Digestion</string>
+    <string name="group_other">Other</string>
+    <string name="tag_energy">Alert</string>
+    <string name="tag_tired">Tired</string>
+    <string name="tag_sleepy">Sleepy</string>
+    <string name="tag_head">Head</string>
+    <string name="tag_back">Back</string>
+    <string name="tag_muscle">Muscles after a workout</string>
+    <string name="tag_joint">Joints</string>
+    <string name="tag_belly">Stomach</string>
+    <string name="tag_calm">Calm</string>
+    <string name="tag_joy">Joy</string>
+    <string name="tag_anx">Anxiety</string>
+    <string name="tag_angry">Irritation</string>
+    <string name="tag_sad">Sadness</string>
+    <string name="tag_stress">Stress</string>
+    <string name="tag_bloat">Bloating</string>
+    <string name="tag_heart">Heartburn</string>
+    <string name="tag_nausea">Nausea</string>
+    <string name="tag_cold">Cold</string>
+</resources>

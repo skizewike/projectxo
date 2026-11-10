@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Motion v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3;
+  --accent:#2D64D2; --on-accent:#FFFFFF; --bezel:#1B1A18;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422;
+    --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422;
+  --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600;letter-spacing:-.01em}
+.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.ghost:hover{border-color:var(--muted)}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--ink);margin:0}
+
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:340px;flex:0 0 340px;padding-top:8px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);color:var(--ink)}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:6}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:6}
+
+.view{position:absolute;inset:0;transition:opacity 280ms cubic-bezier(.2,0,0,1)}
+.view[hidden]{display:block;opacity:0;pointer-events:none}
+.hd{position:absolute;left:24px;right:24px;top:58px}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.plus{position:absolute;right:-4px;top:-2px;width:48px;height:48px;display:grid;place-items:center;transition:transform 160ms}
+.plus i{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}
+.plus svg{width:14px;height:14px}
+
+#ringBox{position:absolute;left:50%;top:280px;width:250px;height:250px;margin:-125px 0 0 -125px}
+#ringCv{position:absolute;inset:0;width:250px;height:250px}
+.ringLabel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.big{font-size:56px;font-weight:500;letter-spacing:-.035em;line-height:1;display:flex;align-items:baseline;gap:4px}
+.unit{font-size:26px;font-weight:400;letter-spacing:0;color:var(--muted)}
+.cap{font-size:13px;color:var(--muted)}
+.ringLabel .cap{margin-top:9px}
+
+.roll{display:inline-flex;flex-direction:row-reverse}
+.slot{position:relative;display:inline-block;overflow:hidden;height:1.12em;line-height:1.12em}
+.slot span{display:block;white-space:pre}
+.slot span.out{position:absolute;left:0;top:0}
+
+.row{position:absolute;left:24px;right:24px;height:64px;border-top:1px solid var(--line)}
+.row.last{border-bottom:1px solid var(--line)}
+.rl{display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;font-size:15px}
+.rn{display:flex;align-items:center;gap:10px}
+.shp{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:1.3}
+.rv{font-weight:500}
+.rv i{font-style:normal;color:var(--muted);font-weight:400;margin-left:5px;font-size:13px}
+.bar{margin-top:12px;height:2px;background:var(--track);position:relative}
+.bar b{position:absolute;left:0;top:0;bottom:0;background:var(--ink);width:0}
+
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;font-size:12px;color:var(--muted);z-index:4;background:var(--bg)}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted)}
+.nav button::before{content:"";width:4px;height:4px;border-radius:50%;background:transparent}
+.nav button.on{color:var(--ink);font-weight:500}
+.nav button.on::before{background:var(--ink)}
+.nav button:disabled{cursor:default}
+
+/* Вода */
+.total{position:absolute;left:24px;right:24px;top:150px}
+.total .cap{margin-top:8px}
+.total .bar{margin-top:12px}
+.pills{position:absolute;left:24px;right:24px;top:270px;display:flex;gap:8px}
+.pill{flex:1;height:48px;border-radius:999px;border:1px solid var(--line);font-size:15px;transition:transform 160ms cubic-bezier(.2,0,0,1)}
+.pill.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:500}
+.pill:active,.plus:active{transform:scale(.96)}
+.lbl{position:absolute;left:24px;top:352px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.list{position:absolute;left:24px;right:24px;top:376px;bottom:80px;overflow:hidden}
+.entry{display:flex;align-items:center;height:56px;border-top:1px solid var(--line);overflow:hidden}
+.entry:last-child{border-bottom:1px solid var(--line)}
+.entry .t{font-size:13px;color:var(--muted);width:56px}
+.entry .v{flex:1;font-weight:500;font-size:15px}
+.entry button{width:48px;height:48px;display:grid;place-items:center;color:var(--muted)}
+.entry button svg{width:14px;height:14px}
+.empty{font-size:15px;color:var(--muted);padding:12px 0}
+
+.undo{position:absolute;left:16px;right:16px;bottom:72px;min-height:56px;border-radius:16px;background:var(--ink);color:var(--bg);display:flex;align-items:center;padding-left:16px;transform:translateY(140%);opacity:0;transition:transform 150ms cubic-bezier(.3,0,.8,.15),opacity 150ms;z-index:7}
+.undo.show{transform:none;opacity:1;transition:transform 280ms cubic-bezier(.05,.7,.1,1),opacity 280ms}
+.undo span{flex:1;font-size:15px}
+.undo button{height:48px;padding:0 16px;font-weight:500;color:var(--bg);font-size:15px}
+
+#fx,#ink{position:absolute;left:0;top:0;width:360px;height:780px;pointer-events:none;z-index:8}
+#ink{z-index:9}
+.tag{position:absolute;left:0;right:0;top:438px;text-align:center;font-size:13px;letter-spacing:.04em;color:var(--muted);z-index:9;pointer-events:none;opacity:0}
+.tag .rest{color:transparent}
+.tag .cur{display:inline-block;width:1.5px;height:1.3em;background:var(--ink);vertical-align:-.28em;margin-left:-1.5px}
+.splashBg{position:absolute;inset:0;background:var(--bg);z-index:7;opacity:0;pointer-events:none}
+
+/* Панель */
+.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500}
+.group{margin-bottom:26px}
+.primary-btn{background:var(--ink);color:var(--page);border-radius:999px;padding:9px 20px;font-weight:500}
+.list-ideas{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.list-ideas li{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.list-ideas b{display:block;font-weight:600;font-size:14px;margin-bottom:2px}
+.list-ideas span{color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:14px 0 0}
+
+@media (max-width:900px){
+  .layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}
+  .panel{width:100%;max-width:380px;flex-basis:auto}
+  .top{padding:16px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>Project XO</b><span>Движение v2</span></div>
+  <div class="ctrls">
+    <label class="chk"><input type="checkbox" id="slow"> Замедлить ×4</label>
+    <label class="chk"><input type="checkbox" id="rm"> Меньше анимаций</label>
+    <button class="ghost" id="theme" type="button">Тёмная тема</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="device-box" id="deviceBox">
+    <div class="device" id="device">
+      <div class="screen" id="screen">
+        <div class="status"><span>9:41</span><span>100 %</span></div>
+
+        <section class="view" id="vToday" aria-label="Сегодня">
+          <div class="hd" data-h="0">
+            <div class="title">Сегодня</div><div class="date">Понедельник, 9 ноября</div>
+            <button class="plus" id="plusBtn" type="button" aria-label="Добавить 250 мл воды"><i><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0V14M0 7H14" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></i></button>
+          </div>
+          <div id="ringBox">
+            <canvas id="ringCv" width="250" height="250" aria-hidden="true"></canvas>
+            <div class="ringLabel" data-h="1"><div class="big"><span class="roll" id="pct"></span><span class="unit">%</span></div><div class="cap">Баланс дня</div></div>
+          </div>
+          <div class="row" data-h="2" style="top:432px"><div class="rl"><span class="rn"><svg class="shp" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>Вода</span><span class="rv"><span id="rowWater">1 500</span><i>из 2 000 мл</i></span></div><div class="bar"><b id="barWaterRow"></b></div></div>
+          <div class="row" data-h="3" style="top:496px"><div class="rl"><span class="rn"><svg class="shp" viewBox="0 0 10 10"><rect x="1.2" y="1.2" width="7.6" height="7.6"/></svg>Еда</span><span class="rv">1 240<i>из 2 000 ккал</i></span></div><div class="bar"><b style="width:62%"></b></div></div>
+          <div class="row last" data-h="4" style="top:560px"><div class="rl"><span class="rn"><svg class="shp" viewBox="0 0 10 10"><path d="M5 1.2L9.2 8.8H.8Z"/></svg>Ходьба</span><span class="rv">6 480<i>из 8 000 шагов</i></span></div><div class="bar"><b style="width:81%"></b></div></div>
+        </section>
+
+        <section class="view" id="vWater" hidden aria-label="Вода">
+          <div class="hd"><div class="title">Вода</div><div class="date">Понедельник, 9 ноября</div></div>
+          <div class="total">
+            <div class="big"><span class="roll" id="tot"></span><span class="unit">мл</span></div>
+            <div class="cap" id="totCap"></div>
+            <div class="bar" id="waterBar"><b id="barWater"></b></div>
+          </div>
+          <div class="pills">
+            <button class="pill" data-ml="150" type="button">150 мл</button>
+            <button class="pill primary" data-ml="250" type="button">250 мл</button>
+            <button class="pill" data-ml="350" type="button">350 мл</button>
+            <button class="pill" data-ml="custom" type="button">Своя</button>
+          </div>
+          <div class="lbl">За сегодня</div>
+          <div class="list" id="list"></div>
+        </section>
+
+        <nav class="nav" data-h="5">
+          <button class="on" data-v="vToday" type="button">Сегодня</button>
+          <button data-v="vWater" type="button">Вода</button>
+          <button type="button" disabled>Еда</button>
+          <button type="button" disabled>Ходьба</button>
+        </nav>
+
+        <div class="undo" id="undo" role="status"><span id="undoMsg"></span><button id="undoBtn" type="button"></button></div>
+        <div class="splashBg" id="splashBg"></div>
+        <canvas id="fx" width="360" height="780" aria-hidden="true"></canvas>
+        <div class="tag" id="tag"></div>
+        <canvas id="ink" width="360" height="780" aria-hidden="true"></canvas>
+        <div class="gesture"></div><div class="punch"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="group">
+      <div class="label">Попробуйте</div>
+      <div class="actions" style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+        <button class="primary-btn" id="replay" type="button">Заставка</button>
+        <button class="primary-btn" id="full" type="button">Довести до 100 %</button>
+        
+      </div>
+    </div>
+    <div class="group">
+      <div class="label">Что взято из роликов</div>
+      <ul class="list-ideas">
+        <li><b>Чернильный поток</b><span>Folio: точки отрываются от кнопки и питают голову прогресса. Значение растёт, когда долетают первые.</span></li>
+        <li><b>Перекатка цифр</b><span>Принципы анимации: разряды справа налево через 45 мс, лёгкий перелёт.</span></li>
+        <li><b>Циферблат</b><span>Шкала с делениями вокруг кольца, проявляется по часовой после заставки.</span></li>
+        <li><b>Печать цели</b><span>Когда вода дошла до цели, по делениям проходит одна волна. Когда «Баланс дня» 100 % — «Обход и шкала»: след по кругу, волна, процент приседает. Кнопка «Довести до 100 %».</span></li>
+        <li><b>Свежие чернила</b><span>SuperX без свечения: кончик пишущегося штриха X синий и остывает в чёрный.</span></li>
+        <li><b>Печатная машинка</b><span>GravityDEX: подпись под логотипом печатается с тонким курсором.</span></li>
+      </ul>
+      <p class="note">Свечение, хром, фиолетовые переливы и глитч не перенесены: в CLAUDE.md они запрещены. Числа и тайминги совпадают с приложением (docs/DESIGN.md, 5b).</p>
+    </div>
+  </aside>
+</main>
+
+<script>
+(function(){
+'use strict';
+/* ---------- математика (как core/motion в приложении) ---------- */
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+function bezier(x1,y1,x2,y2){
+  const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+  const sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,dx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t);if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t-=e/d;}
+    if(!(t>=0&&t<=1)||Math.abs(sx(t)-x)>1e-4){let lo=0,hi=1;t=x;for(let i=0;i<40;i++){if(sx(t)<x)lo=t;else hi=t;t=(lo+hi)/2;}}return sy(t);};
+}
+const E={std:bezier(.2,0,0,1),fosi:bezier(.4,0,.2,1),dec:bezier(.05,.7,.1,1),acc:bezier(.3,0,.8,.15)};
+function spring(ms,z,k){if(ms<=0)return 0;const t=ms/1000,w=Math.sqrt(k);let x,env;
+  if(z<1){const wd=w*Math.sqrt(1-z*z),e=Math.exp(-z*w*t);x=1-e*(Math.cos(wd*t)+(z*w/wd)*Math.sin(wd*t));env=e*(1+z*w/wd);}
+  else{const e=Math.exp(-w*t);x=1-e*(1+w*t);env=e*(1+w*t);}return env<2e-3?1:x;}
+/* Пружина-состояние (как animateTo(springSettle)) */
+class Spr{constructor(v,z,k){this.x=v;this.v=0;this.t=v;this.z=z;this.k=k;}
+  to(t,instant){this.t=t;if(instant){this.x=t;this.v=0;}}
+  step(dt){if(this.x===this.t&&this.v===0)return;const c=2*this.z*Math.sqrt(this.k),n=Math.max(1,Math.ceil(dt/.004)),h=dt/n;
+    for(let i=0;i<n;i++){const a=-this.k*(this.x-this.t)-c*this.v;this.v+=a*h;this.x+=this.v*h;}
+    if(Math.abs(this.x-this.t)<1e-4&&Math.abs(this.v)<1e-3){this.x=this.t;this.v=0;}}}
+
+/* ---------- чернильный поток (InkFlow.kt) ---------- */
+const INK={COUNT:56,SPREAD:240,TRAVEL:600,TOTAL:840,ARRIVE:360,CLOUD:18,END:3,RMIN:.9,RMAX:1.6,CMIN:.18,CMAX:.28,FIN:.10,FOUT:.18};
+function particles(seed){
+  let st=(Math.imul(seed,747796405)+(2891336453|0))|0;
+  const next=()=>{st=(Math.imul(st,747796405)+1442695041)|0;let w=Math.imul(((st>>>((st>>>28)+4))^st),277803737);w=(w>>>22)^w;return (w>>>8)/16777216;};
+  const disk=()=>{const r=Math.sqrt(next()),a=2*Math.PI*next();return [r*Math.cos(a),r*Math.sin(a)];};
+  const side=next()<.5?-1:1,P=[];
+  for(let i=0;i<INK.COUNT;i++){const base=Math.pow(i/INK.COUNT,1.4);
+    const d=clamp(base+(next()-.5)*.04)*INK.SPREAD,s=disk(),e=disk();
+    P.push({d,sx:s[0],sy:s[1],ex:e[0],ey:e[1],c:lerp(INK.CMIN,INK.CMAX,next()),r:lerp(INK.RMIN,INK.RMAX,next())});}
+  return {side,P};
+}
+function dot(f,p,t){const l=(t-p.d)/INK.TRAVEL;if(l<=0||l>=1)return null;const e=E.fosi(l);
+  const sx=f.x0+p.sx*INK.CLOUD,sy=f.y0+p.sy*INK.CLOUD,ex=f.x1+p.ex*INK.END,ey=f.y1+p.ey*INK.END;
+  const dx=ex-sx,dy=ey-sy,len=Math.max(1,Math.hypot(dx,dy)),bend=p.c*len*f.side;
+  const cx=(sx+ex)/2-dy/len*bend,cy=(sy+ey)/2+dx/len*bend,u=1-e;
+  return {x:u*u*sx+2*u*e*cx+e*e*ex,y:u*u*sy+2*u*e*cy+e*e*ey,r:p.r*lerp(1,.7,e),a:l<INK.FIN?l/INK.FIN:(l>1-INK.FOUT?(1-l)/INK.FOUT:1)};}
+
+/* ---------- состояние ---------- */
+const $=id=>document.getElementById(id);
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const st={slow:1,reduced:false,water:1500,goal:2000,food:1240/2000,steps:6480/8000,entries:[],seed:1,flows:[],seal:-1,cel:-1,reveal:-1,splash:null,id:1};
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ');
+const frac=()=>clamp(st.water/st.goal);
+const balance=()=>(frac()+st.food+st.steps)/3;
+const ringV=new Spr(balance(),1,200), barV=new Spr(frac(),1,200);
+
+/* перекатка цифр (RollingNumber.kt) */
+function Roller(el){this.el=el;this.slots=[];this.val=null;}
+Roller.prototype.set=function(text,val){
+  const anim=this.val!==null&&!st.reduced,up=this.val===null||val>=this.val;this.val=val;
+  const n=text.length;
+  while(this.slots.length<n){const s=document.createElement('span');s.className='slot';const c=document.createElement('span');c.textContent='';s.appendChild(c);this.el.appendChild(s);this.slots.push({el:s,cur:c,ch:''});}
+  while(this.slots.length>n){const s=this.slots.pop();s.el.remove();}
+  for(let i=0;i<n;i++){const ch=text[n-1-i],s=this.slots[i];if(s.ch===ch)continue;s.ch=ch;
+    if(!anim||!s.cur.textContent){s.cur.textContent=ch;continue;}
+    const old=s.cur,nw=document.createElement('span');nw.textContent=ch;old.classList.add('out');s.el.appendChild(nw);s.cur=nw;
+    const d=i*45*st.slow,dur=420*st.slow,fd=140*st.slow,ease='cubic-bezier(.2,1.25,.4,1)';
+    old.animate([{transform:'translateY(0)'},{transform:`translateY(${up?-100:100}%)`}],{duration:dur,delay:d,easing:ease,fill:'forwards'});
+    old.animate([{opacity:1},{opacity:0}],{duration:fd,delay:d,fill:'forwards'}).onfinish=()=>setTimeout(()=>old.remove(),dur);
+    nw.animate([{transform:`translateY(${up?100:-100}%)`},{transform:'translateY(0)'}],{duration:dur,delay:d,easing:ease,fill:'backwards'});
+    nw.animate([{opacity:0},{opacity:1}],{duration:fd,delay:d,fill:'backwards'});}
+};
+const pct=new Roller($('pct')),tot=new Roller($('tot'));
+
+function syncNumbers(instant){
+  pct.set(String(Math.round(balance()*100)),balance());
+  tot.set(fmt(st.water),st.water);
+  $('rowWater').textContent=fmt(st.water);
+  const left=Math.max(0,st.goal-st.water);
+  $('totCap').textContent=left===0?'из 2 000 мл · цель на сегодня есть':`из 2 000 мл · осталось ${fmt(left)} мл`;
+  ringV.to(balance(),instant||st.reduced);barV.to(frac(),instant||st.reduced);
+}
+
+/* ---------- геометрия ---------- */
+const RING={x:180,y:280,r:100,sw:12},DIAL={n:60,gap:8,tick:5,seal:9};
+function ringHead(){const a=2*Math.PI*ringV.x-Math.PI/2;return [RING.x+RING.r*Math.cos(a),RING.y+RING.r*Math.sin(a)];}
+function barHead(){const b=$('waterBar').getBoundingClientRect(),s=$('screen').getBoundingClientRect(),k=s.width/360;
+  return [(b.left-s.left)/k+(b.width/k)*barV.x,(b.top-s.top)/k+1];}
+function centerOf(el){const b=el.getBoundingClientRect(),s=$('screen').getBoundingClientRect(),k=s.width/360;
+  return [(b.left-s.left+b.width/2)/k,(b.top-s.top+b.height/2)/k];}
+
+/* ---------- добавление воды ---------- */
+let undoTimer=0;
+function showUndo(msg,act,fn){$('undoMsg').textContent=msg;$('undoBtn').textContent=act;$('undoBtn').onclick=()=>{fn();hideUndo();};
+  $('undo').classList.add('show');clearTimeout(undoTimer);undoTimer=setTimeout(hideUndo,4000*st.slow);}
+function hideUndo(){$('undo').classList.remove('show');}
+function addWater(ml,fromEl,target){
+  const from=centerOf(fromEl),to=target==='ring'?ringHead():barHead();
+  const flying=!st.reduced;
+  if(flying){st.flows.push({...particles(st.seed++),x0:from[0],y0:from[1],x1:to[0],y1:to[1],t0:performance.now()});}
+  const before=frac(),beforeBal=balance();
+  setTimeout(()=>{
+    st.water+=ml;const e={id:st.id++,ml,time:new Date()};st.entries.unshift(e);renderList(e.id);syncNumbers(false);
+    // «Баланс дня» 100 %: «Обход и шкала» на кольце (DESIGN.md 5c.1); один модуль: только волна.
+    if(beforeBal<1&&balance()>=1&&!st.reduced){st.cel=performance.now();
+      document.querySelector('.ringLabel .big').animate([{transform:'translateY(0)'},{transform:'translateY(4px) scaleY(.97)',offset:.22},{transform:'translateY(-3px)',offset:.55},{transform:'translateY(0)'}],{duration:620*st.slow,delay:520*st.slow,easing:'cubic-bezier(.2,0,0,1)'});}
+    else if(before<1&&frac()>=1&&!st.reduced) st.seal=performance.now();
+    if(target==='ring') showUndo(`Добавлено ${ml} мл`,'Отменить',()=>removeEntry(e.id));
+  },(flying?INK.ARRIVE:0)*st.slow);
+}
+function removeEntry(id){const i=st.entries.findIndex(e=>e.id===id);if(i<0)return;st.water-=st.entries[i].ml;st.entries.splice(i,1);renderList();syncNumbers(false);}
+function renderList(newId){
+  const list=$('list');list.textContent='';
+  if(!st.entries.length){const p=document.createElement('div');p.className='empty';p.textContent='Пока пусто. Нажмите «250 мл», чтобы отметить первый стакан.';list.appendChild(p);return;}
+  st.entries.slice(0,6).forEach(e=>{
+    const r=document.createElement('div');r.className='entry';
+    const t=document.createElement('span');t.className='t';t.textContent=e.time.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+    const v=document.createElement('span');v.className='v';v.textContent=fmt(e.ml)+' мл';
+    const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Удалить запись');
+    b.innerHTML='<svg viewBox="0 0 14 14"><path d="M0 0L14 14M14 0L0 14" stroke="currentColor" stroke-width="1.6"/></svg>';
+    b.onclick=()=>{const kept=e;removeEntry(e.id);showUndo('Запись удалена','Вернуть',()=>{st.entries.unshift(kept);st.water+=kept.ml;st.entries.sort((a,b)=>b.time-a.time);renderList();syncNumbers(false);});};
+    r.append(t,v,b);list.appendChild(r);
+    if(e.id===newId&&!st.reduced){r.animate([{height:'0px',opacity:0},{height:'56px',opacity:1}],{duration:280*st.slow,easing:'cubic-bezier(.05,.7,.1,1)'});}
+  });
+}
+$('plusBtn').onclick=()=>addWater(250,$('plusBtn'),'ring');
+document.querySelectorAll('.pill').forEach(p=>p.onclick=()=>{
+  let ml=p.dataset.ml;if(ml==='custom'){const v=parseInt(prompt('Своя порция, мл (1–3 000)','500')||'',10);if(!(v>=1&&v<=3000))return;ml=v;}
+  addWater(+ml,p,'bar');});
+
+/* навигация */
+document.querySelectorAll('.nav button[data-v]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x===b));
+  ['vToday','vWater'].forEach(v=>$(v).hidden=v!==b.dataset.v);hideUndo();});
+
+/* ---------- заставка 01 + свежие чернила + печатная машинка ---------- */
+const XC={x:137,y:372},OC={x:221,y:372,r:30.75,sw:10.5},XH=30.5,XSW=10,NIB=14,TAG='вода · еда · ходьба';
+function splashFrame(t){
+  const s={};s.d1=E.dec(seg(t,80,460));s.d2=E.dec(seg(t,200,580));
+  const nib=(a,b)=>t<=a?0:(t<=b?1:1-E.std(seg(t,b,b+160)));
+  s.n1=t>=1750?0:nib(80,460);s.n2=t>=1750?0:nib(200,580);
+  let L=t<300?0:t<900?.55*E.std(seg(t,300,900)):t<1050?lerp(.55,.6,seg(t,900,1050)):lerp(.6,1,E.dec(seg(t,1050,1700)));
+  s.track=E.std(seg(t,100,400));
+  s.typed=seg(t,500,1040);s.tagA=(t>=500?1:0)*(1-E.std(seg(t,1700,1850)));
+  s.cur=(t>=480&&t<1440)?(t<1040?1:(Math.floor((t-1040)/200)%2===0?0:1)):0;
+  if(t>=1750){s.d2=1-E.acc(seg(t,1750,1950));s.d1=1-E.acc(seg(t,1820,2020));}
+  const px=spring(t-1800,.82,300),py=spring(t-1800,.9,170);
+  if(t>=1950)L=lerp(1,balance(),spring(t-1950,1,120));
+  s.end=L;s.cx=lerp(OC.x,RING.x,px);s.cy=lerp(OC.y,RING.y,py);s.r=lerp(OC.r,RING.r,py);s.sw=lerp(OC.sw,RING.sw,clamp(py));
+  s.home=[0,1,2,3,4,5].map(i=>E.dec(seg(t,2050+i*60,2050+i*60+420)));
+  return s;
+}
+function replay(){
+  hideUndo();document.querySelector('.nav button[data-v="vToday"]').click();
+  st.splash={t0:performance.now()};st.reveal=-1;$('splashBg').style.opacity=st.reduced?1:0;
+}
+$('replay').onclick=replay;
+$('full').onclick=()=>{hideUndo();document.querySelector('.nav button[data-v="vToday"]').click();
+  st.food=1;st.steps=1;st.water=1750;st.cel=-1;
+  const rv=document.querySelectorAll('#vToday .row .rv'),bars=document.querySelectorAll('#vToday .row .bar b');
+  rv[1].innerHTML='2 000<i>из 2 000 ккал</i>';rv[2].innerHTML='8 000<i>из 8 000 шагов</i>';bars[1].style.width='100%';bars[2].style.width='100%';
+  syncNumbers(true);setTimeout(()=>addWater(250,$('plusBtn'),'ring'),600);};
+
+/* ---------- рисование ---------- */
+const ringCtx=$('ringCv').getContext('2d'),fx=$('fx').getContext('2d'),ink=$('ink').getContext('2d');
+const DPR=Math.min(2,window.devicePixelRatio||1);
+[[$('ringCv'),250,250],[$('fx'),360,780],[$('ink'),360,780]].forEach(([c,w,h])=>{c.width=w*DPR;c.height=h*DPR;c.getContext('2d').setTransform(DPR,0,0,DPR,0,0);});
+function drawRing(now,splashOn){
+  const g=ringCtx;g.clearRect(0,0,250,250);if(splashOn)return;
+  const cx=125,cy=125,inner=RING.r+RING.sw/2+DIAL.gap;
+  const revealTotal=59*8+200,rv=st.reveal<0?revealTotal:clamp((now-st.reveal)/st.slow,0,revealTotal);
+  let wave=-1;if(st.seal>0){const p=(now-st.seal)/(900*st.slow);if(p<1)wave=E.std(clamp(p));else st.seal=-1;}
+  const head=-.12+1.24*wave;
+  const ct=st.cel>0?(now-st.cel)/st.slow:-1;if(ct>1500)st.cel=-1;
+  g.lineWidth=1;
+  for(let i=0;i<DIAL.n;i++){const a=clamp((rv-i*8)/200);if(a<=0)continue;const f=i/DIAL.n;let len=DIAL.tick;
+    if(wave>=0){const x=(f-head)/.12;if(Math.abs(x)<1)len+=(DIAL.seal-DIAL.tick)*.5*(1+Math.cos(Math.PI*x));}
+    if(ct>=0){const k=(ct-500-i*8)/300;if(k>0&&k<1)len=Math.max(len,DIAL.tick+(DIAL.seal-DIAL.tick)*Math.sin(Math.PI*k));}
+    const an=2*Math.PI*f-Math.PI/2;g.globalAlpha=a;g.strokeStyle=f<ringV.x?C.ink:C.line;
+    g.beginPath();g.moveTo(cx+Math.cos(an)*inner,cy+Math.sin(an)*inner);g.lineTo(cx+Math.cos(an)*(inner+len),cy+Math.sin(an)*(inner+len));g.stroke();}
+  g.globalAlpha=1;g.lineWidth=RING.sw;g.strokeStyle=C.track;g.beginPath();g.arc(cx,cy,RING.r,0,2*Math.PI);g.stroke();
+  if(ringV.x>0){g.strokeStyle=C.accent;g.lineCap='round';g.beginPath();g.arc(cx,cy,RING.r,-Math.PI/2,-Math.PI/2+2*Math.PI*ringV.x);g.stroke();g.lineCap='butt';}
+  // след по окружности снаружи шкалы
+  if(ct>=0&&ct<1100){const R=inner+DIAL.tick+2+1.25,P=2*Math.PI*R,L=110,headT=E.std(clamp(ct/900))*(P+L),fade=1-clamp((ct-900)/200);
+    g.strokeStyle=C.ink;g.lineWidth=2.5;g.lineCap='round';
+    for(let k=0;k<14;k++){const a0=clamp(headT-L*(k+1)/14,0,P),a1=clamp(headT-L*k/14,0,P);if(a1<=a0)continue;
+      g.globalAlpha=(1-k/14)*fade;g.beginPath();g.arc(cx,cy,R,-Math.PI/2+a0/P*2*Math.PI,-Math.PI/2+a1/P*2*Math.PI);g.stroke();}
+    g.globalAlpha=1;g.lineCap='butt';}
+}
+function drawSplash(now){
+  fx.clearRect(0,0,360,780);const tag=$('tag');
+  const homeEls=document.querySelectorAll('#vToday [data-h], .nav[data-h]');
+  if(!st.splash){tag.style.opacity=0;homeEls.forEach(e=>{e.style.opacity='';e.style.transform='';});$('splashBg').style.opacity=0;return false;}
+  const t=(now-st.splash.t0)/st.slow;
+  if(st.reduced){ // меньше анимаций: стоп-кадр, затем смена прозрачности
+    const T=700;const done=t>=T;const s=splashFrame(1720);
+    const a=t<450?1-seg(t,300,450):0;$('splashBg').style.opacity=a;
+    homeEls.forEach(e=>{e.style.opacity=t<450?0:seg(t,450,T);e.style.transform='';});
+    if(a>0)paintLogo(s,a);tag.style.opacity=0;
+    if(done){st.splash=null;}return !done;}
+  const s=splashFrame(Math.min(t,2800));
+  homeEls.forEach(e=>{const p=s.home[+e.dataset.h];e.style.opacity=p;e.style.transform=`translateY(${(1-p)*14}px)`;});
+  paintLogo(s,1);
+  const n=Math.ceil(s.typed*TAG.length);
+  tag.innerHTML=TAG.slice(0,n).replace(/ /g,' ')+(s.cur?'<span class="cur"></span>':'')+'<span class="rest">'+TAG.slice(n)+'</span>';
+  tag.style.opacity=s.tagA;
+  if(t>=2800){st.splash=null;st.reveal=now;tag.style.opacity=0;fx.clearRect(0,0,360,780);return false;}
+  return true;
+}
+function paintLogo(s,alpha){
+  fx.globalAlpha=alpha;
+  if(s.track>0){fx.globalAlpha=alpha*s.track;fx.strokeStyle=C.track;fx.lineWidth=s.sw;fx.beginPath();fx.arc(s.cx,s.cy,s.r,0,2*Math.PI);fx.stroke();fx.globalAlpha=alpha;}
+  if(s.end*2*Math.PI*s.r>=.5){fx.strokeStyle=C.accent;fx.lineWidth=s.sw;fx.lineCap='round';fx.beginPath();fx.arc(s.cx,s.cy,s.r,-Math.PI/2,-Math.PI/2+2*Math.PI*s.end);fx.stroke();fx.lineCap='butt';}
+  const l=XC.x-XH,r=XC.x+XH,tp=XC.y-XH,b=XC.y+XH,nf=NIB/(Math.SQRT2*(r-l));
+  fx.lineWidth=XSW;fx.lineCap='butt';
+  const line=(x0,y0,x1,y1,p,col)=>{fx.strokeStyle=col;fx.beginPath();fx.moveTo(x0,y0);fx.lineTo(x1,y1);fx.stroke();};
+  if(s.d1>0)line(l,tp,l+(r-l)*s.d1,tp+(b-tp)*s.d1,0,C.ink);
+  if(s.d2>0)line(r,tp,r+(l-r)*s.d2,tp+(b-tp)*s.d2,0,C.ink);
+  if(s.n1>0&&s.d1>0){const f=Math.max(0,s.d1-nf);fx.globalAlpha=alpha*s.n1;line(l+(r-l)*f,tp+(b-tp)*f,l+(r-l)*s.d1,tp+(b-tp)*s.d1,0,C.accent);}
+  if(s.n2>0&&s.d2>0){const f=Math.max(0,s.d2-nf);fx.globalAlpha=alpha*s.n2;line(r+(l-r)*f,tp+(b-tp)*f,r+(l-r)*s.d2,tp+(b-tp)*s.d2,0,C.accent);}
+  fx.globalAlpha=1;
+}
+function drawInk(now){
+  ink.clearRect(0,0,360,780);ink.fillStyle=C.ink;
+  st.flows=st.flows.filter(f=>(now-f.t0)/st.slow<=INK.TOTAL);
+  for(const f of st.flows){const t=(now-f.t0)/st.slow;
+    for(const p of f.P){const d=dot(f,p,t);if(!d)continue;ink.globalAlpha=d.a;ink.beginPath();ink.arc(d.x,d.y,d.r,0,2*Math.PI);ink.fill();}}
+  ink.globalAlpha=1;
+}
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000)/st.slow;last=now;
+  ringV.step(dt);barV.step(dt);
+  const splashOn=drawSplash(now);
+  drawRing(now,splashOn);drawInk(now);
+  $('barWater').style.width=(barV.x*100)+'%';$('barWaterRow').style.width=(barV.x*100)+'%';
+  requestAnimationFrame(loop);}
+
+/* ---------- панель ---------- */
+$('slow').onchange=e=>{st.slow=e.target.checked?4:1;};
+const mq=matchMedia('(prefers-reduced-motion: reduce)');$('rm').checked=mq.matches;st.reduced=mq.matches;
+$('rm').onchange=e=>{st.reduced=e.target.checked;};
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';readColors();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);
+  $('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);
+
+fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+const t0=Date.now();[[350,-150],[250,-95],[300,-40]].forEach(([ml,m])=>{st.entries.push({id:st.id++,ml,time:new Date(t0+m*60000)});});
+st.water=st.entries.reduce((a,e)=>a+e.ml,0)+600;st.entries.push({id:st.id++,ml:600,time:new Date(t0-210*60000)});
+st.entries.sort((a,b)=>b.time-a.time);
+syncNumbers(true);renderList();replay();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

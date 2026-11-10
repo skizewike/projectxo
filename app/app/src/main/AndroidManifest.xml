@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Шаги с датчика телефона (Р25). Разрешение спрашивается только на экране «Ходьба». -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
+
+    <!-- Счёт шагов по движению на телефонах без датчика шагов (Р65): служба с уведомлением, включается пользователем. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Мягкие напоминания (Р58). Разрешение просим один раз после первого запуска, если напоминания включены. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Резервное копирование выключено, пока владелец не ответит на вопрос В6 (docs/DECISIONS.md). -->
+    <application
+        android:name=".XoApplication"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Xo">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Xo.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Виджет «Баланс дня» (Р59). -->
+        <receiver
+            android:name=".core.widget.DayRingWidget"
+            android:exported="true"
+            android:label="@string/widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_day_ring_info" />
+        </receiver>
+
+        <!-- Кнопки в уведомлениях модулей: голодание, сон, привычки. -->
+        <receiver
+            android:name=".core.reminders.ModuleActionReceiver"
+            android:exported="false" />
+
+        <!-- Счёт шагов по движению (Р65). -->
+        <service
+            android:name=".core.data.sensor.MotionStepsService"
+            android:exported="false"
+            android:foregroundServiceType="health" />
+        <receiver
+            android:name=".core.data.sensor.MotionStepsBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Кнопка «+250 мл» в уведомлении. Только для самого приложения. -->
+        <receiver
+            android:name=".core.reminders.WaterActionReceiver"
+            android:exported="false" />
+    </application>
+</manifest>

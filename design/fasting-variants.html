@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Голодание: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3;
+  --accent:#2D64D2; --on-accent:#FFFFFF; --bezel:#1B1A18;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422; --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120;}
+}
+:root[data-theme="dark"]{--page:#0C0C0B; --bg:#141413; --ink:#ECE9E2; --muted:#8C887F; --line:#2B2A27; --track:#252422; --accent:#6E9BEB; --on-accent:#141413; --bezel:#222120;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);margin:0}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);color:var(--ink);user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:30}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:30}
+.hd{position:absolute;left:24px;right:24px;top:58px;z-index:2}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.total{position:absolute;z-index:2}
+.big{font-weight:500;letter-spacing:-.035em;line-height:1;display:flex;align-items:baseline;gap:6px;font-size:56px;transform-origin:0 100%}
+.unit{font-weight:400;letter-spacing:0;color:var(--muted);font-size:22px}
+.cap{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.45}
+.cap .done{color:var(--ink);font-weight:500}
+.art{position:absolute;left:0;top:0;width:360px;height:780px;pointer-events:none;z-index:1}
+.roll{display:inline-flex;flex-direction:row-reverse}
+.slot{position:relative;display:inline-block;overflow:hidden;height:1.12em;line-height:1.12em}
+.slot span{display:block;white-space:pre}
+.slot span.out{position:absolute;left:0;top:0}
+.info{position:absolute;left:24px;right:24px;z-index:2}
+.irow{display:flex;justify-content:space-between;align-items:center;height:40px;border-top:1px solid var(--line);font-size:15px}
+.irow:last-child{border-bottom:1px solid var(--line)}
+.irow span{color:var(--muted);font-size:13px}
+.irow b{font-weight:500}
+.week{position:absolute;left:24px;right:24px;z-index:2}
+.wrow{display:flex;align-items:center;height:32px;font-size:13px;gap:10px}
+.wrow .d{width:24px;color:var(--muted)}
+.wrow .bar{flex:1}
+.wrow b{font-weight:500;width:64px;text-align:right}
+.wlab{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.plans{position:absolute;left:24px;right:24px;z-index:3;display:flex;gap:8px}
+.plan{flex:1;height:36px;border:1px solid var(--line);border-radius:999px;font-size:13px}
+.plan.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.main{position:absolute;left:24px;right:24px;height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:15px;z-index:3}
+.main.alt{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;z-index:4;background:var(--bg)}
+.nav span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted)}
+.nav span::before{content:"";width:4px;height:4px;border-radius:50%}
+.nav span.on{color:var(--ink);font-weight:500}
+.nav span.on::before{background:var(--ink)}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.primary-btn{background:var(--ink);color:var(--page);border-radius:999px;padding:9px 18px;font-weight:500}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>Project XO</b><span>Экран «Голодание»: три варианта</span></div>
+  <div class="ctrls">
+    <label class="chk"><input type="checkbox" id="slow"> Замедлить ×4</label>
+    <label class="chk"><input type="checkbox" id="rm"> Меньше анимаций</label>
+    <button class="ghost" id="theme" type="button">Тёмная тема</button>
+  </div>
+</header>
+<main class="layout">
+  <section class="device-box" id="deviceBox">
+    <div class="device" id="device">
+      <div class="screen">
+        <div class="status"><span id="clockS">14:20</span><span>100 %</span></div>
+        <canvas class="art" id="art" aria-hidden="true"></canvas>
+        <div class="hd"><div class="title">Голодание</div><div class="date">Понедельник, 9 ноября</div></div>
+        <div class="total" id="total"><div class="big" id="big"><span class="roll" id="roll"></span><span class="unit" id="unit">ч</span></div><div class="cap" id="cap"></div></div>
+        <div class="info" id="info"></div>
+        <div class="week" id="week"></div>
+        <div class="plans" id="plans"></div>
+        <button class="main" id="main" type="button"></button>
+        <nav class="nav" aria-hidden="true"><span>Сегодня</span><span>Вода</span><span>Еда</span><span class="on">Окно</span><span>Ходьба</span></nav>
+        <div class="gesture"></div><div class="punch"></div>
+      </div>
+    </div>
+  </section>
+  <aside class="panel">
+    <div class="group"><div class="label">Вариант</div><div class="variants" id="variants"></div></div>
+    <div class="group acts">
+      <button class="primary-btn" id="h1" type="button">Время +1 ч</button>
+      <button class="ghost" id="m10" type="button">+10 мин</button>
+      <button class="ghost" id="reset" type="button">Сначала</button>
+    </div>
+    <div class="desc"><h2 id="dName"></h2><p id="dIdea"></p><ul class="pc" id="dPc"></ul></div>
+    <p class="note">Голодание началось в 00:30, сейчас 14:20, режим 16:8. Кнопки «Время» изображают ход часов. При 16 ч — «Обход и шкала» в форме варианта. Закончить раньше можно в любой момент: запись сохраняется как есть, без упрёков. Никаких «фаз», «кетоза» и медицинских обещаний — только часы. Знак модуля — ромб. Клавиши 1–3.</p>
+  </aside>
+</main>
+<script>
+(function(){
+'use strict';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+function bezier(x1,y1,x2,y2){const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;const sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,dx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t);if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t-=e/d;}return sy(t);};}
+const std=bezier(.2,0,0,1);
+class Spr{constructor(v,z,k){this.x=v;this.v=0;this.t=v;this.z=z;this.k=k;}to(t,i){this.t=t;if(i){this.x=t;this.v=0;}}
+  step(dt){if(this.x===this.t&&this.v===0)return;const c=2*this.z*Math.sqrt(this.k),n=Math.max(1,Math.ceil(dt/.004)),h=dt/n;for(let i=0;i<n;i++){const a=-this.k*(this.x-this.t)-c*this.v;this.v+=a*h;this.x+=this.v*h;}
+  if(Math.abs(this.x-this.t)<.05&&Math.abs(this.v)<.05){this.x=this.t;this.v=0;}}}
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const hm=m=>{m=((Math.round(m)%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');};
+const dur=m=>{m=Math.max(0,Math.round(m));const h=Math.floor(m/60),mm=m%60;return h?`${h} ч ${String(mm).padStart(2,'0')} мин`:`${mm} мин`;};
+const hmText=m=>{m=Math.max(0,Math.floor(m));return Math.floor(m/60)+':'+String(m%60).padStart(2,'0');};
+
+const PLANS=[12,14,16,18];
+const WEEK=[['Вт',14.5],['Ср',16.2],['Чт',12.1],['Пт',16.4],['Сб',15.0],['Вс',16.1]];
+const st={v:0,slow:1,reduced:false,cel:-1,F:16,start:30,now:860,fasting:true,lastEnd:null};
+const el_=new Spr(0,.9,160); // прошедшие минуты, плавно
+const elapsed=()=>st.fasting?st.now-st.start:0;
+
+function Roller(e){this.el=e;this.slots=[];this.val=null;}
+Roller.prototype.set=function(text,v){const anim=this.val!==null&&!st.reduced,up=this.val===null||v>=this.val;this.val=v;const n=text.length;
+  while(this.slots.length<n){const s=el('span','slot');const c=el('span');s.appendChild(c);this.el.appendChild(s);this.slots.push({el:s,cur:c,ch:''});}
+  while(this.slots.length>n)this.slots.pop().el.remove();
+  for(let i=0;i<n;i++){const ch=text[n-1-i],s=this.slots[i];if(s.ch===ch)continue;s.ch=ch;if(!anim||!s.cur.textContent){s.cur.textContent=ch;continue;}
+    const old=s.cur,nw=el('span',null,ch);old.classList.add('out');s.el.appendChild(nw);s.cur=nw;const d=i*45*st.slow,du=420*st.slow,fd=140*st.slow,ease='cubic-bezier(.2,1.25,.4,1)';
+    old.animate([{transform:'none'},{transform:`translateY(${up?-100:100}%)`}],{duration:du,delay:d,easing:ease,fill:'forwards'});
+    old.animate([{opacity:1},{opacity:0}],{duration:fd,delay:d,fill:'forwards'}).onfinish=()=>setTimeout(()=>old.remove(),du);
+    nw.animate([{transform:`translateY(${up?100:-100}%)`},{transform:'none'}],{duration:du,delay:d,easing:ease,fill:'backwards'});
+    nw.animate([{opacity:0},{opacity:1}],{duration:fd,delay:d,fill:'backwards'});}};
+const roller=new Roller($('roll'));
+
+const LAY=[
+ {tot:{left:80,top:300,width:200,center:true,fs:44},info:470,week:null,plans:556,main:608},
+ {tot:{left:24,top:122,width:312,fs:56},info:null,week:290,plans:556,main:608},
+ {tot:{left:24,top:122,width:312,fs:56},info:null,week:486,plans:556,main:608},
+];
+function sync(instant){
+  const L=LAY[st.v],e=elapsed(),G=st.F*60;
+  $('clockS').textContent=hm(st.now);
+  roller.set(hmText(e),e);$('unit').textContent='ч';
+  const cap=$('cap');cap.textContent='';
+  if(st.fasting){
+    if(e<G)cap.append(L.tot.center?`из ${st.F} ч · ещё ${dur(G-e)}`:`ещё ${dur(G-e)} до ${st.F} ч · окно еды с ${hm(st.start+G)}`);
+    else{cap.append(el('span','done',`${st.F} ч позади`),el('br'),L.tot.center?`окно еды открыто`:`окно еды открыто до ${hm(st.start+24*60)}`);}
+  }else cap.append(st.lastEnd?`прошлое: ${dur(st.lastEnd)} · окно еды`:'окно еды');
+  el_.to(e,instant||st.reduced);
+  const t=$('total');Object.assign(t.style,{left:L.tot.left+'px',top:L.tot.top+'px',width:L.tot.width+'px',textAlign:L.tot.center?'center':'left'});
+  $('big').style.justifyContent=L.tot.center?'center':'flex-start';$('big').style.transformOrigin=L.tot.center?'50% 100%':'0 100%';$('big').style.fontSize=L.tot.fs+'px';
+  // строки информации (вариант 01)
+  const info=$('info');info.textContent='';
+  if(L.info){info.style.top=L.info+'px';[['Начало',hm(st.start)],['Окно еды',`${hm(st.start+G)}–${hm(st.start+24*60)}`]].forEach(([a,b])=>{const r=el('div','irow');r.append(el('span',null,a),el('b',null,b));info.appendChild(r);});}
+  // неделя
+  const wk=$('week');wk.textContent='';
+  if(L.week){wk.style.top=L.week+'px';
+    if(st.v===1){const all=WEEK.concat([['Пн',e/60]]);all.forEach(([d,h],i)=>{const r=el('div','wrow');r.append(el('span','d',d),el('span','bar'),el('b',null,i===6&&!st.fasting?'—':dur(h*60).replace(' мин','').replace(' ч ',':')));wk.appendChild(r);});
+      const lab=el('div','wlab');lab.append(el('span',null,'последние 7 дней'),el('span',null,`цель ${st.F} ч`));wk.appendChild(lab);}
+    else{const lab=el('div','wlab');lab.style.marginTop='44px';lab.append(el('span',null,'Неделя: 5 из 6 дней до цели'),el('span',null,`цель ${st.F} ч`));wk.appendChild(lab);}}
+  // планы
+  const pl=$('plans');pl.style.top=L.plans+'px';pl.textContent='';
+  PLANS.forEach(F=>{const b=el('button','plan'+(F===st.F?' on':''),`${F}:${24-F}`);b.type='button';b.onclick=()=>{const before=elapsed()>=st.F*60;st.F=F;if(!before&&elapsed()>=F*60)celebrate();sync(false);};pl.appendChild(b);});
+  const m=$('main');m.style.top=L.main+'px';m.textContent=st.fasting?(e<G?'Закончить сейчас':'Закончить голодание'):'Начать голодание';m.classList.toggle('alt',st.fasting&&e<G);
+}
+function celebrate(){if(st.reduced)return;st.cel=performance.now();
+  $('big').animate([{transform:'none'},{transform:'translateY(4px) scaleY(.97)',offset:.22},{transform:'translateY(-3px)',offset:.55},{transform:'none'}],{duration:620*st.slow,delay:520*st.slow,easing:'cubic-bezier(.2,0,0,1)'});}
+function tick(min){const before=elapsed();st.now+=min;if(st.fasting&&before<st.F*60&&elapsed()>=st.F*60)celebrate();sync(false);}
+$('h1').onclick=()=>tick(60);$('m10').onclick=()=>tick(10);
+$('reset').onclick=()=>{st.F=16;st.start=30;st.now=860;st.fasting=true;st.lastEnd=null;st.cel=-1;sync(true);};
+$('main').onclick=()=>{if(st.fasting){st.lastEnd=elapsed();st.fasting=false;}else{st.fasting=true;st.start=st.now;}sync(false);};
+
+/* рисование */
+const DPR=Math.min(2,devicePixelRatio||1);
+const g=(()=>{const c=$('art');c.width=360*DPR;c.height=780*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return x;})();
+const celT=now=>st.cel>0?(now-st.cel)/st.slow:-1;
+const bump=(t,i,step)=>{const k=(t-500-i*step)/300;return (k>0&&k<1)?Math.sin(Math.PI*k):0;};
+function trail(t,P,draw){if(t<0||t>=1100)return;const L=110,head=std(clamp(t/900))*(P+L),fade=1-clamp((t-900)/200);g.save();g.strokeStyle=C.ink;g.lineWidth=2.5;g.lineCap='round';
+  for(let k=0;k<14;k++){const a0=clamp(head-L*(k+1)/14,0,P),a1=clamp(head-L*k/14,0,P);if(a1<=a0)continue;g.globalAlpha=(1-k/14)*fade;draw(a0,a1);}g.restore();}
+const ang=m=>-Math.PI/2+(m/1440)*Math.PI*2;
+// 01 Сутки: 24-часовой циферблат
+const D={x:180,y:330,r:116,sw:12};
+function drawA(now){
+  const t=celT(now),G=st.F*60,e=el_.x,s0=st.fasting?st.start:st.now;
+  g.lineWidth=D.sw;g.lineCap='butt';g.strokeStyle=C.track;g.beginPath();g.arc(D.x,D.y,D.r,0,Math.PI*2);g.stroke();
+  // план: пунктир снаружи на время голодания, сплошная тонкая — окно еды
+  const ro=D.r+D.sw/2+6;g.lineWidth=1.2;g.strokeStyle=C.ink;
+  g.setLineDash(e>=G?[]:[3,4]);g.beginPath();g.arc(D.x,D.y,ro,ang(s0),ang(s0+G));g.stroke();g.setLineDash([]);
+  g.strokeStyle=C.muted;g.beginPath();g.arc(D.x,D.y,ro,ang(s0+G),ang(s0+1440));g.stroke();
+  if(st.fasting&&e>0){g.lineWidth=D.sw;g.strokeStyle=C.accent;g.lineCap='round';g.beginPath();g.arc(D.x,D.y,D.r,ang(s0),ang(s0+Math.min(e,1439)));g.stroke();g.lineCap='butt';}
+  // деления часов
+  for(let h=0;h<24;h++){const a=ang(h*60),r1=D.r-D.sw/2-6,b=t>=0?bump(t,(h-Math.floor(st.start/60)+24)%24,22):0,len=(h%6===0?8:4)+5*b;
+    g.strokeStyle=h%6===0?C.ink:C.line;g.lineWidth=1;g.beginPath();g.moveTo(D.x+Math.cos(a)*r1,D.y+Math.sin(a)*r1);g.lineTo(D.x+Math.cos(a)*(r1-len),D.y+Math.sin(a)*(r1-len));g.stroke();}
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textAlign='center';g.textBaseline='middle';
+  [0,6,12,18].forEach(h=>{const a=ang(h*60),r=ro+16;g.fillText(String(h).padStart(2,'0'),D.x+Math.cos(a)*r,D.y+Math.sin(a)*r);});
+  // сейчас — ромб на кольце
+  const a=ang(st.now);diamond(D.x+Math.cos(a)*D.r,D.y+Math.sin(a)*D.r,7,C.ink,true);
+  g.textAlign='left';
+  trail(t,Math.PI*2*(ro+6),(a0,a1)=>{const R=ro+6;g.beginPath();g.arc(D.x,D.y,R,ang(s0)+a0/R,ang(s0)+a1/R);g.stroke();});
+  if(t>1500)st.cel=-1;
+}
+function diamond(x,y,r,fill,stroke){g.beginPath();g.moveTo(x,y-r);g.lineTo(x+r,y);g.lineTo(x,y+r);g.lineTo(x-r,y);g.closePath();g.fillStyle=fill;g.fill();if(stroke){g.strokeStyle=C.bg;g.lineWidth=2;g.stroke();g.fill();}}
+// 02 Полоса
+const B={x:24,y:236,w:312};
+function drawB(now){
+  const t=celT(now),G=st.F*60,e=el_.x,max=Math.max(20,st.F+2)*60,f=clamp(e/max),gx=B.x+B.w*G/max;
+  g.fillStyle=C.track;g.beginPath();g.roundRect(B.x,B.y,B.w,10,5);g.fill();
+  if(e>0){g.fillStyle=C.accent;g.beginPath();g.roundRect(B.x,B.y,Math.max(10,B.w*f),10,5);g.fill();}
+  for(let h=0;h<=max/60;h++){const x=B.x+B.w*h*60/max,b=t>=0?bump(t,h,24):0,len=(h%4===0?7:3)+5*b;g.strokeStyle=h*60<=e?C.ink:C.line;g.lineWidth=1;g.beginPath();g.moveTo(x+.5,B.y+16);g.lineTo(x+.5,B.y+16+len);g.stroke();}
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textBaseline='top';g.textAlign='center';for(let h=0;h<=max/60;h+=4)g.fillText(h+' ч',B.x+B.w*h*60/max,B.y+30);
+  g.strokeStyle=C.ink;g.lineWidth=2;g.beginPath();g.moveTo(gx,B.y-6);g.lineTo(gx,B.y+16);g.stroke();diamond(gx,B.y-10,5,e>=G?C.accent:C.ink);
+  g.textAlign='left';
+  trail(t,B.w*Math.min(1,e/max),(a0,a1)=>{g.beginPath();g.moveTo(B.x+a0,B.y-8);g.lineTo(B.x+a1,B.y-8);g.stroke();});
+  // неделя: мини-полосы
+  const all=WEEK.map(w=>w[1]).concat([e/60]);
+  all.forEach((h,i)=>{const y=290+i*32+16,x=24+34,w=312-34-74,fr=clamp(h/20),gx2=x+w*st.F/20;g.fillStyle=C.track;g.fillRect(x,y-1,w,2);g.fillStyle=i===6?C.accent:C.ink;g.fillRect(x,y-2,w*fr,4);
+    g.fillStyle=C.muted;g.fillRect(gx2-.5,y-6,1,12);});
+  if(t>1500)st.cel=-1;
+}
+// 03 Ромб: знак модуля заполняется снизу
+const R={x:180,y:350,h:116};
+function drawC(now){
+  const t=celT(now),G=st.F*60,e=el_.x,f=clamp(e/G),top=R.y-R.h,bot=R.y+R.h;
+  const path=()=>{g.beginPath();g.moveTo(R.x,top);g.lineTo(R.x+R.h,R.y);g.lineTo(R.x,bot);g.lineTo(R.x-R.h,R.y);g.closePath();};
+  g.save();path();g.clip();g.fillStyle=C.track;g.fillRect(R.x-R.h,top,R.h*2,R.h*2);
+  const fy=bot-2*R.h*f;g.fillStyle=C.accent;g.fillRect(R.x-R.h,fy,R.h*2,bot-fy);
+  // линии часов внутри
+  for(let h=1;h<st.F;h++){const y=bot-2*R.h*h/st.F,b=t>=0?bump(t,h,30):0,half=(R.h-Math.abs(y-R.y)),len=Math.min(half,(h%4===0?18:9)+8*b);
+    g.strokeStyle=h/st.F<=f?C.bg:C.muted;g.globalAlpha=h/st.F<=f?.8:.5;g.lineWidth=1;g.beginPath();g.moveTo(R.x-len,y+.5);g.lineTo(R.x+len,y+.5);g.stroke();}
+  g.globalAlpha=1;g.restore();
+  g.strokeStyle=C.ink;g.lineWidth=1.2;g.setLineDash(f>=1?[]:[4,4]);path();g.stroke();g.setLineDash([]);
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textAlign='left';g.textBaseline='middle';g.fillText('0',R.x+8,bot+12);g.fillText(st.F+' ч',R.x+10,top-8);
+  // неделя: маленькие ромбы
+  const all=WEEK.map(w=>w[1]).concat([e/60]),labels=WEEK.map(w=>w[0]).concat(['Пн']),step=312/7;
+  all.forEach((h,i)=>{const cx=24+step*i+step/2,cy=508,r=12,fr=clamp(h/st.F);
+    g.save();g.beginPath();g.moveTo(cx,cy-r);g.lineTo(cx+r,cy);g.lineTo(cx,cy+r);g.lineTo(cx-r,cy);g.closePath();g.clip();g.fillStyle=C.track;g.fillRect(cx-r,cy-r,2*r,2*r);g.fillStyle=i===6?C.accent:C.ink;g.fillRect(cx-r,cy+r-2*r*fr,2*r,2*r*fr);g.restore();
+    g.strokeStyle=C.ink;g.lineWidth=1;g.beginPath();g.moveTo(cx,cy-r);g.lineTo(cx+r,cy);g.lineTo(cx,cy+r);g.lineTo(cx-r,cy);g.closePath();g.stroke();
+    g.fillStyle=C.muted;g.textAlign='center';g.fillText(labels[i],cx,cy+24);});
+  g.textAlign='left';
+  const per=4*Math.hypot(R.h,R.h),side=Math.hypot(R.h,R.h),pts=[[R.x,top],[R.x+R.h,R.y],[R.x,bot],[R.x-R.h,R.y]];
+  const at=d=>{const i=Math.min(3,Math.floor(d/side)),k=(d-i*side)/side,a=pts[i],b=pts[(i+1)%4];return[a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k];};
+  trail(t,per,(a0,a1)=>{g.beginPath();let p=at(a0);g.moveTo(p[0],p[1]);for(let d=Math.ceil(a0/side)*side;d<a1;d+=side){p=at(d);g.lineTo(p[0],p[1]);}p=at(Math.min(a1,per-.01));g.lineTo(p[0],p[1]);g.stroke();});
+  if(t>1500)st.cel=-1;
+}
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000)/st.slow;last=now;el_.step(dt);g.clearRect(0,0,360,780);[drawA,drawB,drawC][st.v](now);requestAnimationFrame(loop);}
+
+const V=[
+ {name:'Сутки',idea:'Циферблат на 24 часа. Синяя дуга — сколько уже прошло без еды, пунктир снаружи — план, тонкая серая — окно еды. Ромб показывает «сейчас». Время в центре, под кольцом начало и окно еды. При цели след обходит циферблат, деления часов вытягиваются волной.',
+  pc:[['Плюсы','Сразу видно, когда окно еды по часам дня. Перекликается с кольцом «Баланс дня».'],['Минусы','Третий круглый прибор в приложении; время мельче.'],['В коде','Canvas, как DayBalanceRing; угол = минуты / 1440.']]},
+ {name:'Полоса',idea:'Крупное время сверху, ниже полоса с отметкой цели-ромбом и делениями по часам. Под ней неделя: 7 тонких полос с длительностью и отметкой цели. При цели по полосе бежит след, деления подпрыгивают.',
+  pc:[['Плюсы','Самый понятный: «сколько прошло, сколько осталось», плюс история недели без отдельного экрана.'],['Минусы','Не видно, на какое время суток приходится окно.'],['В коде','Самый простой; неделя — те же полосы, что у строки модуля.']]},
+ {name:'Ромб',idea:'Ромб — знак модуля — заполняется снизу, как сосуд воды и квадрат еды. Внутри линии каждого часа. Ниже неделя маленькими ромбами с заполнением по длительности. При цели след обходит ромб, линии часов расширяются волной.',
+  pc:[['Плюсы','Единый язык с водой и едой: у каждого модуля своя фигура, которая наполняется.'],['Минусы','Меньше точных цифр по неделе; ромб с острыми углами виден хуже при крупном тексте.'],['В коде','Canvas, как сосуд; клип по ромбу.']]},
+];
+const vw=$('variants');
+V.forEach((v,i)=>{const b=el('button');b.type='button';b.append(el('span','n','0'+(i+1)),el('span',null,v.name));b.onclick=()=>setV(i);vw.appendChild(b);});
+function setV(i){st.v=i;[...vw.children].forEach((b,k)=>b.classList.toggle('on',k===i));const v=V[i];$('dName').textContent=v.name;$('dIdea').textContent=v.idea;
+  const pc=$('dPc');pc.textContent='';v.pc.forEach(([a,b])=>{const li=el('li');li.append(el('b',null,a),el('span',null,b));pc.appendChild(li);});sync(true);}
+document.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3')setV(+e.key-1);});
+$('slow').onchange=e=>{st.slow=e.target.checked?4:1;};
+const mq=matchMedia('(prefers-reduced-motion: reduce)');$('rm').checked=mq.matches;st.reduced=mq.matches;$('rm').onchange=e=>{st.reduced=e.target.checked;};
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';readColors();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setV(0);requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

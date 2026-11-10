@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Тренировка: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button:disabled{opacity:.35;cursor:default}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);margin:0}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.view{position:absolute;inset:0;padding:58px 24px 0;display:flex;flex-direction:column}
+.back{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:13px;height:28px;margin-bottom:6px}
+.back svg{width:16px;height:16px}
+h1{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15;margin:0}
+.sub{font-size:13px;color:var(--muted);margin-top:3px}
+.foot{margin-top:auto;padding:12px 0 36px;display:flex;flex-direction:column;gap:8px}
+.btn{height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:15px;width:100%}
+.btn2{height:40px;border-radius:999px;font-size:13px;color:var(--muted)}
+.btnO{height:52px;border-radius:999px;border:1px solid var(--line);font-weight:500;flex:1}
+/* обзор программы */
+.lvl{display:flex;gap:16px;margin:18px 0 6px}
+.lvl div{flex:1;border-top:1px solid var(--line);padding-top:8px}
+.lvl span{font-size:12px;color:var(--muted);display:block}
+.lvl b{font-size:22px;font-weight:500}
+.days{margin-top:14px;overflow-y:auto;scrollbar-width:none}
+.day{display:flex;align-items:center;gap:12px;height:54px;border-top:1px solid var(--line)}
+.day:last-child{border-bottom:1px solid var(--line)}
+.day .d{width:56px;font-size:12px;color:var(--muted)}
+.day .d b{display:block;font-size:14px;color:var(--ink);font-weight:500}
+.day .sets{flex:1;display:flex;gap:6px}
+.day .sets i{font-style:normal;flex:1;text-align:center;font-size:14px;padding:4px 0;border-radius:8px}
+.day.now .sets i{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.day .st{width:22px;height:22px;color:var(--ink)}
+.day.done .sets i{color:var(--muted)}
+.day.now{font-weight:500}
+/* проверка */
+.big{font-size:84px;font-weight:500;letter-spacing:-.04em;line-height:1;text-align:center}
+.big small{font-size:22px;color:var(--muted);font-weight:400;letter-spacing:0;margin-left:4px}
+.stepper{display:flex;align-items:center;justify-content:space-between;margin:28px 0 10px}
+.stepper button{width:64px;height:64px;border-radius:50%;border:1px solid var(--line);font-size:26px}
+.tip{font-size:13px;color:var(--muted);line-height:1.5;margin-top:14px}
+.tip b{color:var(--ink);font-weight:500}
+/* тренировка */
+.setsBar{display:flex;gap:6px;margin:18px 0 0}
+.setsBar span{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;padding:8px 0 6px;font-size:15px;position:relative}
+.setsBar span small{display:block;font-size:10px;color:var(--muted);margin-top:1px}
+.setsBar span.done{color:var(--muted)}
+.setsBar span.done::after{content:"";position:absolute;left:8px;right:8px;top:50%;height:1.5px;background:var(--muted);transform:rotate(-12deg)}
+.setsBar span.cur{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:600}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.stage .lab{font-size:13px;color:var(--muted);margin-bottom:6px}
+.adj{display:flex;align-items:center;gap:24px;margin-top:14px}
+.adj button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);font-size:20px}
+.adj span{font-size:13px;color:var(--muted)}
+.restbar{width:100%;height:4px;background:var(--track);border-radius:2px;overflow:hidden;margin-top:18px}
+.restbar i{display:block;height:100%;background:var(--ink)}
+.restacts{display:flex;gap:10px;width:100%;margin-top:16px}
+.next{font-size:13px;color:var(--muted);margin-top:14px}
+.ringcv{width:260px;height:260px}
+.ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.tap{width:100%;flex:1;border:1px dashed var(--line);border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:16px 0 4px}
+.tap:active{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.tapdots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:240px;margin-top:14px}
+.tapdots i{width:7px;height:7px;border-radius:50%;background:var(--track)}
+.tapdots i.on{background:var(--ink)}
+/* итог */
+.res{margin-top:18px;border-top:1px solid var(--line)}
+.res div{display:flex;justify-content:space-between;height:44px;align-items:center;border-bottom:1px solid var(--line);font-size:15px}
+.res span{color:var(--muted);font-size:13px}
+.res b{font-weight:500}
+.feel{display:flex;gap:8px;margin-top:18px}
+.feel button{flex:1;height:72px;border:1px solid var(--line);border-radius:14px;font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.feel button svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.feel button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.habitDone{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);margin-top:16px}
+.habitDone .x{width:26px;height:26px;border-radius:8px;background:var(--ink);color:var(--bg);padding:6px}
+.habitDone .x svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.habitDone .x path{stroke-dasharray:20;stroke-dashoffset:20;animation:draw .26s cubic-bezier(.2,0,0,1) forwards}
+.habitDone .x path+path{animation-delay:.12s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><b>Project XO</b><span>Тренировка дома: три варианта экрана подходов</span></div>
+<div class="ctrls"><label class="chk"><input type="checkbox" id="fast"> Отдых ×10</label><button class="ghost" id="theme" type="button">Тёмная тема</button></div></header>
+<main class="layout">
+<section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen" id="scr">
+  <div class="status"><span>18:05</span><span>100 %</span></div>
+  <div class="view" id="view"></div>
+  <div class="gesture"></div><div class="punch"></div>
+</div></div></section>
+<aside class="panel">
+  <div class="group"><div class="label">Вариант экрана подходов</div><div class="variants" id="variants"></div></div>
+  <div class="group"><div class="label">Упражнение</div><div class="acts" id="exs"></div></div>
+  <div class="group acts"><button class="ghost" id="toTest" type="button">Проверка уровня</button><button class="ghost" id="toPlan" type="button">План</button><button class="ghost" id="toWork" type="button">Тренировка</button></div>
+  <div class="desc"><h2 id="dName"></h2><p id="dIdea"></p><ul class="pc" id="dPc"></ul></div>
+  <p class="note">Весь путь общий для трёх вариантов: проверка уровня → личный план по дням → подходы с отдыхом → «Как было?» → привычка отмечается сама. Различается только экран подходов. Рост нагрузки — по правилам docs/SPORT.md. Если появилась боль — остановиться; без обещаний «кубиков» и калорий. Клавиши 1–3.</p>
+</aside>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const EX={push:{n:'Отжимания',u:'повторы',sec:false,q:'Сколько отжиманий подряд получается?',hint:'До первой ошибки в технике: спина ровная, грудь почти касается пола. С колен — тоже считается.'},
+  squat:{n:'Приседания',u:'повторы',sec:false,q:'Сколько приседаний подряд получается?',hint:'Пятки на полу, колени смотрят туда же, куда носки.'},
+  plank:{n:'Планка',u:'секунды',sec:true,q:'Сколько секунд держите планку?',hint:'Тело — прямая линия от плеч до пяток, таз не проваливается.'},
+  abs:{n:'Пресс',u:'повторы',sec:false,q:'Сколько скручиваний подряд получается?',hint:'Поясница прижата к полу, шею не тянем руками.'}};
+const S={ex:'push',M:{push:18,squat:30,plank:45,abs:22},day:4,v:0,speed:1,set:0,fact:[],phase:'work',restEnd:0,restTotal:0,feel:null,taps:0,hold:null};
+const plan=(M,sec)=>{const k=[.6,.55,.5,.45,.5];return k.map(x=>{let v=Math.floor(M*x);if(sec)v=Math.max(10,Math.round(v/5)*5);return Math.max(1,v);});};
+const restFor=(e,reps)=>EX[e].sec?60:(reps>15?90:60);
+const fmtS=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+const unitShort=e=>EX[e].sec?'с':'';
+const ICON={back:'<path d="M15 5l-7 7 7 7"/>',x:'<path d="M3 3l12 12"/><path d="M15 3L3 15"/>'};
+const FEEL=[['Легко','M8.8 14.4c1.7 1.1 4.7 1.1 6.4 0'],['Нормально','M9 15.4h6'],['Тяжело','M8.8 16c1.7-.9 4.7-.9 6.4 0']];
+const face=m=>`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.8v.2M14.7 9.8v.2" stroke-width="2"/><path d="${m}"/></svg>`;
+const back=(t,fn)=>{const b=el('button','back');b.type='button';b.innerHTML=`<svg class="i" viewBox="0 0 24 24">${ICON.back}</svg>`;b.append(t);b.onclick=fn;return b;};
+let screen='plan',timer=null,ringCv=null;
+function go(s){screen=s;clearInterval(timer);timer=null;render();}
+function render(){readColors();const v=$('view');v.textContent='';({plan:vPlan,test:vTest,work:vWork,done:vDone})[screen](v);}
+/* план по дням */
+function vPlan(v){const e=S.ex,M=S.M[e],E=EX[e];v.append(back('Привычки',()=>{}),el('h1',null,E.n),el('div','sub',`пн, ср, пт · день ${S.day} · напоминание в 18:00`));
+  const l=el('div','lvl');[['Уровень сейчас',`${M} ${E.sec?'с':''}`],['Сегодня всего',`${plan(M,E.sec).reduce((a,b)=>a+b,0)} ${E.sec?'с':'повт.'}`],['До проверки',`${6-((S.day-1)%6)} трен.`]].forEach(([a,b])=>{const d=el('div');d.append(el('span',null,a),el('b',null,b));l.appendChild(d);});v.appendChild(l);
+  const days=el('div','days');for(let d=Math.max(1,S.day-2);d<=S.day+3;d++){const m=Math.round(M*Math.pow(1.08,d-S.day)),p=plan(m,E.sec),row=el('div','day'+(d<S.day?' done':d===S.day?' now':''));
+    const dd=el('div','d');dd.append(el('b',null,`День ${d}`),d<S.day?'готово':d===S.day?'сегодня':'');const sets=el('div','sets');p.forEach((x,i)=>sets.appendChild(el('i',null,i===4?`${x}+`:String(x))));
+    const st=el('span','st');if(d<S.day)st.innerHTML=`<svg class="i" viewBox="0 0 18 18" style="width:18px;height:18px;stroke-width:2">${ICON.x}</svg>`;row.append(dd,sets,st);days.appendChild(row);}
+  v.appendChild(days);v.appendChild(el('div','tip','Будущие дни — примерно: план подстроится под то, как пройдёт сегодня. Последний подход — «сколько сможете».'));
+  const f=el('div','foot'),b=el('button','btn','Начать тренировку');b.type='button';b.onclick=()=>{S.set=0;S.fact=[];S.phase='work';S.taps=0;S.hold=null;go('work');};
+  const t=el('button','btn2','Пройти проверку снова');t.type='button';t.onclick=()=>go('test');f.append(b,t);v.appendChild(f);}
+/* проверка уровня */
+function vTest(v){const e=S.ex,E=EX[e];let val=S.M[e];v.append(back('План',()=>go('plan')),el('h1',null,'Проверка уровня'),el('div','sub',E.q));
+  const big=el('div','big');const upd=()=>{big.innerHTML=`${val}<small>${E.sec?'с':''}</small>`;};upd();
+  const st=el('div','stepper'),m=el('button',null,'−'),p=el('button',null,'+');m.type=p.type='button';m.setAttribute('aria-label','Меньше');p.setAttribute('aria-label','Больше');const step=E.sec?5:1;
+  m.onclick=()=>{val=Math.max(E.sec?10:1,val-step);upd();};p.onclick=()=>{val=Math.min(E.sec?600:200,val+step);upd();};st.append(m,big,p);v.appendChild(st);
+  const tip=el('div','tip');tip.append(E.hint,el('br'),el('br'));const bb=el('b',null,'Если появилась боль — остановитесь.');tip.append(bb,' Число можно поправить в любой момент.');v.appendChild(tip);
+  const f=el('div','foot'),b=el('button','btn','Сохранить уровень');b.type='button';b.onclick=()=>{S.M[e]=val;go('plan');};f.appendChild(b);v.appendChild(f);}
+/* тренировка: общий заголовок + вариант */
+function vWork(v){const e=S.ex,E=EX[e],P=plan(S.M[e],E.sec);v.append(back('Закончить позже',()=>go('plan')),el('h1',null,E.n),el('div','sub',`день ${S.day} · подход ${Math.min(S.set+1,5)} из 5`));
+  if(S.v!==1){const bar=el('div','setsBar');P.forEach((x,i)=>{const s=el('span',i<S.set?'done':i===S.set?'cur':'');s.append(i===4?`${x}+`:String(x));if(i<S.set&&S.fact[i]!==x)s.appendChild(el('small',null,`было ${S.fact[i]}`));bar.appendChild(s);});v.appendChild(bar);}
+  const stage=el('div','stage');v.appendChild(stage);
+  if(S.phase==='rest')return rest(stage,v,P);
+  [w1,w2,w3][S.v](stage,v,P);}
+function finishSet(val){S.fact[S.set]=val;S.set++;if(navigator.vibrate)try{navigator.vibrate(15);}catch(e){}
+  if(S.set>=5){go('done');return;}const r=restFor(S.ex,val);S.phase='rest';S.restTotal=r;S.restEnd=performance.now()+r*1000/S.speed;S.taps=0;S.hold=null;render();}
+function rest(stage,v,P){const lab=el('div','lab','Отдых'),big=el('div','big'),bar=el('div','restbar'),bi=el('i');bar.appendChild(bi);
+  if(S.v===1){ringCv=el('canvas','ringcv');ringCv.width=520;ringCv.height=520;const wrap=el('div');wrap.style.position='relative';const c=el('div','ringc');c.append(lab,big);wrap.append(ringCv,c);stage.appendChild(wrap);}
+  else{stage.append(lab,big);if(S.v===0||S.v===2)stage.appendChild(bar);}
+  stage.appendChild(el('div','next',`Дальше: ${P[S.set]}${S.set===4?'+':''} ${EX[S.ex].sec?'с':'повторов'}`));
+  const acts=el('div','restacts'),a=el('button','btnO','+30 с'),s=el('button','btnO','Пропустить');a.type=s.type='button';a.onclick=()=>{S.restEnd+=30000/S.speed;S.restTotal+=30;};s.onclick=()=>{S.phase='work';render();};acts.append(a,s);stage.appendChild(acts);
+  const tick=()=>{const left=Math.max(0,(S.restEnd-performance.now())*S.speed/1000);big.textContent=fmtS(Math.ceil(left));bi.style.width=(left/S.restTotal*100)+'%';
+    if(ringCv)drawRing(P,left/S.restTotal);if(left<=0){clearInterval(timer);if(navigator.vibrate)try{navigator.vibrate([20,60,20]);}catch(e){}S.phase='work';render();}};
+  tick();timer=setInterval(tick,100);}
+/* 01 Лесенка: цель подхода крупно, поправить ± */
+function w1(stage,v,P){const E=EX[S.ex];let val=P[S.set];const last=S.set===4;
+  if(E.sec)return hold(stage,P);
+  stage.appendChild(el('div','lab',last?'Сколько сможете, но не меньше':'Цель подхода'));const big=el('div','big');big.textContent=val;stage.appendChild(big);
+  const adj=el('div','adj'),m=el('button',null,'−'),p=el('button',null,'+');m.type=p.type='button';m.setAttribute('aria-label','Сделано меньше');p.setAttribute('aria-label','Сделано больше');
+  m.onclick=()=>{val=Math.max(0,val-1);big.textContent=val;};p.onclick=()=>{val++;big.textContent=val;};adj.append(m,el('span',null,'если вышло иначе'),p);stage.appendChild(adj);
+  const f=el('div','foot'),b=el('button','btn','Подход сделан');b.type='button';b.onclick=()=>finishSet(val);f.appendChild(b);v.appendChild(f);}
+/* 02 Кольцо: сегменты подходов, нажатие по центру */
+function w2(stage,v,P){const E=EX[S.ex];
+  ringCv=el('canvas','ringcv');ringCv.width=520;ringCv.height=520;const wrap=el('button');wrap.type='button';wrap.style.position='relative';wrap.setAttribute('aria-label','Подход сделан');
+  const c=el('div','ringc');const lab=el('div','lab',S.set===4?'максимум, от':`подход ${S.set+1}`);const big=el('div','big',String(P[S.set]));big.style.fontSize='72px';c.append(lab,big,el('div','lab',E.sec?'секунд':'повторов'));
+  wrap.append(ringCv,c);stage.appendChild(wrap);drawRing(P,-1);
+  if(E.sec){wrap.removeAttribute('aria-label');return hold(stage,P,true,big);}
+  wrap.onclick=()=>finishSet(P[S.set]);stage.appendChild(el('div','next','Нажмите на кольцо, когда закончите подход. Вышло иначе — поправьте на итоговом экране.'));
+  const f=el('div','foot');v.appendChild(f);}
+function drawRing(P,restLeft){if(!ringCv)return;const g=ringCv.getContext('2d');g.setTransform(2,0,0,2,0,0);g.clearRect(0,0,260,260);const R=112,n=5,gap=.08;
+  for(let i=0;i<n;i++){const a0=-Math.PI/2+i/n*Math.PI*2+gap/2,a1=-Math.PI/2+(i+1)/n*Math.PI*2-gap/2;g.lineWidth=12;g.lineCap='round';
+    g.strokeStyle=i<S.set?C.ink:i===S.set&&restLeft<0?C.accent:C.track;g.beginPath();g.arc(130,130,R,a0,a1);g.stroke();}
+  if(restLeft>=0){g.lineWidth=3;g.strokeStyle=C.accent;g.beginPath();g.arc(130,130,R-16,-Math.PI/2,-Math.PI/2+Math.PI*2*restLeft);g.stroke();}
+  g.lineCap='butt';}
+/* 03 Счёт касанием: каждое касание — повтор */
+function w3(stage,v,P){const E=EX[S.ex];if(E.sec)return hold(stage,P);const target=P[S.set];
+  const pad=el('button','tap');pad.type='button';pad.setAttribute('aria-label','Повтор');const lab=el('div','lab','касайтесь на каждый повтор — рукой или носом'),big=el('div','big',String(S.taps)),dots=el('div','tapdots');
+  for(let i=0;i<target;i++)dots.appendChild(el('i',i<S.taps?'on':null));pad.append(lab,big,el('div','lab',`цель ${target}${S.set===4?'+':''}`),dots);
+  pad.onclick=()=>{S.taps++;big.textContent=S.taps;if(!reduced)big.animate([{transform:'scale(1.08)'},{transform:'none'}],{duration:180,easing:'cubic-bezier(.2,0,0,1)'});if(dots.children[S.taps-1])dots.children[S.taps-1].className='on';if(navigator.vibrate)try{navigator.vibrate(8);}catch(e){}
+    if(S.taps>=target&&S.set<4){setTimeout(()=>finishSet(S.taps),350);}};
+  stage.appendChild(pad);const f=el('div','foot'),b=el('button','btn',S.set===4?'Больше не могу':'Закончить подход');b.type='button';b.onclick=()=>finishSet(S.taps);f.appendChild(b);v.appendChild(f);}
+/* планка: удержание с секундомером */
+function hold(stage,P,inRing,bigEl){const target=P[S.set];const big=bigEl||el('div','big');if(!bigEl){stage.appendChild(el('div','lab',`держите ${target}${S.set===4?'+':''} с`));stage.appendChild(big);}
+  const bar=el('div','restbar'),bi=el('i');bar.appendChild(bi);if(!inRing)stage.appendChild(bar);
+  const f=el('div','foot'),b=el('button','btn',S.hold?'Стоп':'Старт');b.type='button';f.appendChild(b);document.getElementById('view').appendChild(f);
+  const tick=()=>{const s=S.hold?Math.floor((performance.now()-S.hold)*S.speed/1000):0;big.textContent=S.hold?String(s):String(target);bi.style.width=clamp(s/target)*100+'%';};
+  b.onclick=()=>{if(!S.hold){S.hold=performance.now();b.textContent='Стоп';clearInterval(timer);timer=setInterval(tick,100);}else{const s=Math.floor((performance.now()-S.hold)*S.speed/1000);S.hold=null;finishSet(s);}};tick();}
+/* итог */
+function vDone(v){const e=S.ex,E=EX[e],P=plan(S.M[e],E.sec),tot=S.fact.reduce((a,b)=>a+b,0),ok=S.fact.every((x,i)=>x>=P[i]);
+  v.append(el('h1',null,'Тренировка готова'),el('div','sub',`${E.n} · день ${S.day}`));const r=el('div','res');
+  [['Всего',`${tot} ${E.sec?'с':'повторов'}`],['Подходы',S.fact.join(' · ')],['План',P.map((x,i)=>i===4?x+'+':x).join(' · ')]].forEach(([a,b])=>{const d=el('div');d.append(el('span',null,a),el('b',null,b));r.appendChild(d);});v.appendChild(r);
+  v.appendChild(el('div','tip',ok?'Все подходы по плану.':'В одном из подходов вышло меньше плана — ничего страшного, следующий день будет таким же.'));
+  const fl=el('div','feel');v.append(el('div','lab',''),el('div','sub','Как было?'));
+  FEEL.forEach(([n,m],i)=>{const b=el('button');b.type='button';b.setAttribute('aria-pressed',S.feel===i);b.innerHTML=face(m);b.append(n);b.onclick=()=>{S.feel=i;render();};fl.appendChild(b);});v.appendChild(fl);
+  const k=!ok||S.feel===2?1:S.feel===0?1.12:1.08,nextM=k===1?S.M[e]:Math.max(S.M[e]+1,Math.round(S.M[e]*k));
+  if(S.feel!=null)v.appendChild(el('div','tip',nextM>S.M[e]?`Следующая тренировка — уровень ${nextM} (+${nextM-S.M[e]}).`:'Следующая тренировка — тот же уровень.'));
+  const hd=el('div','habitDone');hd.innerHTML=`<span class="x"><svg viewBox="0 0 18 18">${ICON.x}</svg></span>`;hd.append('Отмечено в «Привычках»: «Тренировка»');v.appendChild(hd);
+  const f=el('div','foot'),b=el('button','btn','Готово');b.type='button';b.disabled=S.feel==null;b.onclick=()=>{S.M[e]=nextM;S.day++;S.feel=null;go('plan');};f.appendChild(b);v.appendChild(f);}
+/* панель */
+const VS=[
+ {name:'Лесенка',idea:'Сверху пять подходов в ряд, сделанные зачёркнуты. Крупно — цель текущего подхода, «−» и «+», если вышло иначе. Отдых — большой обратный отсчёт и тонкая полоса.',
+  pc:[['Плюсы','Проще всего и понятнее всего: видно весь план дня.'],['Минусы','Нужно нажимать после каждого подхода; меньше «живого» счёта.'],['В коде','Обычные элементы, таймер от времени конца отдыха.']]},
+ {name:'Кольцо',idea:'Кольцо из пяти сегментов-подходов. Нажали на кольцо — подход сделан, сегмент закрашивается. Во время отдыха внутри бежит тонкая дуга обратного отсчёта.',
+  pc:[['Плюсы','Тот же язык, что «Баланс дня» и голодание; крупная цель нажатия.'],['Минусы','Поправить число повторов можно только на итоговом экране.'],['В коде','Canvas сегментов, как кольцо привычек.']]},
+ {name:'Счёт касанием',idea:'Весь экран — кнопка: касание рукой или носом на каждый повтор, число растёт, точки заполняются. На цели подход закрывается сам, последний — «Больше не могу».',
+  pc:[['Плюсы','Не нужно считать в уме; честный факт по каждому подходу.'],['Минусы','Не всем удобно касаться экрана во время упражнения; для планки — секундомер.'],['В коде','Большая область касания, вибрация на каждый повтор.']]},
+];
+VS.forEach((v,i)=>{const b=el('button');b.type='button';b.append(el('span','n','0'+(i+1)),el('span',null,v.name));b.onclick=()=>setV(i);$('variants').appendChild(b);});
+function setV(i){S.v=i;[...$('variants').children].forEach((b,k)=>b.classList.toggle('on',k===i));$('dName').textContent=VS[i].name;$('dIdea').textContent=VS[i].idea;$('dPc').innerHTML='';
+  VS[i].pc.forEach(([a,b])=>{const li=el('li');li.append(el('b',null,a),el('span',null,b));$('dPc').appendChild(li);});ringCv=null;render();}
+Object.entries(EX).forEach(([k,e])=>{const b=el('button','ghost',e.n);b.type='button';b.onclick=()=>{S.ex=k;S.set=0;S.fact=[];S.phase='work';go(screen==='done'?'plan':screen);};$('exs').appendChild(b);});
+$('toTest').onclick=()=>go('test');$('toPlan').onclick=()=>go('plan');$('toWork').onclick=()=>{S.set=0;S.fact=[];S.phase='work';S.taps=0;S.hold=null;go('work');};
+$('fast').onchange=e=>{S.speed=e.target.checked?10:1;};
+document.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3')setV(+e.key-1);});
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';render();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setV(0);
+window.__xo={S,go,setV,finishSet};
+})();
+</script>
+</body>
+</html>

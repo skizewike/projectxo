@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Календарь и самочувствие</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--on-accent:#FFFFFF;--bezel:#1B1A18;--scrim:rgba(23,22,20,.32);--sheet:#FBF9F4;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--on-accent:#141413;--bezel:#222120;--scrim:rgba(0,0,0,.5);--sheet:#1B1B19;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--on-accent:#141413;--bezel:#222120;--scrim:rgba(0,0,0,.5);--sheet:#1B1B19;}
+:root[data-th="acid"]{--page:#000;--bg:#0A0A0A;--ink:#F3F3EE;--muted:#8E8E86;--line:#262624;--track:#1C1C1A;--accent:#B6FF00;--on-accent:#0A0A0A;--bezel:#1A1A1A;--scrim:rgba(0,0,0,.6);--sheet:#131313;}
+:root[data-th="volt"]{--page:#0A1233;--bg:#101A46;--ink:#EEF1FF;--muted:#98A3D3;--line:#26326E;--track:#1B265C;--accent:#245BFF;--on-accent:#FFFFFF;--bezel:#0A1030;--scrim:rgba(4,8,30,.6);--sheet:#16215A;}
+:root[data-th="blood"]{--page:#000;--bg:#080808;--ink:#F2EDED;--muted:#958B8B;--line:#2A1E1E;--track:#1C1414;--accent:#C1121F;--on-accent:#FFFFFF;--bezel:#181212;--scrim:rgba(0,0,0,.6);--sheet:#121010;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button:disabled{cursor:default}
+svg.i{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:10px;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);color:var(--ink)}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.bar{position:absolute;left:16px;right:16px;top:44px;display:flex;align-items:center;justify-content:space-between;z-index:4}
+.bar .x{width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.seg{display:flex;background:var(--track);border-radius:999px;padding:3px}
+.seg button{height:34px;padding:0 20px;border-radius:999px;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--bg);color:var(--ink);font-weight:500;box-shadow:0 1px 0 var(--line)}
+.wd{position:absolute;left:12px;right:12px;top:96px;display:grid;grid-template-columns:repeat(7,1fr);font-size:11px;color:var(--muted);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--line);z-index:4;letter-spacing:.04em}
+.months{position:absolute;left:12px;right:12px;top:118px;bottom:0;overflow-y:auto;scrollbar-width:none;padding-bottom:330px}
+.months::-webkit-scrollbar{display:none}
+.mon h3{text-align:center;font-size:17px;font-weight:600;margin:18px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);row-gap:4px}
+.d{height:50px;position:relative;display:flex;align-items:center;justify-content:center}
+.d canvas{position:absolute;width:40px;height:40px;left:50%;top:50%;margin:-20px 0 0 -20px;pointer-events:none}
+.d b{position:relative;font-size:15px;font-weight:400}
+.d.today b{font-weight:600}
+.d .tl{position:absolute;top:-4px;left:0;right:0;font-size:9px;font-weight:600;letter-spacing:.05em;text-align:center;color:var(--ink)}
+.d.sel::before{content:"";position:absolute;width:44px;height:44px;border-radius:50%;background:var(--ink);left:50%;top:50%;margin:-22px 0 0 -22px}
+.d.sel b{color:var(--bg);font-weight:600}
+.d .fd{position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--accent);left:50%;margin-left:-2px}
+.d:disabled b{color:var(--muted);opacity:.5}
+/* год */
+.year{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 12px;padding:14px 4px}
+.ym h4{font-size:13px;margin:0 0 6px;font-weight:600}
+.ym .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.ym i{aspect-ratio:1;border-radius:50%;background:var(--track)}
+.ym i.no{background:transparent}
+.ym i.fut{opacity:.35}
+.ym.cur h4{color:var(--accent)}
+/* лист дня */
+.sheet{position:absolute;left:0;right:0;bottom:0;height:330px;background:var(--sheet);border-radius:26px 26px 0 0;z-index:6;box-shadow:0 -1px 0 var(--line);transition:height .42s cubic-bezier(.2,0,0,1);display:flex;flex-direction:column}
+.sheet.full{height:690px}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:10px auto 4px;flex:0 0 auto}
+.sh{padding:6px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;flex:0 0 auto}
+.sh h2{margin:0;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.sh .sub{font-size:13px;color:var(--muted);margin-top:2px}
+.sh .pct{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.sh .pct canvas{width:36px;height:36px}
+.sb{flex:1;overflow-y:auto;scrollbar-width:none;padding:8px 24px 40px}
+.sb::-webkit-scrollbar{display:none}
+.st{font-size:13px;color:var(--muted);margin:16px 0 8px;display:flex;justify-content:space-between;align-items:center}
+.st button{color:var(--accent);font-size:13px;font-weight:500}
+.mr{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.mr:last-child{border-bottom:1px solid var(--line)}
+.mr .n{flex:1}.mr b{font-weight:500}.mr small{color:var(--muted);font-size:12px;margin-left:3px}
+.mr .pb{height:2px;background:var(--track);margin-top:6px}.mr .pb i{display:block;height:2px;background:var(--ink)}
+.add{display:flex;align-items:center;justify-content:space-between;background:var(--track);border-radius:18px;padding:14px 10px 14px 16px;color:var(--muted);font-size:14px;width:100%;text-align:left}
+.add .plus{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;flex:0 0 44px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 6px;border-radius:999px;background:var(--track);font-size:14px;transition:background .2s,color .2s}
+.chip .ci{width:30px;height:30px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.chip .ci svg{width:18px;height:18px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.chip[aria-pressed="true"] .ci{background:var(--accent);color:var(--on-accent)}
+.rec{display:flex;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.rec span{color:var(--muted);width:42px;flex:0 0 42px;font-size:13px}
+.rec b{font-weight:500;margin-left:auto}
+.empty{color:var(--muted);font-size:13px;padding:6px 0}
+/* выбор самочувствия */
+.pick{position:absolute;inset:0;background:var(--bg);z-index:20;transform:translateY(100%);transition:transform .42s cubic-bezier(.2,0,0,1);display:flex;flex-direction:column}
+.pick.show{transform:none}
+.ph{padding:44px 16px 0;display:flex;align-items:center;justify-content:space-between}
+.ph .tt{text-align:center}.ph h2{margin:0;font-size:20px;font-weight:600}.ph .sub{font-size:12px;color:var(--muted)}
+.ph button{width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.search{margin:12px 16px 0;height:46px;border-radius:999px;background:var(--track);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--muted)}
+.search input{flex:1;border:0;background:transparent;font:inherit;font-size:15px;color:var(--ink);outline:0}
+.pb2{flex:1;overflow-y:auto;scrollbar-width:none;padding:6px 16px 120px}
+.pb2::-webkit-scrollbar{display:none}
+.card{background:var(--sheet);border-radius:20px;padding:14px 14px 16px;margin-top:12px;box-shadow:inset 0 0 0 1px var(--line)}
+.card h3{margin:0 0 12px;font-size:16px;font-weight:600}
+.faces{display:flex;justify-content:space-between}
+.face{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted);width:58px}
+.face .fc{width:50px;height:50px;border-radius:50%;background:var(--track);display:flex;align-items:center;justify-content:center;color:var(--ink);transition:background .2s,transform .2s}
+.face .fc svg{width:30px;height:30px}
+.face[aria-pressed="true"] .fc{background:var(--accent);color:var(--on-accent)}
+.face[aria-pressed="true"]{color:var(--ink);font-weight:500}
+.wst{display:flex;align-items:center;justify-content:space-between}
+.wst button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);font-size:20px}
+.wst b{font-size:30px;font-weight:500;letter-spacing:-.02em}
+.wst b small{font-size:14px;color:var(--muted);font-weight:400;margin-left:3px}
+textarea{width:100%;min-height:72px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--ink);font:inherit;font-size:15px;padding:10px 12px;resize:none}
+.pfoot{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 34px;background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.pfoot button{width:100%;height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.desc ul{margin:0 0 10px;padding-left:18px;color:var(--muted)}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><b>Project XO</b><span>Календарь: история дня и самочувствие</span></div><button class="ghost" id="theme" type="button">Тёмная тема</button></header>
+<main class="layout">
+<section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen" id="scr">
+  <div class="status"><span>14:20</span><span>100 %</span></div>
+  <div class="bar"><button class="x" type="button" aria-label="Закрыть календарь"><svg class="i" viewBox="0 0 24 24" style="width:24px;height:24px"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="seg" id="mode"><button type="button" data-m="month" aria-pressed="true">Месяц</button><button type="button" data-m="year" aria-pressed="false">Год</button></div><span style="width:40px"></span></div>
+  <div class="wd" id="wd"></div>
+  <div class="months" id="months"></div>
+  <div class="sheet" id="sheet"><button class="grab" id="grab" type="button" aria-label="Развернуть"></button><div class="sh" id="sh"></div><div class="sb" id="sb"></div></div>
+  <div class="pick" id="pick"></div>
+  <div class="gesture"></div><div class="punch"></div>
+</div></div></section>
+<aside class="panel">
+  <div class="group"><div class="label">Тема приложения (Р49)</div><div class="ctrls" id="ths"></div></div>
+  <div class="group"><div class="label">Данные</div><div class="ctrls" id="data"></div></div>
+  <div class="desc"><ul>
+    <li>Календарь открывается нажатием на дату на «Сегодня». Месяцы листаются вниз, «Год» — весь год точками.</li>
+    <li>Кольцо у дня — «Баланс дня». Точка под числом — в этот день отмечено самочувствие.</li>
+    <li>Выбранный день — внизу: баланс, все модули, записи по времени, самочувствие, вес, заметка. Потяните лист вверх — откроется весь день.</li>
+    <li>«+» открывает выбор самочувствия: общее состояние, энергия, боль, настроение, пищеварение, другое, вес, заметка. Частые — сверху. Иконки рисуем сами.</li>
+    <li>Будущие дни и дни до начала пользования XO недоступны.</li>
+  </ul></div>
+</aside>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const C={};function readColors(){const cs=getComputedStyle($('scr'));['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ | /g,' ');
+const dec=(n,d=1)=>n.toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const MON=['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'],MONg=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
+  DOW=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],WD=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+const TODAY=new Date(2026,10,9),key=d=>`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`,same=(a,b)=>key(a)===key(b);
+let START=new Date(2026,8,9); // начали пользоваться
+/* иконки самочувствия: линия 1,5, сетка 24 */
+const I={
+ water:'<path d="M12 3.5c3.4 4.2 5.8 7.4 5.8 10.2a5.8 5.8 0 0 1-11.6 0C6.2 10.9 8.6 7.7 12 3.5z"/><path d="M9.2 14.2a2.8 2.8 0 0 0 2.8 2.8"/>',
+ food:'<path d="M7 3.5v5.5a2 2 0 0 0 2 2M11 3.5v5.5a2 2 0 0 1-2 2v9.5M9 3.5v5"/><path d="M17 20.5V3.5c-2 1.5-3 4-3 7.5h3"/>',
+ steps:'<path d="M8.5 3.5c1.8 0 2.7 1.6 2.7 3.8 0 2.4-.9 4.2-2.7 4.2S5.8 9.7 5.8 7.3c0-2.2.9-3.8 2.7-3.8zM7 13.8l3.4.3-.3 2.1a1.7 1.7 0 0 1-3.3-.5z"/><path d="M15.5 8c1.8 0 2.7 1.6 2.7 3.8 0 2.4-.9 4.2-2.7 4.2s-2.7-1.8-2.7-4.2c0-2.2.9-3.8 2.7-3.8zM14 18.3l3.4.3-.3 2.1a1.7 1.7 0 0 1-3.3-.5z"/>',
+ energy:'<rect x="3.5" y="7.5" width="15" height="9" rx="2"/><path d="M20.5 10.5v3"/><path d="M6.5 10.5h3v3h-3zM10.5 10.5h3v3h-3zM14.5 10.5h1.5v3h-1.5z" fill="currentColor" stroke="none"/>',
+ tired:'<rect x="3.5" y="7.5" width="15" height="9" rx="2"/><path d="M20.5 10.5v3"/><path d="M6.5 10.5h2.5v3h-2.5z" fill="currentColor" stroke="none"/>',
+ sleepy:'<path d="M18 14.5A7 7 0 1 1 9.5 6a5.5 5.5 0 0 0 8.5 8.5z"/><path d="M15 3.5h3l-3 3h3"/>',
+ head:'<circle cx="12" cy="12" r="7"/><path d="M4 6l2.5 2M20 6l-2.5 2M12 1.8v2.5"/><path d="M9.5 13.5c1.4 1 3.6 1 5 0"/>',
+ back:'<path d="M12 3v18"/><path d="M9.5 5.5h5M9 9.5h6M9 13.5h6M9.5 17.5h5"/>',
+ muscle:'<path d="M4.5 17.5c2-4 4-7 7.5-9 1.2-.7 2.5-1.6 3-3l2.5 1.5c-.4 1.7-1.6 2.6-2.8 3.3 2.3.3 4.3 2.1 4.3 4.6 0 2.4-2.1 4.1-4.7 4.1H4.5z"/>',
+ joint:'<path d="M9 3.5v6.5a3 3 0 0 0 6 0V3.5"/><path d="M9 20.5V16a3 3 0 0 1 6 0v4.5"/><circle cx="12" cy="13" r="1.2"/>',
+ belly:'<path d="M7 4v4a5 5 0 0 0 0 8v4M17 4v4a5 5 0 0 1 0 8v4"/><circle cx="12" cy="12" r="1.3"/>',
+ calm:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 10.3c.6-.6 1.4-.6 2 0M13.5 10.3c.6-.6 1.4-.6 2 0M9 14.8c1.7 1.1 4.3 1.1 6 0"/>',
+ joy:'<circle cx="12" cy="12" r="8.5"/><path d="M9 9.5v.5M15 9.5v.5" stroke-width="2"/><path d="M8 13.2c1.8 3 6.2 3 8 0z"/>',
+ anx:'<circle cx="12" cy="12" r="8.5"/><path d="M9 10v.3M15 10v.3" stroke-width="2"/><path d="M8.5 15.5l1.2-1 1.2 1 1.1-1 1.2 1 1.2-1 1.1 1"/>',
+ angry:'<circle cx="12" cy="12" r="8.5"/><path d="M8 8.5l2.5 1.5M16 8.5l-2.5 1.5M9 16c1.7-1 4.3-1 6 0"/>',
+ sad:'<circle cx="12" cy="12" r="8.5"/><path d="M9 10v.3M15 10v.3" stroke-width="2"/><path d="M9 16.2c1.7-1.2 4.3-1.2 6 0M16.5 12.5v1.5"/>',
+ bloat:'<circle cx="12" cy="9.5" r="6"/><path d="M12 15.5l-1 1.5h2zM12 17v3.5"/><path d="M9.5 7.5a3 3 0 0 1 2.5-1.5"/>',
+ heart:'<path d="M12 21c4-3 6-6 6-9.5 0-2-1-3.5-2.5-4.5-.5 2-1.8 3-3 3 .5-3-1-6-3.5-7 .3 3-4 5.5-4 9.5C5 15.5 8 18.5 12 21z"/>',
+ nausea:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 10h2M13.5 10h2M8 15c1-1 2-1 3 0s2 1 3 0 2-1 2 0"/>',
+ cold:'<path d="M10 4a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v6.5"/>',
+ allergy:'<circle cx="12" cy="12" r="2.2"/><path d="M12 9.8V5M12 14.2V19M9.8 12H5M14.2 12H19M10.4 10.4L7 7M13.6 13.6L17 17M13.6 10.4L17 7M10.4 13.6L7 17"/>',
+ stress:'<path d="M3.5 13h3l2-5 3.5 10 2.5-7 1.5 2h4.5"/>',
+ period:'<path d="M12 3.5c3 4 5 6.8 5 9.5a5 5 0 0 1-10 0c0-2.7 2-5.5 5-9.5z"/><path d="M9.5 14.5h5"/>',
+ scale:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 10a5 5 0 0 1 7 0L13 12.2"/>',
+ note:'<path d="M6 3.5h9l3 3v14H6z"/><path d="M9 10h6M9 13.5h6M9 17h4"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',back2:'<path d="M15 5l-7 7 7 7"/>',fwd:'<path d="M9 5l7 7-7 7"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>'};
+const svg=(k,st)=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true"${st?` style="${st}"`:''}>${I[k]}</svg>`;
+const FACES=[['Плохо','M8.3 16.6c1.9-2 5.5-2 7.4 0'],['Так себе','M8.8 16c1.7-.9 4.7-.9 6.4 0'],['Нормально','M9 15.4h6'],['Хорошо','M8.8 14.4c1.7 1.1 4.7 1.1 6.4 0'],['Отлично','M8.2 13.8c1.9 2.6 5.7 2.6 7.6 0']];
+const face=m=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.8v.2M14.7 9.8v.2" stroke-width="2"/><path d="${m}"/></svg>`;
+const CATS=[
+ ['Энергия',[['energy','Бодрость'],['tired','Усталость'],['sleepy','Сонливость']]],
+ ['Боль',[['head','Голова'],['back','Спина'],['muscle','Мышцы после тренировки'],['joint','Суставы'],['belly','Живот']]],
+ ['Настроение',[['calm','Спокойствие'],['joy','Радость'],['anx','Тревога'],['angry','Раздражение'],['sad','Грусть'],['stress','Стресс']]],
+ ['Пищеварение',[['bloat','Вздутие'],['heart','Изжога'],['nausea','Тошнота']]],
+ ['Другое',[['cold','Простуда'],['allergy','Аллергия'],['period','Месячные']]]];
+const ALL={};CATS.forEach(([,a])=>a.forEach(([k,n])=>ALL[k]=n));
+/* данные: пример за 2 месяца или новый пользователь */
+let LOG={};const G={water:2200,food:1720,steps:8000};
+function rnd(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return s/2147483647;};}
+function demo(full){LOG={};START=full?new Date(2026,8,9):new Date(TODAY);const r=rnd(7);
+  for(let d=new Date(START);d<=TODAY;d.setDate(d.getDate()+1)){const k=key(d),isT=same(d,TODAY);
+    if(!full){LOG[k]={water:0,food:0,steps:0,feel:null,tags:[],w:null,note:'',recs:[]};continue;}
+    const t=(d-START)/(TODAY-START);const e={water:isT?1450:1300+r()*1300,food:isT?1240:1300+r()*700,steps:isT?5420:4000+r()*6500+t*1500,feel:r()<.6?Math.min(4,Math.round(1.5+t*1.5+r()*1.5)):null,tags:[],w:r()<.35?74-2.2*t+(r()-.5)*.5:null,note:'',recs:[]};
+    if(e.feel!=null){const pool=Object.keys(ALL);const n=1+Math.floor(r()*2);for(let i=0;i<n;i++){const kk=pool[Math.floor(r()*pool.length)];if(kk!=='period'&&!e.tags.includes(kk))e.tags.push(kk);}}
+    if(isT){e.feel=3;e.tags=['energy','muscle'];e.w=71.8;e.note='Первый раз 12 отжиманий подряд';
+      e.recs=[['08:10','water','Вода','250 мл'],['08:30','food','Овсянка с бананом','320 ккал'],['10:45','water','Вода','300 мл'],['11:40','food','Яблоко','80 ккал'],['13:05','food','Курица с рисом','540 ккал'],['13:20','water','Вода','500 мл'],['16:30','water','Вода','400 мл'],['17:10','food','Творог 5 %','300 ккал']];}
+    LOG[k]=e;}}
+const bal=e=>e?(clamp(e.water/G.water)+clamp(e.food/G.food)+clamp(e.steps/G.steps))/3:0;
+let sel=new Date(TODAY),mode='month';
+function ring(cv,p,size,inv){const c=cv.getContext('2d');cv.width=size*2;cv.height=size*2;c.setTransform(2,0,0,2,0,0);const r=size/2-2;c.lineWidth=2.2;
+  c.strokeStyle=inv?'rgba(127,127,127,.3)':C.track;c.beginPath();c.arc(size/2,size/2,r,0,Math.PI*2);c.stroke();if(p>0){c.strokeStyle=p>=1?C.accent:(inv?C.bg:C.ink);c.lineCap='round';c.beginPath();c.arc(size/2,size/2,r,-Math.PI/2,-Math.PI/2+Math.PI*2*p);c.stroke();}}
+/* месяц */
+function renderMonths(){readColors();const box=$('months');box.textContent='';$('wd').style.display=mode==='month'?'grid':'none';
+  if(mode==='year')return renderYear(box);
+  for(let m=new Date(START.getFullYear(),START.getMonth(),1);m<=new Date(2026,11,1);m.setMonth(m.getMonth()+1)){const mon=el('div','mon');mon.appendChild(el('h3',null,MON[m.getMonth()]+(m.getFullYear()!==2026?' '+m.getFullYear():'')));
+    const g=el('div','grid');const first=(new Date(m.getFullYear(),m.getMonth(),1).getDay()+6)%7;for(let i=0;i<first;i++)g.appendChild(el('span'));
+    const n=new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
+    for(let d=1;d<=n;d++){const dt=new Date(m.getFullYear(),m.getMonth(),d),k=key(dt),e=LOG[k],b=el('button','d');b.type='button';const ok=dt>=new Date(START.getFullYear(),START.getMonth(),START.getDate())&&dt<=TODAY;b.disabled=!ok;
+      const isSel=same(dt,sel),isT=same(dt,TODAY);if(isSel)b.classList.add('sel');if(isT){b.classList.add('today');b.appendChild(el('span','tl','СЕГОДНЯ'));}
+      if(ok){const cv=el('canvas');b.appendChild(cv);ring(cv,bal(e),40,isSel);}b.appendChild(el('b',null,d));if(e&&(e.feel!=null||e.tags.length||e.w||e.note)&&!isSel)b.appendChild(el('i','fd'));
+      b.setAttribute('aria-label',`${d} ${MONg[dt.getMonth()]}${ok?`, баланс ${Math.round(bal(e)*100)} %`:''}`);b.onclick=()=>{sel=dt;renderMonths();renderDay();};g.appendChild(b);}
+    mon.appendChild(g);box.appendChild(mon);}
+  if(!renderMonths.did){const s=box.querySelector('.sel');if(s){box.scrollTop=s.offsetTop-160;renderMonths.did=true;}}}
+function renderYear(box){const y=el('div','year');for(let m=0;m<12;m++){const ym=el('button','ym'+(m===TODAY.getMonth()?' cur':''));ym.type='button';ym.style.textAlign='left';ym.appendChild(el('h4',null,MON[m]));const g=el('div','g');
+    const first=(new Date(2026,m,1).getDay()+6)%7;for(let i=0;i<first;i++)g.appendChild(el('i','no'));const n=new Date(2026,m+1,0).getDate();
+    for(let d=1;d<=n;d++){const dt=new Date(2026,m,d),e=LOG[key(dt)],i=el('i');if(dt>TODAY)i.className='fut';else if(e){const p=bal(e);i.style.background=p>=1?C.accent:C.ink;i.style.opacity=.15+p*.85;}g.appendChild(i);}
+    ym.appendChild(g);ym.onclick=()=>{mode='month';setMode();sel=new Date(2026,m,Math.min(TODAY.getDate(),n));if(sel>TODAY||sel<START)sel=new Date(TODAY);renderMonths.did=false;renderMonths();renderDay();};y.appendChild(ym);}box.appendChild(y);}
+/* день */
+function renderDay(){readColors();const e=LOG[key(sel)],sh=$('sh'),sb=$('sb');sh.textContent='';sb.textContent='';
+  const t=el('div');t.append(el('h2',null,`${sel.getDate()} ${MONg[sel.getMonth()].slice(0,4)}. · ${same(sel,TODAY)?'сегодня':DOW[sel.getDay()]}`),el('div','sub',same(sel,START)?'первый день с XO':`день ${Math.round((sel-START)/864e5)+1} с XO`));
+  const p=el('div','pct'),cv=el('canvas');ring(cv,bal(e),36,false);p.append(el('span',null,`${Math.round(bal(e)*100)} %`),cv);sh.append(t,p);
+  if(!e){sb.appendChild(el('div','empty','Нет данных за этот день.'));return;}
+  sb.appendChild(el('div','st','Модули'));const ms=el('div');
+  [['water','Вода',e.water,G.water,'мл'],['food','Еда',e.food,G.food,'ккал'],['steps','Ходьба',e.steps,G.steps,'шагов']].forEach(([k,n,v,g,u])=>{const r=el('div','mr');r.insertAdjacentHTML('beforeend',svg(k));const nn=el('div','n');const h=el('div');h.style.cssText='display:flex;justify-content:space-between';
+    const vv=el('span');vv.append(el('b',null,fmt(v)),el('small',null,`из ${fmt(g)} ${u}`));h.append(el('span',null,n),vv);const pb=el('div','pb'),pi=el('i');pi.style.width=clamp(v/g)*100+'%';pb.appendChild(pi);nn.append(h,pb);r.appendChild(nn);ms.appendChild(r);});sb.appendChild(ms);
+  // самочувствие
+  const st=el('div','st');st.append('Самочувствие');const ed=el('button',null,'Изменить');ed.type='button';ed.onclick=openPick;st.appendChild(ed);sb.appendChild(st);
+  if(e.feel==null&&!e.tags.length&&!e.w&&!e.note){const a=el('button','add');a.type='button';a.append('Как вы себя чувствуете? Вес, заметка');const pl=el('span','plus');pl.innerHTML=svg('plus');a.appendChild(pl);a.onclick=openPick;sb.appendChild(a);}
+  else{const c=el('div','chips');if(e.feel!=null){const ch=el('span','chip');ch.setAttribute('aria-pressed','true');const ci=el('span','ci');ci.innerHTML=face(FACES[e.feel][1]);ch.append(ci,FACES[e.feel][0]);c.appendChild(ch);}
+    e.tags.forEach(k=>{const ch=el('span','chip');const ci=el('span','ci');ci.innerHTML=svg(k);ch.append(ci,ALL[k]);c.appendChild(ch);});
+    if(e.w){const ch=el('span','chip');const ci=el('span','ci');ci.innerHTML=svg('scale');ch.append(ci,`${dec(e.w)} кг`);c.appendChild(ch);}sb.appendChild(c);
+    if(e.note){const n=el('div','rec');n.style.borderTop='0';n.insertAdjacentHTML('beforeend',svg('note'));n.append(e.note);sb.appendChild(n);}}
+  // записи
+  sb.appendChild(el('div','st','Записи за день'));
+  if(e.recs.length)e.recs.forEach(([tm,k,n,v])=>{const r=el('div','rec');r.appendChild(el('span',null,tm));r.insertAdjacentHTML('beforeend',svg(k,'width:18px;height:18px'));r.append(n,el('b',null,v));sb.appendChild(r);});
+  else sb.appendChild(el('div','empty',same(sel,TODAY)?'Сегодня ещё ничего не отмечено.':'Подробные записи хранятся, здесь — пример только для сегодня.'));}
+/* выбор самочувствия */
+function openPick(){const e=LOG[key(sel)];const draft={feel:e.feel,tags:e.tags.slice(),w:e.w,note:e.note};let q='';
+  const p=$('pick');p.textContent='';
+  const ph=el('div','ph');const cl=el('button');cl.type='button';cl.setAttribute('aria-label','Закрыть');cl.innerHTML=svg('x','width:24px;height:24px');cl.onclick=()=>p.classList.remove('show');
+  const tt=el('div','tt');tt.append(el('h2',null,same(sel,TODAY)?'Сегодня':`${sel.getDate()} ${MONg[sel.getMonth()]}`),el('div','sub',DOW[sel.getDay()]));ph.append(cl,tt,el('span'));ph.lastChild.style.width='40px';p.appendChild(ph);
+  const s=el('label','search');s.innerHTML=svg('search');const inp=el('input');inp.placeholder='Поиск';inp.setAttribute('aria-label','Поиск по самочувствию');s.appendChild(inp);p.appendChild(s);
+  const body=el('div','pb2');p.appendChild(body);
+  const draw=()=>{body.textContent='';const ql=q.trim().toLowerCase();
+    if(!ql){const c=el('div','card');c.appendChild(el('h3',null,'Как вы в целом?'));const f=el('div','faces');FACES.forEach(([n,m],i)=>{const b=el('button','face');b.type='button';b.setAttribute('aria-pressed',draft.feel===i);const fc=el('span','fc');fc.innerHTML=face(m);b.append(fc,n);
+        b.onclick=()=>{draft.feel=draft.feel===i?null:i;draw();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)body.querySelectorAll('.face .fc')[i].animate([{transform:'scale(.9)'},{transform:'scale(1.06)'},{transform:'none'}],{duration:260,easing:'cubic-bezier(.2,0,0,1)'});};f.appendChild(b);});c.appendChild(f);body.appendChild(c);
+      const freq=['tired','muscle','head','calm'].filter(k=>!draft.tags.includes(k)||true);const c2=el('div','card');c2.appendChild(el('h3',null,'Часто отмечаете'));c2.appendChild(chips(freq));body.appendChild(c2);}
+    CATS.forEach(([n,a])=>{const list=a.filter(([k,nm])=>!ql||nm.toLowerCase().includes(ql));if(!list.length)return;const c=el('div','card');c.appendChild(el('h3',null,n));c.appendChild(chips(list.map(x=>x[0])));body.appendChild(c);});
+    if(!ql){const c=el('div','card');c.appendChild(el('h3',null,'Вес'));const w=el('div','wst');const m=el('button',null,'−'),pl=el('button',null,'+');m.type=pl.type='button';m.setAttribute('aria-label','Меньше');pl.setAttribute('aria-label','Больше');
+        const v=el('b');const up=()=>{v.innerHTML=draft.w?`${dec(draft.w)}<small>кг</small>`:'—<small>не указан</small>';};up();m.onclick=()=>{draft.w=Math.round(((draft.w||71.8)-.1)*10)/10;up();};pl.onclick=()=>{draft.w=Math.round(((draft.w||71.8)+.1)*10)/10;up();};w.append(m,v,pl);c.appendChild(w);body.appendChild(c);
+      const c3=el('div','card');c3.appendChild(el('h3',null,'Заметка'));const ta=el('textarea');ta.placeholder='Что было важного? Например: мало сна, тяжёлая тренировка';ta.value=draft.note;ta.oninput=()=>{draft.note=ta.value;};c3.appendChild(ta);body.appendChild(c3);}};
+  const chips=keys=>{const c=el('div','chips');keys.forEach(k=>{const b=el('button','chip');b.type='button';b.setAttribute('aria-pressed',draft.tags.includes(k));const ci=el('span','ci');ci.innerHTML=svg(k);b.append(ci,ALL[k]);
+    b.onclick=()=>{draft.tags=draft.tags.includes(k)?draft.tags.filter(x=>x!==k):draft.tags.concat(k);draw();};c.appendChild(b);});return c;};
+  inp.oninput=()=>{q=inp.value;draw();};draw();
+  const f=el('div','pfoot'),sv=el('button',null,'Сохранить');sv.type='button';sv.onclick=()=>{Object.assign(e,draft);p.classList.remove('show');renderMonths();renderDay();};f.appendChild(sv);p.appendChild(f);
+  setTimeout(()=>p.classList.add('show'),20);}
+/* режимы и лист */
+function setMode(){[...$('mode').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===mode));}
+[...$('mode').children].forEach(b=>b.onclick=()=>{mode=b.dataset.m;setMode();renderMonths();});
+$('grab').onclick=()=>$('sheet').classList.toggle('full');
+WD.forEach(w=>$('wd').appendChild(el('span',null,w)));
+/* панель */
+[['warm','Тёплая'],['acid','Кислотная'],['volt','Электрик'],['blood','Красная']].forEach(([k,n])=>{const b=el('button','ghost',n);b.type='button';b.onclick=()=>{if(k==='warm')document.documentElement.removeAttribute('data-th');else document.documentElement.setAttribute('data-th',k);renderMonths();renderDay();};$('ths').appendChild(b);});
+[['Через 2 месяца',true],['Новый пользователь',false]].forEach(([n,f])=>{const b=el('button','ghost',n);b.type='button';b.onclick=()=>{demo(f);sel=new Date(TODAY);renderMonths.did=false;renderMonths();renderDay();};$('data').appendChild(b);});
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';renderMonths();renderDay();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();demo(true);setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+window.__xo={openPick,setMode:m=>{mode=m;setMode();renderMonths();},full:()=>$('sheet').classList.toggle('full'),pick:d=>{sel=d;renderMonths();renderDay();}};
+})();
+</script>
+</body>
+</html>

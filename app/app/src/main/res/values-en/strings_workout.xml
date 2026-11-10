@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home workouts -->
+    <string name="ex_pushups">Push-ups</string>
+    <string name="ex_squats">Squats</string>
+    <string name="ex_plank">Plank</string>
+    <string name="ex_crunches">Crunches</string>
+    <string name="ex_unit_sec">%1$s s</string>
+    <string name="pushup_wall">wall</string>
+    <string name="pushup_knees">on knees</string>
+    <string name="pushup_classic">classic</string>
+    <string name="workout_title">Home workout</string>
+    <string name="workout_lead">Pick an exercise. The load grows when it gets easier for you.</string>
+    <string name="workout_ex_new">we will check your level before the first workout</string>
+    <string name="workout_ex_level">now %1$s · workouts: %2$s</string>
+    <string name="workout_ex_level_variant">now %1$s, %2$s · workouts: %3$s</string>
+    <string name="workout_safety">If you feel pain, stop.</string>
+    <string name="workout_stop">Stop</string>
+    <string name="workout_check_reps">How many can you do in a row with good form?</string>
+    <string name="workout_check_seconds">How many seconds can you hold with good form?</string>
+    <string name="workout_begin">Start</string>
+    <string name="workout_set_of">Set %1$s of %2$s</string>
+    <string name="workout_last_short">max</string>
+    <string name="workout_rest">Rest</string>
+    <string name="workout_next_up">next: %1$s</string>
+    <string name="workout_skip_rest">Skip rest</string>
+    <string name="workout_add_rest">+30 s</string>
+    <string name="workout_goal_reps">Set goal. If it went differently, adjust it.</string>
+    <string name="workout_goal_seconds">Set goal in seconds. If it went differently, adjust it.</string>
+    <string name="workout_tap_hint">Tap the screen for every rep. Goal: %1$s</string>
+    <string name="workout_set_done">Set done</string>
+    <string name="workout_set_last">Last set done</string>
+    <string name="workout_rate_title">How was it?</string>
+    <string name="workout_rate_all">All sets completed.</string>
+    <string name="workout_rate_partial">One of the sets came out below the goal. That is fine.</string>
+    <string name="workout_set_n">Set %1$s</string>
+    <string name="workout_rate_easy">Easy</string>
+    <string name="workout_rate_normal">Okay</string>
+    <string name="workout_rate_hard">Hard</string>
+    <string name="workout_done_title">Workout logged</string>
+    <string name="workout_done_up">%1$s: the next goal is higher, from %2$s to %3$s.</string>
+    <string name="workout_done_same">%1$s: the level stays at %2$s.</string>
+    <string name="workout_done_habit">The “Workout” habit is checked for today.</string>
+    <string name="habits_counting">How to count sets</string>
+    <string name="habits_counting_ladder">Ladder</string>
+    <string name="habits_counting_tap">Tap count</string>
+    <string name="habits_open_workout">Open workout</string>
+    <string name="workout_check_again">Several workouts have passed, so let’s check your level again.</string>
+    <string name="workout_plan_line">Plan: %1$s</string>
+    <string name="workout_plan_sec">sec</string>
+    <string name="workout_prep">Get ready</string>
+    <string name="workout_hold_start">Start holding</string>
+    <string name="workout_hold_stop">End the set</string>
+    <string name="workout_hold_now">hold</string>
+    <string name="workout_hold_hint">Hold the position until the signal. If it gets hard, stop earlier.</string>
+    <string name="workout_hold_a11y">Holding, %1$s seconds left</string>
+    <string name="workout_untap">Remove a rep</string>
+    <string name="workout_abort_title">Stop the workout?</string>
+    <string name="workout_abort_body">The sets of this workout will not be saved.</string>
+    <string name="workout_abort_continue">Continue</string>
+    <string name="workout_abort_confirm">Stop</string>
+    <string name="workout_today_done">Workouts logged today: %1$s</string>
+    <string name="workout_next_tag">next</string>
+    <string name="workout_history">Recent workouts</string>
+    <string name="workout_rest_a11y">Rest, %1$s seconds left</string>
+    <string name="workout_done_total">Total this workout: %1$s</string>
+
+    <!-- First run: home workouts -->
+    <string name="onb_workout_title">Work out at home?</string>
+    <string name="onb_workout_lead">Short workouts with no equipment. The plan grows when it gets easier.</string>
+    <string name="onb_workout_days">Mon, Wed and Fri by default. You can change the days in habits.</string>
+    <string name="onb_workout_yes">Turn on workouts</string>
+    <string name="onb_workout_no">Not now</string>
+    <string name="ex_pushups_sub">wall, on knees or classic</string>
+    <string name="ex_squats_sub">bodyweight</string>
+    <string name="ex_plank_sub">on elbows, with a timer</string>
+    <string name="ex_crunches_sub">crunches</string>
+
+    <!-- Language -->
+    <string name="set_language">Language</string>
+    <string name="lang_title">Language</string>
+    <string name="lang_lead">Changes at once. “Phone default” follows the Android language.</string>
+    <string name="lang_system">Phone default</string>
+
+    <!-- Week summary and export -->
+    <string name="week_title">Week summary</string>
+    <string name="week_avg_caption">average over 7 days</string>
+    <string name="week_days_full">Days the balance reached 100 %%: %1$s of %2$s</string>
+    <string name="week_best">Best day: %1$s, %2$s %%</string>
+    <string name="week_prev">Previous 7 days: %1$s %%</string>
+    <string name="week_module_a11y">%1$s: average %2$s percent of the goal</string>
+    <string name="set_export">Export data</string>
+    <string name="set_export_sub">CSV table, day by day</string>
+    <string name="export_done">File saved</string>
+    <string name="export_failed">Could not save the file</string>
+
+    <!-- Week summary: notification -->
+    <string name="rem_weekly">Week summary</string>
+    <string name="rem_weekly_sub">on Sundays at 19:00, in one line</string>
+    <string name="notif_weekly_title">Week summary</string>
+    <string name="notif_weekly_body">%1$s %% on average over 7 days. Details are in your profile.</string>
+
+    <!-- Workout timer style -->
+    <string name="habits_timer">Timer style</string>
+    <string name="habits_timer_ring">Ring</string>
+    <string name="habits_timer_bar">Bar</string>
+    <string name="habits_timer_ticks">Ticks</string>
+</resources>

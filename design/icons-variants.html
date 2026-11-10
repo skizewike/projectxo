@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Иконки: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:380px;flex:0 0 380px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg)}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28}
+.hd{position:absolute;left:24px;right:24px;top:58px}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.sum{position:absolute;left:24px;right:24px;top:118px;display:flex;align-items:center;gap:16px}
+.sum canvas{width:64px;height:64px}
+.sum b{font-size:34px;font-weight:500;letter-spacing:-.03em;line-height:1}
+.sum b small{font-size:15px;color:var(--muted);font-weight:400;letter-spacing:0}
+.sum span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.rows{position:absolute;left:24px;right:24px;top:206px}
+.r{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.r:last-child{border-bottom:1px solid var(--line)}
+.r .t{flex:1;min-width:0}
+.r .t .h{display:flex;justify-content:space-between;align-items:baseline}
+.r .t .h span{font-size:15px}
+.r .t .h b{font-weight:500;font-size:15px}
+.r .t .h b small{color:var(--muted);font-weight:400;font-size:12px;margin-left:3px}
+.r .bar{height:2px;background:var(--track);margin-top:8px}
+.r .bar i{display:block;height:2px;background:var(--ink)}
+.nav{position:absolute;left:0;right:0;top:696px;height:58px;border-top:1px solid var(--line);display:flex;background:var(--bg)}
+.nav span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--muted)}
+.nav span svg.i{width:22px;height:22px}
+.nav span.on{color:var(--ink);font-weight:500}
+.nav span.on svg.i{stroke-width:1.8}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.sheet{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.cell{border:1px solid var(--line);border-radius:14px;padding:14px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.cell svg.i{width:40px;height:40px;color:var(--ink);stroke-width:1.5}
+.sizes{display:flex;gap:18px;align-items:center;margin:-4px 0 16px;color:var(--ink)}
+.sizes svg.i{stroke-width:1.5}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><b>Project XO</b><span>Иконки модулей и нижней панели: три варианта</span></div><button class="ghost" id="theme" type="button">Тёмная тема</button></header>
+<main class="layout">
+<section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen">
+  <div class="status"><span>14:20</span><span>100 %</span></div>
+  <div class="hd"><div class="title">Сегодня</div><div class="date">Понедельник, 9 ноября</div></div>
+  <div class="sum"><canvas id="ring" width="128" height="128" aria-hidden="true"></canvas><div><b>74<small> %</small></b><span>Баланс дня по 6 модулям</span></div></div>
+  <div class="rows" id="rows"></div>
+  <nav class="nav" id="nav" aria-label="Разделы"></nav>
+  <div class="gesture"></div><div class="punch"></div>
+</div></div></section>
+<aside class="panel">
+  <div class="group"><div class="label">Вариант</div><div class="variants" id="variants"></div></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="sizes" id="sizes"></div>
+  <div class="desc"><h2 id="dName"></h2><p id="dIdea"></p><ul class="pc" id="dPc"></ul></div>
+  <p class="note">Все иконки нарисованы с нуля на сетке 24 × 24, линия 1,5 dp, круглые концы, тот же цвет, что у текста. Активная вкладка — линия 1,8 dp и подпись жирнее, без цветной заливки. Если включено больше четырёх модулей, в панели «Сегодня» + три модуля + «Ещё»; порядок вкладок пользователь меняет в настройках. Клавиши 1–3.</p>
+</aside>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+/* иконки: пути на сетке 24 × 24 */
+const SETS=[
+ {name:'Знаки',idea:'Чистые фигуры, как сейчас, но крупнее и единым весом: круг — вода, квадрат — еда, треугольник — ходьба, ромб — голодание, полумесяц — сон, крестик из логотипа XO — привычки.',
+  pc:[['Плюсы','Строже всех, прямо из логотипа XO; фигуры уже работают как прогресс (сосуд, квадрат, ромб).'],['Минусы','Как вы заметили, смысл не читается сам — нужна подпись рядом, в панели без подписи непонятно.'],['В коде','Самое простое: те же формы, что на холстах экранов.']],
+  i:{today:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8" stroke-width="3"/>',water:'<circle cx="12" cy="12" r="7.5"/>',food:'<rect x="4.5" y="4.5" width="15" height="15" rx="2"/>',walk:'<path d="M12 4.5l8 14.5H4z"/>',
+     fast:'<path d="M12 3.5l8.5 8.5-8.5 8.5L3.5 12z"/>',sleep:'<path d="M18.5 15.5A8 8 0 1 1 9 4.6a6.5 6.5 0 0 0 9.5 10.9z"/>',habit:'<path d="M6 6l12 12M18 6L6 18"/>',more:'<path d="M5 9h14M5 15h14"/>'}},
+ {name:'Предметы',idea:'Узнаваемые вещи тонкой линией: капля, вилка и нож, следы, часы, луна, галочка. Читаются без подписи, как в привычных приложениях, но нарисованы под наш вес линии.',
+  pc:[['Плюсы','Понятно с первого взгляда, особенно в нижней панели и в уведомлениях.'],['Минусы','Теряется связь с фигурами на экранах модулей; ближе к «обычным» трекерам.'],['В коде','Векторные ресурсы, отдельный набор для уведомлений (белый силуэт).']],
+  i:{today:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8" stroke-width="3"/>',water:'<path d="M12 3.5c3.4 4.2 5.8 7.4 5.8 10.2a5.8 5.8 0 0 1-11.6 0C6.2 10.9 8.6 7.7 12 3.5z"/><path d="M9.2 14.2a2.8 2.8 0 0 0 2.8 2.8"/>',
+     food:'<path d="M7 3.5v5.5a2 2 0 0 0 2 2M11 3.5v5.5a2 2 0 0 1-2 2v9.5M9 3.5v5"/><path d="M17 20.5V3.5c-2 1.5-3 4-3 7.5h3"/>',
+     walk:'<path d="M8.5 3.5c1.8 0 2.7 1.6 2.7 3.8 0 2.4-.9 4.2-2.7 4.2S5.8 9.7 5.8 7.3c0-2.2.9-3.8 2.7-3.8zM7 13.8l3.4.3-.3 2.1a1.7 1.7 0 0 1-3.3-.5z"/><path d="M15.5 8c1.8 0 2.7 1.6 2.7 3.8 0 2.4-.9 4.2-2.7 4.2s-2.7-1.8-2.7-4.2c0-2.2.9-3.8 2.7-3.8zM14 18.3l3.4.3-.3 2.1a1.7 1.7 0 0 1-3.3-.5z"/>',
+     fast:'<circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M10 2.5h4"/>',sleep:'<path d="M19 14.8A7.8 7.8 0 1 1 9.2 5a6.2 6.2 0 0 0 9.8 9.8z"/><path d="M16 3.5h3l-3 3h3"/>',
+     habit:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.3 12.3l2.6 2.6 4.9-5.4"/>',more:'<circle cx="6" cy="12" r=".9"/><circle cx="12" cy="12" r=".9"/><circle cx="18" cy="12" r=".9"/>'}},
+ {name:'Форма и смысл',idea:'Каждая иконка — та же фигура модуля, но со смыслом внутри: круг стал каплей, квадрат — тарелкой с ложкой, треугольник — дорожкой с шагами, ромб — песочными часами, полумесяц со звездой, крестик XO в кружке. Знак и на экране модуля, и в панели — один.',
+  pc:[['Плюсы','Читается без подписи и не ломает язык фигур: квадрат еды на экране и в панели — одна вещь.'],['Минусы','Деталей больше — на 16 dp в уведомлениях нужен упрощённый вариант.'],['В коде','Векторные ресурсы; холсты экранов остаются фигурами.']],
+  i:{today:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8" stroke-width="3"/>',water:'<path d="M12 3.2c3.6 4.4 6.6 7.6 6.6 10.8a6.6 6.6 0 0 1-13.2 0c0-3.2 3-6.4 6.6-10.8z"/><path d="M8.6 15.4h6.8"/>',
+     food:'<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="12" r="4.5"/>',
+     walk:'<path d="M4 20.5c5 0 3.5-6.5 8-6.5s3.2-5 5.5-7.5" stroke-dasharray="2.2 2.6"/><path d="M14.6 4.6l5.6-1.1-1.4 5.5z"/>',
+     fast:'<path d="M6.5 3.5h11M6.5 20.5h11"/><path d="M8 3.5c0 4.3 8 5.7 8 8.5s-8 4.2-8 8.5M16 3.5c0 4.3-8 5.7-8 8.5s8 4.2 8 8.5"/><path d="M9.6 19h4.8"/>',
+     sleep:'<path d="M18.5 15.5A8 8 0 1 1 9 4.6a6.5 6.5 0 0 0 9.5 10.9z"/><path d="M17.5 4.5v3M16 6h3"/>',
+     habit:'<circle cx="12" cy="12" r="8"/><path d="M9 9l6 6M15 9l-6 6"/>',more:'<path d="M5 9h14M5 15h14"/>'}},
+];
+const NAMES={today:'Сегодня',water:'Вода',food:'Еда',walk:'Ходьба',fast:'Голодание',sleep:'Сон',habit:'Привычки',more:'Ещё'};
+const ROWS=[['water','Вода','1 450','из 2 300 мл',.63],['food','Еда','1 520','из 2 140 ккал',.71],['walk','Ходьба','5 420','из 8 000 шагов',.68],['fast','Голодание','13 ч 48 мин','из 12 ч',1],['sleep','Сон','7 ч 05 мин','из 8 ч',.89],['habit','Привычки','3','из 5',.6]];
+const svg=(p,cls)=>`<svg class="i${cls?' '+cls:''}" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+let v=0;
+function render(){
+  const S=SETS[v];
+  $('rows').innerHTML=ROWS.map(([k,n,val,of,p])=>`<div class="r">${svg(S.i[k])}<div class="t"><div class="h"><span>${n}</span><b>${val}<small>${of}</small></b></div><div class="bar"><i style="width:${p*100}%"></i></div></div></div>`).join('');
+  $('nav').innerHTML=['today','water','food','walk','more'].map((k,i)=>`<span class="${i===0?'on':''}">${svg(S.i[k])}${NAMES[k]}</span>`).join('');
+  $('sheet').innerHTML=Object.keys(NAMES).map(k=>`<div class="cell">${svg(S.i[k])}${NAMES[k]}</div>`).join('');
+  $('sizes').innerHTML=[16,20,24,32].map(s=>`<span style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted)">${svg(S.i.water).replace('class="i"',`class="i" style="width:${s}px;height:${s}px;color:var(--ink)"`)}${s}</span>`).join('')+'<span style="font-size:12px;color:var(--muted)">капля в 16 / 20 / 24 / 32 dp</span>';
+  $('dName').textContent=S.name;$('dIdea').textContent=S.idea;
+  $('dPc').innerHTML='';S.pc.forEach(([a,b])=>{const li=document.createElement('li');const x=document.createElement('b');x.textContent=a;const y=document.createElement('span');y.textContent=b;li.append(x,y);$('dPc').appendChild(li);});
+  [...$('variants').children].forEach((b,k)=>b.classList.toggle('on',k===v));
+  ring();
+}
+function ring(){const c=$('ring').getContext('2d'),cs=getComputedStyle(document.documentElement);c.setTransform(2,0,0,2,0,0);c.clearRect(0,0,64,64);c.lineWidth=5;
+  c.strokeStyle=cs.getPropertyValue('--track');c.beginPath();c.arc(32,32,27,0,Math.PI*2);c.stroke();c.strokeStyle=cs.getPropertyValue('--accent');c.lineCap='round';c.beginPath();c.arc(32,32,27,-Math.PI/2,-Math.PI/2+Math.PI*2*.74);c.stroke();}
+SETS.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="n">0${i+1}</span><span></span>`;b.lastChild.textContent=s.name;b.onclick=()=>{v=i;render();};$('variants').appendChild(b);});
+document.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3'){v=+e.key-1;render();}});
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';ring();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');render();
+})();
+</script>
+</body>
+</html>

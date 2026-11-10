@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project XO — заставка</title>
+<style>
+:root{
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --page:#ECE8DF; --screen:#F6F3EC; --ink:#171614; --muted:#77736B;
+  --line:#DCD7CC; --track:#E3DED3; --accent:#2D64D2; --bezel:#1B1A18;
+}
+:root[data-theme="dark"]{
+  --page:#0C0C0B; --screen:#141413; --ink:#ECE9E2; --muted:#8C887F;
+  --line:#2B2A27; --track:#252422; --accent:#6E9BEB; --bezel:#222120;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px}
+.brand b{font-weight:600;letter-spacing:-.01em}
+.brand span{color:var(--muted);margin-left:10px}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.ghost:hover{border-color:var(--muted)}
+
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.stagecol{flex:0 0 auto}
+.panel{width:340px;flex:0 0 340px;padding-top:8px}
+
+/* Устройство */
+.device-box{position:relative}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0;cursor:pointer}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--screen);color:var(--ink)}
+.stage{position:absolute;inset:0}
+.ink{position:absolute;inset:0;background:var(--ink);opacity:0}
+.home{position:absolute;inset:0;background:var(--screen)}
+.splash-dom{position:absolute;inset:0;pointer-events:none}
+#fx{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;pointer-events:none}
+.status svg{display:block}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28}
+
+/* Главный экран */
+.h-head{position:absolute;left:24px;right:24px;top:58px}
+.h-title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.h-date{font-size:13px;color:var(--muted);margin-top:3px}
+.h-ring{position:absolute;left:80px;top:170px;width:200px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.h-val{font-size:56px;font-weight:500;letter-spacing:-.035em;line-height:1;margin:4px 0 9px;font-variant-numeric:tabular-nums}
+.h-val small{font-size:26px;font-weight:400;letter-spacing:0;margin-left:3px;color:var(--muted)}
+.h-sub{font-size:13px;color:var(--muted)}
+.h-row{position:absolute;left:24px;right:24px;height:64px;border-top:1px solid var(--line)}
+.h-row.last{border-bottom:1px solid var(--line)}
+.r-line{display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;font-size:15px}
+.r-name{display:flex;align-items:center;gap:10px}
+.shp{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:1.3;flex:0 0 auto}
+.r-val{font-variant-numeric:tabular-nums;font-weight:500}
+.r-val i{font-style:normal;color:var(--muted);font-weight:400;margin-left:5px}
+.bar{margin-top:12px;height:2px;background:var(--track);overflow:hidden}
+.bar b{display:block;height:100%;background:var(--ink);transform-origin:0 50%;transform:scaleX(0)}
+.h-add{position:absolute;right:0;top:2px;width:40px;height:40px;border:1px solid var(--line);border-radius:50%}
+.h-add .plus{position:absolute;left:12px;top:12px;width:14px;height:14px}
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;font-size:12px;color:var(--muted)}
+.nav span{position:relative;padding-top:6px}
+.nav .on{color:var(--ink);font-weight:500}
+.nav .on::before{content:"";position:absolute;left:50%;top:-4px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--ink)}
+
+.tag{position:absolute;left:0;right:0;top:438px;text-align:center;font-size:13px;letter-spacing:.04em;color:var(--muted);opacity:0}
+.load{position:absolute;left:150px;top:474px;width:60px;height:1px;opacity:0;overflow:hidden}
+.load i{display:block;height:100%;background:currentColor;transform-origin:0 50%;transform:scaleX(0)}
+
+/* Панель */
+.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:26px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:11px 12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;width:18px}
+.variants button:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{flex:1;padding:7px 10px;border-radius:999px;font-size:13px}
+.seg button.on{background:var(--ink);color:var(--page)}
+.seg button small{opacity:.6;margin-left:6px;font-variant-numeric:tabular-nums}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-bottom:18px}
+.primary{background:var(--ink);color:var(--page);border-radius:999px;padding:9px 20px;font-weight:500}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--ink);margin:0}
+.scrub{margin-bottom:28px}
+.scrub input{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:0;cursor:pointer}
+.scrub input::-webkit-slider-runnable-track{height:1px;background:var(--line)}
+.scrub input::-moz-range-track{height:1px;background:var(--line)}
+.scrub input::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--ink);margin-top:-5px;border:0}
+.scrub input::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--ink);border:0}
+.time{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:4px}
+.cap h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+.cap p{margin:0 0 14px;color:var(--muted)}
+.phases{list-style:none;margin:0 0 16px;padding:0;border-top:1px solid var(--line)}
+.phases li{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.phases li span{flex:0 0 86px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.compose{font-size:12.5px;line-height:1.5;border-left:2px solid var(--ink);padding:2px 0 2px 12px}
+.compose b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-bottom:3px}
+.compose code{font-family:inherit}
+.note{font-size:12px;color:var(--muted);margin:18px 0 0}
+
+@media (max-width:900px){
+  .layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}
+  .panel{width:100%;max-width:380px;flex-basis:auto}
+  .top{padding:16px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>Project XO</b><span>Заставка и переход</span></div>
+  <button class="ghost" id="theme" type="button">Тёмная тема</button>
+</header>
+
+<main class="layout">
+  <section class="stagecol">
+    <div class="device-box" id="deviceBox">
+      <div class="device" id="device" title="Нажмите, чтобы повторить">
+        <div class="screen" id="screen">
+          <div class="stage" id="stage">
+            <div class="ink" id="ink"></div>
+            <div class="home" id="home">
+              <div class="h-head" data-h><div class="h-title">Сегодня</div><div class="h-date">Четверг, 5 ноября</div>
+                <div class="h-add" aria-label="Быстрое добавление"><svg class="plus" id="plusDom" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 0V14M0 7H14" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></div></div>
+              <div class="h-ring" data-h><div class="h-val">72<small>%</small></div><div class="h-sub">Баланс дня</div></div>
+              <div class="h-row" data-h style="top:404px"><div class="r-line"><span class="r-name"><svg class="shp" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>Вода</span><span class="r-val">1,6<i>из 2,4 л</i></span></div><div class="bar"><b data-w="0.667"></b></div></div>
+              <div class="h-row" data-h style="top:468px"><div class="r-line"><span class="r-name"><svg class="shp" viewBox="0 0 10 10"><rect x="1.2" y="1.2" width="7.6" height="7.6"/></svg>Еда</span><span class="r-val">1 240<i>из 1 900 ккал</i></span></div><div class="bar"><b data-w="0.653"></b></div></div>
+              <div class="h-row last" data-h style="top:532px"><div class="r-line"><span class="r-name"><svg class="shp" viewBox="0 0 10 10"><path d="M5 1.2L9.2 8.8H.8Z"/></svg>Ходьба</span><span class="r-val">6 480<i>из 8 000 шагов</i></span></div><div class="bar"><b data-w="0.81"></b></div></div>
+              <nav class="nav" data-h><span class="on">Сегодня</span><span>Вода</span><span>Еда</span><span>Ходьба</span></nav>
+            </div>
+            <div class="splash-dom">
+              <div class="tag" id="tag">вода · еда · ходьба</div>
+              <div class="load" id="load"><i></i></div>
+            </div>
+            <svg id="fx" viewBox="0 0 360 780" width="360" height="780" aria-hidden="true">
+              <g id="ticks"></g>
+              <circle id="dial" fill="none" stroke-linecap="butt" opacity="0"/>
+              <g id="ringG">
+                <circle id="track" cx="0" cy="0" fill="none" transform="rotate(-90)" opacity="0"/>
+                <circle id="ring" cx="0" cy="0" fill="none" stroke-linecap="round" transform="rotate(-90)" opacity="0"/>
+              </g>
+              <g id="xg" fill="none" stroke-linecap="butt" stroke-width="10" opacity="0">
+                <path id="x1" d="M-30.5 -30.5L30.5 30.5" pathLength="1" stroke-dasharray="1 2"/>
+                <path id="x2" d="M30.5 -30.5L-30.5 30.5" pathLength="1" stroke-dasharray="1 2"/>
+              </g>
+            </svg>
+          </div>
+          <div class="status" id="status">
+            <span>9:41</span>
+            <svg width="38" height="12" viewBox="0 0 38 12" aria-hidden="true" fill="currentColor">
+              <rect x="0" y="8" width="3" height="4" rx=".5"/><rect x="5" y="5" width="3" height="7" rx=".5"/><rect x="10" y="2" width="3" height="10" rx=".5"/>
+              <rect x="18.5" y=".5" width="17" height="11" rx="2.5" fill="none" stroke="currentColor"/><rect x="20.5" y="2.5" width="10" height="7" rx="1"/><rect x="36.5" y="4" width="1.5" height="4" rx=".5"/>
+            </svg>
+          </div>
+          <div class="gesture" id="gesture"></div>
+          <div class="punch"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="group">
+      <div class="label">Вариант</div>
+      <div class="variants" id="variants"></div>
+    </div>
+    <div class="group">
+      <div class="label">Запуск</div>
+      <div class="seg" id="mode">
+        <button type="button" data-m="0" class="on">Первый<small id="mF">2,75 с</small></button>
+        <button type="button" data-m="1">Повторный<small>0,8 с</small></button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="replay" type="button">Повторить</button>
+      <label class="chk"><input type="checkbox" id="slow"> Замедлить ×4</label>
+      <label class="chk"><input type="checkbox" id="rm"> Меньше движения</label>
+    </div>
+    <div class="scrub">
+      <input type="range" id="scrub" min="0" max="2750" step="1" value="0" aria-label="Время анимации">
+      <div class="time"><span id="tNow">0 мс</span><span id="tAll">2 750 мс</span></div>
+    </div>
+    <div class="cap">
+      <h2 id="capName"></h2>
+      <p id="capIdea"></p>
+      <ol class="phases" id="capPhases"></ol>
+      <div class="compose"><b>Jetpack Compose</b><code id="capCompose"></code></div>
+    </div>
+    <p class="note">Повторный запуск начинается с кадра системной заставки Android 12+ (статичная иконка XO), поэтому в нём только переход. В приложении выход из заставки — по готовности данных, но не раньше минимального времени: installSplashScreen().setKeepOnScreenCondition { !ready }. Клавиши: 1–4, R — повтор.</p>
+  </aside>
+</main>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- математика ---------- */
+const clamp=(x,a,b)=>Math.min(b===undefined?1:b,Math.max(a===undefined?0:a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const seg=(t,t0,t1)=>clamp((t-t0)/(t1-t0));
+
+function bezier(x1,y1,x2,y2){
+  const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx;
+  const cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+  const sx=t=>((ax*t+bx)*t+cx)*t, sy=t=>((ay*t+by)*t+cy)*t, dx=t=>(3*ax*t+2*bx)*t+cx;
+  return function(x){
+    if(x<=0) return 0; if(x>=1) return 1;
+    let t=x;
+    for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t); if(Math.abs(e)<1e-6||Math.abs(d)<1e-6) break; t-=e/d;}
+    if(!(t>=0&&t<=1)||Math.abs(sx(t)-x)>1e-4){let lo=0,hi=1;t=x;for(let i=0;i<40;i++){if(sx(t)<x)lo=t;else hi=t;t=(lo+hi)/2;}}
+    return sy(t);
+  };
+}
+/* Кривые Material 3 / Compose */
+const E={
+  std:bezier(.2,0,0,1),        // Standard
+  fosi:bezier(.4,0,.2,1),      // FastOutSlowInEasing
+  dec:bezier(.05,.7,.1,1),     // EmphasizedDecelerate
+  acc:bezier(.3,0,.8,.15)      // EmphasizedAccelerate
+};
+/* Аналитическая пружина (масса 1), как spring(dampingRatio, stiffness) в Compose. ms — время от старта. */
+function spring(ms,z,k){
+  if(ms<=0) return 0;
+  const t=ms/1000,w=Math.sqrt(k);
+  let x,env;
+  if(z<1){
+    const wd=w*Math.sqrt(1-z*z),e=Math.exp(-z*w*t);
+    x=1-e*(Math.cos(wd*t)+(z*w/wd)*Math.sin(wd*t));
+    env=e*(1+z*w/wd);
+  }else{
+    const e=Math.exp(-w*t); x=1-e*(1+w*t); env=e*(1+w*t);
+  }
+  return env<2e-3?1:x;
+}
+
+/* ---------- цвета ---------- */
+let C={};
+function readColors(){
+  const cs=getComputedStyle(document.documentElement);
+  ['screen','ink','muted','line','track','accent'].forEach(n=>{C[n]=cs.getPropertyValue('--'+n).trim();});
+}
+function hex(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return[(n>>16)&255,(n>>8)&255,n&255];}
+function mix(a,b,t){
+  t=clamp(t); if(t===0) return a; if(t===1) return b;
+  const A=hex(a),B=hex(b);
+  return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';
+}
+
+/* ---------- геометрия (px экрана 360×780) ----------
+   Логотип: X 68×68 (визуально), O внешний Ø72 — на 6% выше X (overshoot круглых букв).
+   Толщина: O 10,5 против X 10 — кривая выглядит тоньше прямой при равной толщине.
+   Центр композиции y=372 — на 18 px выше геометрического (390): оптический центр. */
+const XC={x:137,y:372};
+const OC={x:221,y:372,r:30.75,sw:10.5};
+const HR={x:180,y:270,r:100,sw:12};   // кольцо «Баланс дня»
+const PLUS={x:316,y:80,s:0.163};   // кнопка «+» в шапке; 43,13·2·0,163 ≈ 14 px, толщина 10·0,163 ≈ 1,6
+const N_TICKS=48;
+const RATIO=0.72;                  // Баланс дня 72 %
+const H_N=6;                       // шапка, кольцо, 3 строки, навигация
+
+function geo(a,b,p){return{cx:lerp(a.x,b.x,p),cy:lerp(a.y,b.y,p),r:Math.max(0,lerp(a.r,b.r,p)),sw:lerp(a.sw,b.sw,clamp(p))};}
+function homeSeq(t,t0,st,dur){const h=[];for(let i=0;i<H_N;i++){h.push(E.dec(seg(t,t0+i*st,t0+i*st+dur)));}return h;}
+function cover(clip,x,y){const d=Math.hypot(x-clip.x,y-clip.y);return mix(C.screen,C.ink,clamp((clip.r-d)/24+.5));}
+
+function S(){
+  return{
+    stageOp:1, ink:0, clip:null, status:C.ink, gesture:C.ink,
+    x:{cx:XC.x,cy:XC.y,rot:0,s:1,d1:1,d2:1,op:0,color:C.ink},
+    ring:{cx:OC.x,cy:OC.y,r:OC.r,sw:OC.sw,start:0,end:1,op:0,color:C.accent,sx:1,sy:1},
+    track:0, ticks:null, dial:null,
+    tag:{op:0,ty:0,color:C.muted}, load:null,
+    home:new Array(H_N).fill(0), plusDom:true
+  };
+}
+
+/* ---------- варианты ---------- */
+const V=[
+{
+  name:'Загрузка в букве',
+  idea:'O — настоящий индикатор загрузки: дуга дорисовывается по мере готовности данных (с честной паузой), затем по кривой уходит наверх и становится кольцом «Баланс дня».',
+  compose:'Animatable(0f).animateTo(1f, tween(1400, FastOutSlowInEasing)) → Canvas { drawArc(sweepAngle = 360f * p, useCenter = false, style = Stroke(cap = Round)) }; x и y — два Animatable на разных spring() дают дугу; SharedTransitionLayout + Modifier.sharedElement(rememberSharedContentState("day-balance")).',
+  Tf:2800, Ts:800, hold:1720,
+  pf:[[80,580,'X прописывается: два штриха, сдвиг 120 мс'],[300,1700,'O заполняется как прогресс, пауза на 55 %'],[1750,2020,'X стирается в обратном порядке'],[1800,2400,'O → кольцо баланса: x и y на разных пружинах'],[1950,2550,'Дуга 100 → 72 %, spring без отскока'],[2050,2770,'Контент, stagger 60 мс']],
+  ps:[[0,220,'X стирается'],[0,500,'O → кольцо баланса, пружины жёстче'],[120,600,'Дуга 100 → 72 %'],[200,760,'Контент, stagger 40 мс']],
+  render(t,sh){
+    const s=S(); s.x.op=1; s.ring.op=1;
+    let px,py;
+    if(!sh){
+      s.x.d1=E.dec(seg(t,80,460)); s.x.d2=E.dec(seg(t,200,580));
+      let L;
+      if(t<300) L=0;
+      else if(t<900) L=.55*E.std(seg(t,300,900));
+      else if(t<1050) L=.55+.05*seg(t,900,1050);
+      else L=.6+.4*E.dec(seg(t,1050,1700));
+      s.ring.end=L;
+      s.track=E.std(seg(t,100,400));
+      const ti=E.dec(seg(t,500,900));
+      s.tag.op=ti*(1-E.std(seg(t,1700,1850))); s.tag.ty=(1-ti)*6;
+      if(t>=1750){ s.x.d2=1-E.acc(seg(t,1750,1950)); s.x.d1=1-E.acc(seg(t,1820,2020)); }
+      px=spring(t-1800,.82,300); py=spring(t-1800,.9,170);
+      if(t>=1950) s.ring.end=lerp(1,RATIO,spring(t-1950,1,120));
+      s.home=homeSeq(t,2050,60,420);
+    }else{
+      s.x.d2=1-E.acc(seg(t,0,180)); s.x.d1=1-E.acc(seg(t,40,220));
+      s.track=1;
+      px=spring(t,.85,520); py=spring(t,.92,360);
+      s.ring.end=lerp(1,RATIO,spring(t-120,1,300));
+      s.home=homeSeq(t,200,40,360);
+    }
+    s.ring.cx=lerp(OC.x,HR.x,px); s.ring.cy=lerp(OC.y,HR.y,py);
+    s.ring.r=lerp(OC.r,HR.r,py); s.ring.sw=lerp(OC.sw,HR.sw,clamp(py));
+    return s;
+  }
+},
+{
+  name:'Капля',
+  idea:'Капля падает с ускорением, сплющивается при касании и раскрывается волной в O. При переходе кольцо сливается и заново наливается до баланса дня — ровно 72 %.',
+  compose:'Падение — Animatable.animateTo(tween(420, easing = { it * it })); squash — spring(dampingRatio = 0.35f, stiffness = 900f) в graphicsLayer { scaleX; scaleY; transformOrigin = TransformOrigin(0.5f, 1f) }; кольцо — drawCircle(radius, style = Stroke(width)) с анимацией radius и width; налив до 0.72f — drawArc + spring; sharedElement("day-balance").',
+  Tf:2900, Ts:800, hold:1600,
+  pf:[[0,420,'Падение, ускорение t²'],[420,900,'Удар: сжатие на пружине ζ 0,35'],[560,1100,'Капля раскрывается в O (ζ 0,62)'],[700,1100,'X выходит из волны'],[1700,2060,'X падает, кольцо уходит и сливается'],[2100,2700,'Налив до 72 %'],[2150,2870,'Контент, stagger 60 мс']],
+  ps:[[0,200,'X падает'],[0,550,'O → кольцо баланса'],[0,220,'Слив'],[240,700,'Налив до 72 %'],[220,780,'Контент, stagger 40 мс']],
+  render(t,sh){
+    const s=S(); s.ring.op=1;
+    if(!sh){
+      // капля = кольцо с внутренним радиусом 0: r = 4, толщина 8 → диск Ø16
+      const tf=seg(t,0,420);
+      let cy=lerp(236,OC.y,tf*tf), sx=1-.12*tf*tf, sy=1+.2*tf*tf;
+      const po=spring(t-560,.62,260);
+      if(t>=420){
+        const sq=(1-spring(t-420,.35,900))*(1-clamp(po));
+        sy=1-.32*sq; sx=1+.26*sq; cy=OC.y+8*(1-sy);
+      }
+      s.ring.op=E.std(seg(t,0,100));
+      s.ring.cx=OC.x; s.ring.cy=cy; s.ring.sx=sx; s.ring.sy=sy;
+      s.ring.r=lerp(4,OC.r,po); s.ring.sw=lerp(8,OC.sw,clamp(po));
+      const pxs=spring(t-700,.75,260);
+      s.x.op=E.std(seg(t,720,1000)); s.x.s=lerp(.9,1,pxs); s.x.cx=XC.x+6*(1-pxs);
+      const ti=E.dec(seg(t,950,1300));
+      s.tag.op=ti*(1-E.std(seg(t,1650,1800))); s.tag.ty=(1-ti)*6;
+      if(t>=1700){ const f=E.acc(seg(t,1700,1950)); s.x.cy=XC.y+28*f; s.x.op*=1-f; }
+      if(t>=1720){
+        const p=spring(t-1720,.8,170);
+        Object.assign(s.ring,geo(OC,HR,p)); s.ring.sx=1; s.ring.sy=1;
+        s.track=E.std(seg(t,1720,1900));
+        if(t<2080){ s.ring.start=E.acc(seg(t,1720,2060)); s.ring.end=1; }
+        else { s.ring.start=0; s.ring.end=RATIO*spring(t-2100,.95,140); }
+      }
+      s.home=homeSeq(t,2150,60,420);
+    }else{
+      s.x.op=1;
+      const f=E.acc(seg(t,0,200)); s.x.cy=XC.y+28*f; s.x.op=1-f;
+      Object.assign(s.ring,geo(OC,HR,spring(t,.85,420)));
+      s.track=E.std(seg(t,0,120));
+      if(t<240){ s.ring.start=E.acc(seg(t,0,220)); s.ring.end=1; }
+      else { s.ring.start=0; s.ring.end=RATIO*spring(t-240,1,360); }
+      s.home=homeSeq(t,220,40,360);
+    }
+    return s;
+  }
+},
+{
+  name:'Окно в O',
+  idea:'Инверсная заставка: буквы встают на пружине с оптическим кернингом 8 → 0 px. Затем O раскрывается как апертура — главный экран виден сквозь букву, и окно заполняет экран.',
+  compose:'Modifier.drawWithContent { clipPath(Path().apply { addOval(Rect(center, radius)) }) { this@drawWithContent.drawContent() } }; radius — Animatable с FastOutSlowInEasing; цвет обводки — animateColorAsState; дуга 1 → 0.72f — spring; выход — SplashScreen.setOnExitAnimationListener { it.remove() }.',
+  Tf:2650, Ts:800, hold:1500,
+  pf:[[0,600,'Буквы встают, кернинг 8 → 0 px, сдвиг 90 мс'],[400,1500,'Линия загрузки'],[1600,1760,'Апертура открывается внутри O'],[1600,2300,'O растёт в кольцо «Баланс дня»'],[1800,2350,'Окно заполняет экран'],[1900,2550,'Дуга 100 → 72 %'],[1700,2450,'Контент проявляется сквозь окно']],
+  ps:[[0,150,'X уходит'],[0,500,'O → кольцо баланса'],[0,560,'Апертура → весь экран'],[60,510,'Контент']],
+  render(t,sh){
+    const s=S(); s.ink=1; s.ring.op=1; s.x.op=1;
+    s.x.color=C.screen; s.tag.color=C.screen;
+    let g, cr, p;
+    if(!sh){
+      const pO=spring(t,.7,260), pX=spring(t-90,.7,260), kO=lerp(.86,1,pO);
+      g={cx:OC.x+8*(1-pO),cy:OC.y,r:OC.r*kO,sw:OC.sw*kO};
+      s.ring.op=E.std(seg(t,0,240));
+      s.x.op=E.std(seg(t,90,330)); s.x.s=lerp(.86,1,pX); s.x.cx=XC.x-8*(1-pX);
+      const ti=E.dec(seg(t,450,800));
+      s.tag.op=.6*ti*(1-E.std(seg(t,1500,1600))); s.tag.ty=(1-ti)*6;
+      s.load={w:E.std(seg(t,400,1500)),op:.5*seg(t,300,450)*(1-seg(t,1450,1600)),color:C.screen};
+      if(t>=1550){ const f=E.std(seg(t,1550,1750)); s.x.op*=1-f; s.x.s*=1-.06*f; }
+      if(t>=1600){ p=spring(t-1600,.9,150); g=geo(OC,HR,p); }
+      const inner=Math.max(0,g.r-g.sw/2);
+      cr=inner*E.std(seg(t,1600,1760));
+      if(t>=1800) cr=lerp(inner,560,E.fosi(seg(t,1800,2350)));
+      s.ring.color=mix(C.screen,C.accent,E.std(seg(t,1650,1900)));
+      s.track=E.std(seg(t,2050,2300));
+      if(t>=1900) s.ring.end=lerp(1,RATIO,spring(t-1900,1,130));
+      s.home=homeSeq(t,1700,50,500);
+    }else{
+      const f=E.std(seg(t,0,150)); s.x.op=1-f; s.x.s=1-.06*f;
+      g=geo(OC,HR,spring(t,.9,380));
+      const inner=Math.max(0,g.r-g.sw/2);
+      cr=inner*E.std(seg(t,0,100));
+      if(t>=120) cr=lerp(inner,560,E.fosi(seg(t,120,560)));
+      s.ring.color=mix(C.screen,C.accent,E.std(seg(t,40,220)));
+      s.track=E.std(seg(t,260,450));
+      s.ring.end=lerp(1,RATIO,spring(t-120,1,320));
+      s.home=homeSeq(t,60,30,300);
+    }
+    Object.assign(s.ring,g);
+    s.clip={x:g.cx,y:g.cy,r:Math.max(0,cr)};
+    s.status=cover(s.clip,40,17); s.gesture=cover(s.clip,180,766);
+    if(cr>=559.99){ s.clip=null; s.ink=0; }   // окно раскрыто полностью — финальный кадр как у остальных
+    return s;
+  }
+},
+{
+  name:'Циферблат',
+  idea:'48 делений проявляются по часовой стрелке как прогресс и сливаются в сплошное O, плюс щелчком поворачивается в X. На выходе X снова становится плюсом и улетает в кнопку быстрого добавления «+» в шапке — второй общий элемент.',
+  compose:'Canvas { repeat(48) { i -> rotate(i * 7.5f) { drawLine(alpha = a[i]) } } } со stagger через delayMillis = i * 24; слияние — Stroke(pathEffect = PathEffect.dashPathEffect(floatArrayOf(dash, gap))); поворот — spring(0.55f); два общих элемента в SharedTransitionLayout: "day-balance" и "quick-add".',
+  Tf:2900, Ts:800, hold:1720,
+  pf:[[0,400,'Появляется плюс'],[120,1408,'48 делений, шаг 24 мс'],[1420,1700,'Деления сливаются, зазор → 0'],[1440,1900,'Плюс → X, пружина ζ 0,55'],[1850,2400,'X → плюс, летит в кнопку «+»'],[1880,2600,'O → кольцо баланса, дуга 100 → 72 % с отскоком'],[2050,2820,'Контент, stagger 70 мс']],
+  ps:[[0,300,'X → плюс'],[0,550,'Плюс летит в кнопку «+»'],[0,550,'O → кольцо баланса'],[120,680,'Дуга 100 → 72 %'],[200,760,'Контент, stagger 40 мс']],
+  render(t,sh){
+    const s=S(); s.plusDom=false; s.x.op=1;
+    let rot;
+    if(!sh){
+      if(t<1420){
+        s.ticks=[];
+        for(let i=0;i<N_TICKS;i++){const ti=120+i*24; s.ticks.push(E.dec(seg(t,ti,ti+160)));}
+      }else if(t<1700){
+        const per=2*Math.PI*OC.r/N_TICKS;
+        s.dial={d:lerp(1.6,per,E.fosi(seg(t,1420,1700)))};
+      }else s.ring.op=1;
+      s.x.op=E.std(seg(t,0,300)); s.x.s=lerp(.9,1,E.dec(seg(t,0,400)));
+      rot=-45+45*spring(t-1440,.55,320);
+      const ti=E.dec(seg(t,600,950));
+      s.tag.op=ti*(1-E.std(seg(t,1750,1880))); s.tag.ty=(1-ti)*6;
+      if(t>=1850){
+        const q=spring(t-1850,.85,190);
+        s.x.cx=lerp(XC.x,PLUS.x,q); s.x.cy=lerp(XC.y,PLUS.y,q); s.x.s=Math.max(.05,lerp(1,PLUS.s,q));
+        rot-=45*E.std(seg(t,1850,2150));
+      }
+      if(t>=1880) Object.assign(s.ring,geo(OC,HR,spring(t-1880,.85,180)));
+      if(t>=2050) s.ring.end=lerp(1,RATIO,spring(t-2050,.55,260));
+      s.track=E.std(seg(t,2000,2250));
+      s.home=homeSeq(t,2050,70,420);
+    }else{
+      s.ring.op=1;
+      const q=spring(t,.85,420);
+      s.x.cx=lerp(XC.x,PLUS.x,q); s.x.cy=lerp(XC.y,PLUS.y,q); s.x.s=Math.max(.05,lerp(1,PLUS.s,q));
+      rot=-45*E.std(seg(t,0,300));
+      Object.assign(s.ring,geo(OC,HR,spring(t,.88,400)));
+      s.ring.end=lerp(1,RATIO,spring(t-120,.6,420));
+      s.track=E.std(seg(t,100,300));
+      s.home=homeSeq(t,200,40,360);
+    }
+    s.x.rot=rot;
+    return s;
+  }
+}
+];
+
+/* ---------- DOM ---------- */
+const $=id=>document.getElementById(id);
+const el={
+  stage:$('stage'),ink:$('ink'),home:$('home'),tag:$('tag'),load:$('load'),loadI:$('load').firstElementChild,
+  ringG:$('ringG'),ring:$('ring'),track:$('track'),dial:$('dial'),ticks:$('ticks'),
+  xg:$('xg'),x1:$('x1'),x2:$('x2'),status:$('status'),gesture:$('gesture'),plusDom:$('plusDom')
+};
+const homeEls=[...el.home.querySelectorAll('[data-h]')];
+const bars=homeEls.map(h=>{const b=h.querySelector('.bar b');return b?{b,w:parseFloat(b.dataset.w)}:null;});
+const SVGNS='http://www.w3.org/2000/svg';
+const tickEls=[];
+for(let i=0;i<N_TICKS;i++){
+  const l=document.createElementNS(SVGNS,'line');
+  l.setAttribute('stroke-width','1.6'); l.setAttribute('stroke-linecap','butt');
+  el.ticks.appendChild(l); tickEls.push(l);
+}
+
+function apply(s){
+  el.stage.style.opacity=s.stageOp;
+  el.ink.style.opacity=s.ink;
+  el.home.style.clipPath=s.clip?'circle('+s.clip.r.toFixed(2)+'px at '+s.clip.x.toFixed(2)+'px '+s.clip.y.toFixed(2)+'px)':'none';
+  el.status.style.color=s.status;
+  el.gesture.style.background=s.gesture;
+
+  // X
+  const x=s.x;
+  el.xg.setAttribute('transform','translate('+x.cx.toFixed(2)+' '+x.cy.toFixed(2)+') rotate('+x.rot.toFixed(3)+') scale('+x.s.toFixed(4)+')');
+  el.xg.setAttribute('opacity',clamp(x.op).toFixed(3));
+  el.xg.setAttribute('stroke',x.color);
+  el.x1.setAttribute('stroke-dashoffset',(1-clamp(x.d1)).toFixed(4));
+  el.x2.setAttribute('stroke-dashoffset',(1-clamp(x.d2)).toFixed(4));
+
+  // кольцо (общий элемент)
+  const r=s.ring, Cf=2*Math.PI*r.r, len=Math.max(0,r.end-r.start)*Cf;
+  el.ringG.setAttribute('transform','translate('+r.cx.toFixed(2)+' '+r.cy.toFixed(2)+') scale('+r.sx.toFixed(4)+' '+r.sy.toFixed(4)+')');
+  [el.ring,el.track].forEach(c=>{c.setAttribute('r',r.r.toFixed(3));c.setAttribute('stroke-width',Math.max(0,r.sw).toFixed(3));});
+  el.ring.setAttribute('stroke',r.color);
+  el.ring.setAttribute('stroke-dasharray',len.toFixed(3)+' '+(Cf*2).toFixed(3));
+  el.ring.setAttribute('stroke-dashoffset',(-r.start*Cf).toFixed(3));
+  el.ring.setAttribute('opacity',len<.5?0:clamp(r.op).toFixed(3));
+  el.track.setAttribute('stroke',C.track);
+  el.track.setAttribute('opacity',clamp(s.track).toFixed(3));
+
+  // деления
+  if(s.ticks){
+    el.ticks.style.display='';
+    const ro=OC.r+OC.sw/2;
+    for(let i=0;i<N_TICKS;i++){
+      const p=s.ticks[i], a=i/N_TICKS*2*Math.PI-Math.PI/2, ri=ro-OC.sw*lerp(.35,1,p);
+      const c=Math.cos(a), sn=Math.sin(a), l=tickEls[i];
+      l.setAttribute('x1',(OC.x+c*ri).toFixed(2)); l.setAttribute('y1',(OC.y+sn*ri).toFixed(2));
+      l.setAttribute('x2',(OC.x+c*ro).toFixed(2)); l.setAttribute('y2',(OC.y+sn*ro).toFixed(2));
+      l.setAttribute('stroke',C.accent); l.setAttribute('opacity',p.toFixed(3));
+    }
+  }else el.ticks.style.display='none';
+
+  if(s.dial){
+    const per=2*Math.PI*OC.r/N_TICKS, d=Math.min(per,s.dial.d);
+    el.dial.setAttribute('cx',OC.x); el.dial.setAttribute('cy',OC.y); el.dial.setAttribute('r',OC.r);
+    el.dial.setAttribute('stroke-width',OC.sw); el.dial.setAttribute('stroke',C.accent);
+    el.dial.setAttribute('transform','rotate(-90 '+OC.x+' '+OC.y+')');
+    el.dial.setAttribute('stroke-dasharray',d.toFixed(3)+' '+Math.max(0,per-d).toFixed(3));
+    el.dial.setAttribute('stroke-dashoffset',(d/2).toFixed(3));
+    el.dial.setAttribute('opacity',1);
+  }else el.dial.setAttribute('opacity',0);
+
+  // тексты заставки
+  el.tag.style.opacity=clamp(s.tag.op);
+  el.tag.style.transform='translateY('+s.tag.ty.toFixed(2)+'px)';
+  el.tag.style.color=s.tag.color;
+  if(s.load){
+    el.load.style.opacity=clamp(s.load.op); el.load.style.color=s.load.color;
+    el.loadI.style.transform='scaleX('+s.load.w.toFixed(4)+')';
+  }else el.load.style.opacity=0;
+
+  // главный экран
+  for(let i=0;i<homeEls.length;i++){
+    const p=s.home[i];
+    homeEls[i].style.opacity=p.toFixed(3);
+    homeEls[i].style.transform='translateY('+((1-p)*14).toFixed(2)+'px)';
+    if(bars[i]) bars[i].b.style.transform='scaleX('+(bars[i].w*p).toFixed(4)+')';
+  }
+  el.plusDom.style.visibility=s.plusDom?'visible':'hidden';
+}
+
+/* ---------- движок ---------- */
+const st={v:0,short:false,slow:1,reduced:false,playing:false,t:0};
+let raf=0, t0=0;
+const RM_DUR=700;
+
+function duration(){const v=V[st.v];return st.reduced?RM_DUR:(st.short?v.Ts:v.Tf);}
+function stateAt(t){
+  const v=V[st.v];
+  if(!st.reduced) return v.render(t,st.short);
+  // Меньше движения: только смена прозрачности, без перемещений
+  const T=st.short?v.Ts:v.Tf, from=st.short?0:v.hold;
+  let s;
+  if(t<450){ s=v.render(from,st.short); s.stageOp=1-seg(t,300,450); }
+  else { s=v.render(T,st.short); s.stageOp=seg(t,450,RM_DUR); }
+  return s;
+}
+const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+function frame(t){
+  st.t=t; apply(stateAt(t));
+  scrub.value=Math.round(t);
+  $('tNow').textContent=fmt(t)+' мс';
+}
+function tick(now){
+  const T=duration();
+  let t=(now-t0)/st.slow;
+  if(t>=T){t=T;st.playing=false;}
+  frame(t);
+  if(st.playing) raf=requestAnimationFrame(tick);
+}
+function play(){
+  cancelAnimationFrame(raf);
+  scrub.max=duration();
+  $('tAll').textContent=fmt(duration())+' мс';
+  st.playing=true; t0=performance.now();
+  frame(0);
+  raf=requestAnimationFrame(tick);
+}
+
+/* ---------- панель ---------- */
+const scrub=$('scrub');
+const vWrap=$('variants');
+V.forEach((v,i)=>{
+  const b=document.createElement('button'); b.type='button';
+  b.innerHTML='<span class="n">0'+(i+1)+'</span><span></span>';
+  b.lastChild.textContent=v.name;
+  b.addEventListener('click',()=>setVariant(i));
+  vWrap.appendChild(b);
+});
+function renderCaption(){
+  const v=V[st.v];
+  [...vWrap.children].forEach((b,i)=>b.classList.toggle('on',i===st.v));
+  $('capName').textContent=v.name;
+  $('capIdea').textContent=v.idea;
+  $('capCompose').textContent=v.compose;
+  $('mF').textContent=(v.Tf/1000).toLocaleString('ru-RU',{maximumFractionDigits:2})+' с';
+  const ol=$('capPhases'); ol.textContent='';
+  (st.short?v.ps:v.pf).forEach(p=>{
+    const li=document.createElement('li'), a=document.createElement('span'), b=document.createElement('div');
+    a.textContent=fmt(p[0])+'–'+fmt(p[1])+' мс'; b.textContent=p[2];
+    li.appendChild(a); li.appendChild(b); ol.appendChild(li);
+  });
+}
+function setVariant(i){st.v=i;renderCaption();play();}
+$('mode').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  st.short=b.dataset.m==='1';
+  [...$('mode').children].forEach(x=>x.classList.toggle('on',x===b));
+  renderCaption(); play();
+});
+$('replay').addEventListener('click',play);
+$('device').addEventListener('click',play);
+$('slow').addEventListener('change',e=>{st.slow=e.target.checked?4:1;play();});
+const rmBox=$('rm');
+const mq=window.matchMedia('(prefers-reduced-motion: reduce)');
+rmBox.checked=mq.matches; st.reduced=mq.matches;
+rmBox.addEventListener('change',()=>{st.reduced=rmBox.checked;play();});
+if(mq.addEventListener) mq.addEventListener('change',()=>{rmBox.checked=mq.matches;st.reduced=mq.matches;play();});
+scrub.addEventListener('input',()=>{cancelAnimationFrame(raf);st.playing=false;frame(+scrub.value);});
+
+// тема
+const themeBtn=$('theme');
+function setTheme(th){
+  document.documentElement.setAttribute('data-theme',th);
+  themeBtn.textContent=th==='dark'?'Светлая тема':'Тёмная тема';
+  readColors(); apply(stateAt(st.t));
+}
+themeBtn.addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'&&e.target.type==='range') return;
+  if(e.key>='1'&&e.key<='4') setVariant(+e.key-1);
+  else if(e.key==='r'||e.key==='R'||e.key==='к'||e.key==='К') play();
+});
+
+// масштаб устройства
+function fit(){
+  const wide=window.innerWidth>900;
+  let s=Math.min(1,(window.innerWidth-32)/380);
+  if(wide) s=Math.min(s,(window.innerHeight-90)/800);
+  s=Math.max(.5,s);
+  $('device').style.transform='scale('+s+')';
+  const box=$('deviceBox'); box.style.width=(380*s)+'px'; box.style.height=(800*s)+'px';
+}
+window.addEventListener('resize',fit);
+
+/* ---------- старт ---------- */
+fit();
+setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+renderCaption();
+play();
+})();
+</script>
+</body>
+</html>

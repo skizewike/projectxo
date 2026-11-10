@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">XO</string>
+
+    <!-- Язык форматирования чисел и дат. В values-en будет "en". -->
+    <string name="format_locale" translatable="false">ru</string>
+
+    <!-- Вкладки -->
+    <string name="tab_today">Сегодня</string>
+    <string name="tab_water">Вода</string>
+    <string name="tab_food">Еда</string>
+    <string name="tab_steps">Ходьба</string>
+
+    <!-- Сегодня -->
+    <string name="today_title">Сегодня</string>
+    <string name="today_date_pattern" translatable="false">EEEE, d MMMM</string>
+    <string name="day_balance">Баланс дня</string>
+    <string name="percent_sign" translatable="false" formatted="false">%</string>
+    <plurals name="day_balance_a11y">
+        <item quantity="one">Баланс дня, %d процент</item>
+        <item quantity="few">Баланс дня, %d процента</item>
+        <item quantity="many">Баланс дня, %d процентов</item>
+        <item quantity="other">Баланс дня, %d процента</item>
+    </plurals>
+    <string name="quick_add">Добавить %1$s воды</string>
+
+    <!-- Модули -->
+    <string name="module_water">Вода</string>
+    <string name="module_food">Еда</string>
+    <string name="module_steps">Ходьба</string>
+    <string name="of_ml">из %1$s</string>
+    <string name="of_kcal">из %1$s ккал</string>
+    <plurals name="of_steps">
+        <item quantity="one">из %1$s шага</item>
+        <item quantity="few">из %1$s шагов</item>
+        <item quantity="many">из %1$s шагов</item>
+        <item quantity="other">из %1$s шага</item>
+    </plurals>
+    <!-- Для TalkBack: «Вода, 0 из 2 000 мл» -->
+    <string name="module_row_a11y">%1$s, %2$s %3$s</string>
+
+    <!-- Вода -->
+    <string name="water_left">ещё %1$s из %2$s</string>
+    <string name="water_done_title">Цель дня выполнена</string>
+    <string name="water_over">+%1$s сверх %2$s</string>
+    <string name="water_exact">ровно %1$s</string>
+    <string name="water_total_a11y">Выпито %1$s %2$s</string>
+    <string name="portion_add_a11y">Добавить %1$s</string>
+    <string name="water_list_title">Сегодня</string>
+    <string name="vessel_a11y">Сосуд: %1$s из %2$s. Потяните вверх, чтобы налить свою порцию.</string>
+    <string name="vessel_custom_action">Своя порция</string>
+    <string name="vessel_drag_amount">+%1$s</string>
+    <string name="vessel_drag_higher">выше уровня</string>
+    <string name="water_empty">Пока пусто. Нажмите «%1$s», чтобы отметить первый стакан.</string>
+    <string name="time_pattern" translatable="false">HH:mm</string>
+    <string name="water_entry_a11y">%1$s в %2$s</string>
+    <string name="delete_entry_a11y">Удалить запись: %1$s в %2$s</string>
+    <string name="custom_portion_title">Своя порция</string>
+    <string name="custom_portion_label">Объём, %1$s</string>
+    <string name="custom_portion_error">От %1$s до %2$s</string>
+    <string name="custom_portion_add">Добавить</string>
+    <string name="cancel">Отмена</string>
+
+    <!-- Ходьба -->
+    <plurals name="steps_unit">
+        <item quantity="one">шаг</item>
+        <item quantity="few">шага</item>
+        <item quantity="many">шагов</item>
+        <item quantity="other">шага</item>
+    </plurals>
+    <string name="steps_left">ещё %1$s до %2$s</string>
+    <string name="steps_over">+%1$s сверх %2$s</string>
+    <string name="steps_exact">ровно %1$s</string>
+    <string name="goal_done_title">Цель дня выполнена</string>
+    <string name="steps_total_a11y">Шагов за день: %1$s. %2$s</string>
+    <string name="steps_hours_a11y">Шаги по часам. Больше всего %1$s.</string>
+    <string name="steps_hours_empty_a11y">Шаги по часам. Пока шагов нет.</string>
+    <string name="steps_distance">Расстояние</string>
+    <string name="steps_distance_value">≈ %1$s км</string>
+    <string name="steps_active_hours">Активных часов</string>
+    <string name="steps_best_hour">Больше всего</string>
+    <string name="steps_hour_range" translatable="false">%1$s:00–%2$s:00</string>
+    <string name="steps_none" translatable="false">—</string>
+    <string name="steps_perm_title">Шаги считает датчик телефона</string>
+    <string name="steps_perm_text">Чтобы видеть шаги за день, разрешите приложению распознавать физическую активность. Данные остаются на телефоне.</string>
+    <string name="steps_perm_allow">Разрешить</string>
+    <string name="steps_perm_settings">Открыть настройки</string>
+    <string name="steps_no_sensor_title">На этом телефоне нет датчика шагов</string>
+    <string name="steps_no_sensor_text">Шаги можно добавить вручную. Вода и еда работают как обычно.</string>
+    <string name="motion_text">XO может считать шаги по движению телефона. Носите телефон с собой, в кармане или в руке. Пока идёт счёт, в шторке видно уведомление.</string>
+    <string name="motion_start">Считать шаги</string>
+    <string name="motion_on">Шаги считаются по движению телефона</string>
+    <string name="motion_stop">Остановить счёт</string>
+    <string name="motion_channel">Счёт шагов</string>
+    <string name="motion_notif_title">Шаги считаются</string>
+    <string name="motion_notif_text_start">Счёт идёт, пока телефон с вами</string>
+    <string name="motion_notif_text">Сегодня: %1$s %2$s</string>
+    <string name="steps_manual_add">Добавить шаги</string>
+    <string name="steps_manual_open">Добавить шаги вручную</string>
+    <string name="steps_manual_title">Шаги вручную</string>
+    <string name="steps_manual_label">Число шагов</string>
+    <string name="steps_manual_hint">Запишутся в текущий час</string>
+    <string name="steps_manual_added">Добавлено: %1$s %2$s</string>
+
+    <!-- Отмена действий -->
+    <string name="undo_deleted">Запись удалена</string>
+    <string name="undo_restore">Вернуть</string>
+    <string name="undo_added">Добавлено %1$s</string>
+    <string name="undo_cancel">Отменить</string>
+
+    <!-- Заглушки вкладок до готовности модулей -->
+
+    <!-- Заставка -->
+    <string name="splash_tagline">вода · еда · ходьба</string>
+
+    <!-- Общие -->
+    <string name="back">Назад</string>
+    <string name="next">Дальше</string>
+    <string name="less">Меньше</string>
+    <string name="more">Больше</string>
+    <string name="got_it">Понятно</string>
+
+    <!-- Первый запуск: приватность -->
+    <string name="onb_privacy_title">Ваши данные остаются у вас</string>
+    <string name="onb_privacy_lead">XO — дневник воды, еды и движения. Вот как он обращается с тем, что вы вводите.</string>
+    <string name="onb_privacy_1_t">Только на телефоне</string>
+    <string name="onb_privacy_1_s">Нет серверов и аккаунтов. Приложению даже не нужен интернет.</string>
+    <string name="onb_privacy_2_t">Без рекламы и слежки</string>
+    <string name="onb_privacy_2_s">Нет аналитики, рекламных меток и передачи третьим лицам.</string>
+    <string name="onb_privacy_3_t">Удалить можно в любой момент</string>
+    <string name="onb_privacy_3_s">«Удалить все данные» в настройках стирает всё сразу.</string>
+    <string name="onb_privacy_full">Полная политика конфиденциальности</string>
+    <string name="onb_privacy_accept">Принять и продолжить</string>
+    <string name="policy_title">Политика конфиденциальности</string>
+    <string name="policy_h1">Коротко</string>
+    <string name="policy_p1">Всё, что вы вводите в XO, хранится только на вашем телефоне. У нас нет серверов, аккаунтов, рекламы и аналитики. Мы не видим ваши данные и никому их не передаём.</string>
+    <string name="policy_h2">Какие данные</string>
+    <string name="policy_p2">Профиль, который вы указали сами: пол (по желанию), возраст, рост, вес, тренировки, цель. Записи воды, еды и шагов. Настройки.</string>
+    <string name="policy_h3">Где хранятся</string>
+    <string name="policy_p3">В закрытой папке приложения на телефоне. Другие приложения доступа к ним не имеют. Приложению не нужно разрешение на интернет.</string>
+    <string name="policy_h4">Разрешения</string>
+    <string name="policy_p4">Физическая активность — чтобы считать шаги, можно не давать. Уведомления — для напоминаний, если вы их включили.</string>
+    <string name="policy_h5">Удаление</string>
+    <string name="policy_p5">«Удалить все данные» в настройках стирает всё сразу и без восстановления. Удаление приложения тоже стирает всё.</string>
+    <string name="policy_h6">Только для взрослых</string>
+    <string name="policy_p6">Расчёт калорий рассчитан на людей от 18 лет.</string>
+    <string name="policy_h7">Не медицина</string>
+    <string name="policy_p7">XO — дневник и калькулятор ориентиров, а не медицинское изделие. При болезнях, беременности или приёме лекарств посоветуйтесь с врачом, прежде чем менять питание.</string>
+    <string name="policy_h8">Связь</string>
+    <string name="policy_p8">varcolinz@gmail.com</string>
+
+    <!-- Первый запуск: удобство -->
+    <string name="onb_comfort_title">Удобно читать</string>
+    <string name="onb_comfort_lead">Настройте под себя. Всё можно поменять потом в настройках.</string>
+    <string name="onb_text_size">Размер текста</string>
+    <string name="text_size_small">Мелкий</string>
+    <string name="text_size_normal">Обычный</string>
+    <string name="text_size_large">Крупный</string>
+    <string name="text_size_huge">Очень крупный</string>
+    <string name="onb_theme">Тема</string>
+    <string name="theme_warm">Тёплая</string>
+    <string name="theme_acid">Кислотная</string>
+    <string name="theme_volt">Электрик</string>
+    <string name="theme_blood">Красная</string>
+    <string name="onb_contrast">Высокий контраст</string>
+    <string name="onb_contrast_sub">Линии и подписи темнее</string>
+    <string name="onb_motion">Меньше анимаций</string>
+    <string name="onb_motion_sub">Без движения, только плавная смена</string>
+    <string name="onb_preview_caption">ещё 850 до 2 300 мл</string>
+
+    <!-- Первый запуск: модули -->
+    <string name="onb_modules_title">Что отслеживать?</string>
+    <string name="onb_modules_lead">Включите нужное. «Баланс дня» считается только по включённым.</string>
+    <string name="module_water_sub">сколько выпито за день</string>
+    <string name="module_food_sub">калории, белки, жиры, углеводы</string>
+    <string name="module_steps_sub">шаги с датчика телефона</string>
+    <string name="onb_modules_need_one">Нужен хотя бы один модуль.</string>
+
+    <!-- Первый запуск: о вас -->
+    <string name="onb_about_title">Немного о вас</string>
+    <string name="onb_about_lead">Чтобы рассчитать калории, воду и шаги. Хранится только на телефоне.</string>
+    <string name="onb_sex">Пол</string>
+    <string name="onb_sex_hint">нужен для формулы обмена</string>
+    <string name="sex_male">Мужской</string>
+    <string name="sex_female">Женский</string>
+    <string name="sex_unspecified">Не указывать</string>
+    <string name="onb_age">Возраст</string>
+    <string name="onb_age_hint">от 18 лет</string>
+    <string name="onb_height">Рост</string>
+    <string name="onb_weight">Вес</string>
+    <string name="unit_years">лет</string>
+    <string name="unit_cm">см</string>
+    <string name="unit_ml">мл</string>
+    <string name="unit_oz">унц.</string>
+    <string name="unit_water_ml">Миллилитры</string>
+    <string name="unit_water_oz">Унции</string>
+    <string name="unit_kg">кг</string>
+    <string name="unit_lb">фунты</string>
+    <string name="unit_ft">футы</string>
+    <string name="onb_bmi_line">ИМТ %1$s · %2$s</string>
+    <string name="onb_hold_hint">Удерживайте «+» или «−», чтобы листать быстрее.</string>
+    <string name="stepper_a11y">%1$s: %2$s %3$s</string>
+    <string name="bmi_under">ниже нормы</string>
+    <string name="bmi_normal">норма</string>
+    <string name="bmi_over">выше нормы</string>
+    <string name="bmi_obese1">ожирение I степени</string>
+    <string name="bmi_obese2">ожирение II степени</string>
+    <string name="bmi_obese3">ожирение III степени</string>
+
+    <!-- Первый запуск: тренировки и цель -->
+    <string name="onb_activity_title">Сколько раз в неделю вы тренируетесь?</string>
+    <string name="onb_activity_lead">Любая нагрузка от 30 минут: зал, бег, плавание, танцы, быстрая ходьба.</string>
+    <string name="act_none">Не тренируюсь</string>
+    <string name="act_none_sub">в основном сидячий день</string>
+    <string name="act_low">Иногда</string>
+    <string name="act_low_sub">1–2 тренировки в неделю</string>
+    <string name="act_mid">Регулярно</string>
+    <string name="act_mid_sub">3–4 тренировки в неделю</string>
+    <string name="act_high">Часто</string>
+    <string name="act_high_sub">5–6 тренировок в неделю</string>
+    <string name="act_daily">Каждый день</string>
+    <string name="act_daily_sub">или тяжёлая физическая работа</string>
+    <string name="onb_goal_title">Ваша цель</string>
+    <string name="onb_goal_lead">ИМТ %1$s — %2$s. Мы подсказали, но решаете вы.</string>
+    <string name="goal_lose">Снизить вес</string>
+    <string name="goal_lose_sub">мягкий дефицит калорий</string>
+    <string name="goal_lose_disabled">недоступно при ИМТ ниже 18,5</string>
+    <string name="goal_keep">Держать вес</string>
+    <string name="goal_keep_sub">калории на уровне расхода</string>
+    <string name="goal_gain">Набрать вес</string>
+    <string name="goal_gain_sub">небольшой профицит</string>
+    <string name="goal_suggested">подходит</string>
+    <string name="goal_under_note">Если вес снижается без причины, стоит показаться врачу.</string>
+
+    <!-- Первый запуск: напоминания -->
+    <string name="onb_rem_title">Мягкие напоминания</string>
+    <string name="onb_rem_lead">По желанию. В тихие часы напоминаний нет.</string>
+    <string name="rem_water">Вода</string>
+    <string name="rem_water_sub">раз в 2 часа, если давно не отмечали</string>
+    <string name="rem_summary">Итог дня</string>
+    <string name="rem_summary_sub">в 21:00, одной строкой</string>
+    <string name="rem_quiet">Тихие часы</string>
+    <string name="rem_quiet_sub">%1$s–%2$s · без звука и вибрации</string>
+    <string name="onb_rem_cta">Посчитать план</string>
+
+    <!-- Первый запуск: расчёт и план -->
+    <string name="onb_calc_title">Считаем ваш план</string>
+    <string name="onb_calc_1">Рост, вес, возраст и тренировки…</string>
+    <string name="onb_calc_2">Обмен в покое по формуле Миффлина — Сан Жеора…</string>
+    <string name="onb_calc_3">Вода и шаги…</string>
+    <string name="onb_calc_4">Готово</string>
+    <string name="onb_plan_title">Ваш план</string>
+    <string name="onb_plan_lead">Посчитан по росту, весу, возрасту и тренировкам. Всё можно поменять в настройках.</string>
+    <string name="onb_bmi_note">ИМТ — грубая оценка: он не различает мышцы и жир, у спортсменов может быть завышен.</string>
+    <string name="plan_kcal">Калории</string>
+    <string name="plan_kcal_value">%1$s ккал</string>
+    <string name="plan_macros">Б %1$d · Ж %2$d · У %3$d г</string>
+    <string name="plan_pace_lose">≈ −%1$s кг в неделю</string>
+    <string name="plan_pace_gain">≈ +%1$s кг в неделю</string>
+    <string name="plan_pace_keep">на уровне расхода</string>
+    <string name="plan_water">Вода</string>
+    <string name="plan_water_sub">в дни тренировок +%1$s</string>
+    <string name="plan_steps">Ходьба</string>
+    <string name="plan_steps_value">%1$s шагов</string>
+    <string name="plan_steps_sub">≈ %1$s км</string>
+    <string name="plan_how">Как посчитали</string>
+    <string name="plan_how_1">Обмен в покое (формула Миффлина — Сан Жеора): %1$s ккал.</string>
+    <string name="plan_how_2">Расход за день: обмен × %1$s = %2$s ккал.</string>
+    <string name="plan_how_keep">Цель «держать»: калории равны расходу.</string>
+    <string name="plan_how_gain">Цель «набрать»: расход + 10 %.</string>
+    <string name="plan_how_lose">Цель «снизить»: расход − %1$d %%, но не ниже %2$s ккал.</string>
+    <string name="plan_how_4">Белки: %1$s г на кг × %2$s кг. Жиры: 30 %% калорий. Углеводы: остаток.</string>
+    <string name="plan_how_5">Вода: 30 мл на кг веса, но не меньше нормы EFSA для питья.</string>
+    <string name="plan_how_6">Шаги: польза растёт до 8 000–10 000 в день до 60 лет и до 6 000–8 000 после 60 (Paluch и соавт., 2022).</string>
+    <string name="plan_how_7">Это ориентиры, а не медицинские назначения.</string>
+    <string name="onb_plan_accept">Принять план</string>
+    <string name="onb_step_a11y">Шаг %1$d из %2$d</string>
+
+    <!-- Еда -->
+    <string name="food_unit">ккал</string>
+    <string name="food_left">ещё %1$s до %2$s</string>
+    <string name="food_done_title">Цель дня выполнена</string>
+    <string name="food_over">+%1$s ккал сверх цели</string>
+    <string name="food_exact">ровно %1$s ккал</string>
+    <string name="food_total_a11y">Съедено %1$s ккал. %2$s</string>
+    <string name="food_square_a11y">Съедено %1$s из %2$s ккал</string>
+    <string name="food_add_a11y">Добавить запись</string>
+    <string name="macro_protein">Белки</string>
+    <string name="macro_fat">Жиры</string>
+    <string name="macro_carbs">Углеводы</string>
+    <string name="macro_grams">%1$s г</string>
+    <string name="macro_of">из %1$s</string>
+    <string name="macro_a11y">%1$s: %2$s из %3$s г</string>
+    <string name="food_entry_macros">Б %1$s · Ж %2$s · У %3$s</string>
+    <string name="food_list_title">Сегодня</string>
+    <string name="food_empty">Пока пусто. Добавьте первый приём пищи шаблоном выше или кнопкой «+».</string>
+    <string name="food_entry_a11y">%1$s, %2$s ккал, в %3$s</string>
+    <string name="food_delete_a11y">Удалить запись: %1$s, %2$s ккал</string>
+    <string name="food_unnamed">Без названия</string>
+    <string name="food_custom_chip">Своё…</string>
+    <string name="food_template_a11y">Добавить: %1$s, %2$s ккал</string>
+    <string name="food_more">и ещё %1$s</string>
+    <string name="food_dialog_title">Приём пищи</string>
+    <string name="food_name_label">Название</string>
+    <string name="food_kcal_label">Калории, ккал</string>
+    <string name="food_kcal_estimate">≈ %1$s по белкам, жирам и углеводам</string>
+    <string name="food_kcal_error">От 1 до 5 000 ккал</string>
+    <string name="food_macro_error">До 500 г</string>
+    <string name="food_protein_label">Белки, г</string>
+    <string name="food_fat_label">Жиры, г</string>
+    <string name="food_carbs_label">Углеводы, г</string>
+    <string name="food_tpl_1">Овсянка с бананом</string>
+    <string name="food_tpl_2">Курица с рисом</string>
+    <string name="food_tpl_3">Творог 5 %</string>
+    <string name="food_tpl_4">Яблоко</string>
+    <string name="food_tpl_5">Гречка с котлетой</string>
+
+    <!-- Календарь -->
+    <string name="calendar_close">Закрыть календарь</string>
+    <string name="calendar_mode_month">Месяц</string>
+    <string name="calendar_mode_year">Год</string>
+    <string name="calendar_today_tag">СЕГОДНЯ</string>
+    <string name="calendar_day_pattern" translatable="false">d MMMM</string>
+    <string name="calendar_day_short_pattern" translatable="false">d MMM</string>
+    <string name="calendar_day_a11y">%1$s, баланс %2$s %%</string>
+    <string name="calendar_day_logged_a11y">%1$s, баланс %2$s %%, есть заметка</string>
+    <string name="calendar_day_off_a11y">%1$s, недоступно</string>
+    <string name="calendar_month_a11y">%1$s: открыть месяц</string>
+    <string name="calendar_sheet_expand">Развернуть день</string>
+    <string name="calendar_sheet_collapse">Свернуть день</string>
+    <string name="day_title_today">%1$s · сегодня</string>
+    <string name="day_title">%1$s · %2$s</string>
+    <string name="day_first">первый день с XO</string>
+    <string name="day_number">день %1$s с XO</string>
+    <string name="day_balance_a11y">Баланс дня %1$s процентов</string>
+    <string name="day_modules">Модули</string>
+    <string name="day_wellbeing">Самочувствие</string>
+    <string name="day_edit">Изменить</string>
+    <string name="day_add_prompt">Как вы себя чувствуете? Вес, заметка</string>
+    <string name="day_records">Записи за день</string>
+    <string name="day_records_empty_today">Сегодня ещё ничего не отмечено.</string>
+    <string name="day_records_empty">В этот день записей нет.</string>
+    <string name="day_record_water">Вода</string>
+    <string name="day_weight_kg">%1$s кг</string>
+    <string name="day_weight_lb">%1$s фунта</string>
+
+    <!-- Самочувствие -->
+    <string name="pick_title_today">Сегодня</string>
+    <string name="pick_close">Закрыть</string>
+    <string name="pick_search">Поиск</string>
+    <string name="pick_search_a11y">Поиск по самочувствию</string>
+    <string name="pick_nothing_found">Ничего не найдено</string>
+    <string name="pick_overall">Как вы в целом?</string>
+    <string name="pick_frequent">Часто отмечаете</string>
+    <string name="pick_weight">Вес</string>
+    <string name="pick_weight_none" translatable="false">—</string>
+    <string name="pick_weight_none_a11y">Вес не указан</string>
+    <string name="pick_weight_less">Меньше</string>
+    <string name="pick_weight_more">Больше</string>
+    <string name="pick_weight_clear">Убрать вес</string>
+    <string name="pick_note">Заметка</string>
+    <string name="pick_note_hint">Что было важного? Например: мало сна, тяжёлая тренировка</string>
+    <string name="pick_save">Сохранить</string>
+    <string name="feel_0">Плохо</string>
+    <string name="feel_1">Так себе</string>
+    <string name="feel_2">Нормально</string>
+    <string name="feel_3">Хорошо</string>
+    <string name="feel_4">Отлично</string>
+    <string name="group_energy">Энергия</string>
+    <string name="group_pain">Боль</string>
+    <string name="group_mood">Настроение</string>
+    <string name="group_digestion">Пищеварение</string>
+    <string name="group_other">Другое</string>
+    <string name="tag_energy">Бодрость</string>
+    <string name="tag_tired">Усталость</string>
+    <string name="tag_sleepy">Сонливость</string>
+    <string name="tag_head">Голова</string>
+    <string name="tag_back">Спина</string>
+    <string name="tag_muscle">Мышцы после тренировки</string>
+    <string name="tag_joint">Суставы</string>
+    <string name="tag_belly">Живот</string>
+    <string name="tag_calm">Спокойствие</string>
+    <string name="tag_joy">Радость</string>
+    <string name="tag_anx">Тревога</string>
+    <string name="tag_angry">Раздражение</string>
+    <string name="tag_sad">Грусть</string>
+    <string name="tag_stress">Стресс</string>
+    <string name="tag_bloat">Вздутие</string>
+    <string name="tag_heart">Изжога</string>
+    <string name="tag_nausea">Тошнота</string>
+    <string name="tag_cold">Простуда</string>
+    <string name="tag_allergy">Аллергия</string>
+
+    <!-- Настройки -->
+    <string name="settings_open">Настройки</string>
+    <string name="settings_title">Настройки</string>
+    <string name="set_group_you">Вы</string>
+    <string name="set_group_look">Вид</string>
+    <string name="set_group_notif">Уведомления и доступ</string>
+    <string name="set_group_data">Данные</string>
+    <string name="set_group_about">О приложении</string>
+    <string name="set_profile">Мой профиль</string>
+    <string name="set_profile_sub">%1$s · %2$s · %3$s %4$s</string>
+    <string name="set_plan">Цели и план</string>
+    <string name="set_plan_sub">вода, калории, шаги — пересчитать</string>
+    <string name="set_modules">Модули</string>
+    <string name="set_theme">Тема</string>
+    <string name="set_text">Размер текста и контраст</string>
+    <string name="set_units">Единицы измерения</string>
+    <string name="set_units_sub">%1$s, %2$s</string>
+    <string name="set_notif">Уведомления и разрешения</string>
+    <string name="set_notif_sub">тихие часы %1$s–%2$s</string>
+    <string name="set_delete">Удалить все данные</string>
+    <string name="set_delete_sub">без восстановления</string>
+    <string name="set_policy">Политика конфиденциальности</string>
+    <string name="set_policy_sub">данные только на телефоне</string>
+    <string name="set_about">Связь и версия</string>
+    <string name="set_about_sub">%1$s · %2$s</string>
+    <string name="contact_email" translatable="false">varcolinz@gmail.com</string>
+    <string name="profile_title">Мой профиль</string>
+    <string name="profile_lead">Данные для расчёта плана. Хранятся только на телефоне.</string>
+    <string name="profile_weight">Вес</string>
+    <string name="profile_bmi">ИМТ</string>
+    <string name="profile_days">Дней с XO</string>
+    <string name="profile_note">Профиль не меняет цели сам. Пересчитайте их в «Цели и план».</string>
+    <string name="profile_goal_title">Цель</string>
+    <string name="profile_activity_title">Тренировок в неделю</string>
+    <string name="plan_title">Цели и план</string>
+    <string name="plan_lead">План считается по профилю. Текущие цели можно заменить расчётными.</string>
+    <string name="plan_now">Сейчас</string>
+    <string name="plan_calc">По профилю</string>
+    <string name="plan_apply">Применить план</string>
+    <string name="plan_applied">Цели обновлены</string>
+    <string name="plan_differs">Текущие цели отличаются от расчёта.</string>
+    <string name="plan_same">Цели совпадают с планом</string>
+    <string name="plan_unavailable">План считается для возраста от 18 до 100 лет.</string>
+    <string name="modules_title">Модули</string>
+    <string name="modules_lead">«Баланс дня» и «Сегодня» считаются только по включённым.</string>
+    <string name="theme_title">Тема</string>
+    <string name="theme_lead">Меняется сразу. «Тёплая» следует за светлой и тёмной темой телефона.</string>
+    <string name="text_title">Размер текста и контраст</string>
+    <string name="units_title">Единицы измерения</string>
+    <string name="units_lead">Влияют на ввод и показ. В базе всё хранится в кг, см и мл, смена единиц ничего не теряет.</string>
+    <string name="notif_title">Уведомления</string>
+    <string name="notif_lead">Напоминания по желанию. В тихие часы звука и вибрации нет.</string>
+    <string name="notif_perm_group">Разрешения телефона</string>
+    <string name="notif_perm_notifications">Уведомления</string>
+    <string name="notif_perm_on">разрешены</string>
+    <string name="notif_perm_off">не разрешены, напоминаний не будет</string>
+    <string name="notif_perm_activity">Физическая активность</string>
+    <string name="notif_activity_on">разрешено, шаги считаются</string>
+    <string name="notif_activity_off">не разрешено, шагов не будет</string>
+    <string name="notif_open_system">Откроются настройки Android</string>
+    <string name="notif_reminders_group">Напоминания</string>
+    <string name="notif_quiet_from">Тихие часы с</string>
+    <string name="notif_quiet_to">Тихие часы до</string>
+    <string name="notif_note">Напоминания приходят без звука, не чаще раза в 2 часа и только пока цель воды не выполнена.</string>
+    <string name="delete_title">Удалить все данные?</string>
+    <string name="delete_body">Записи воды, еды и шагов, заметки дней, цели и настройки будут стёрты с телефона. Восстановить их нельзя.</string>
+    <string name="delete_confirm">Удалить</string>
+
+    <!-- Напоминания -->
+    <string name="notif_channel_water">Вода</string>
+    <string name="notif_channel_summary">Итог дня</string>
+    <string name="notif_water_title">Вода</string>
+    <string name="notif_water_body">Ещё %1$s до цели дня. Отметить стакан?</string>
+    <string name="notif_water_action">+%1$s</string>
+    <string name="notif_summary_title">Итог дня</string>
+    <string name="notif_summary_body">Баланс дня %1$s %%. Заглянуть в подробности?</string>
+    <string name="notif_example">Показать пример напоминания</string>
+    <string name="notif_example_sub">придёт сразу, чтобы увидеть, как выглядит</string>
+    <string name="notif_example_blocked">Сначала разрешите уведомления в настройках Android</string>
+
+    <!-- Профиль с графиками -->
+    <string name="profile_edit">Изменить данные профиля</string>
+    <string name="profile_edit_sub">пол, возраст, рост, вес, тренировки, цель</string>
+    <string name="profile_weight_delta_down">−%1$s с начала</string>
+    <string name="profile_weight_delta_up">+%1$s с начала</string>
+    <string name="period_week">Неделя</string>
+    <string name="period_month">Месяц</string>
+    <string name="period_all">Всё время</string>
+    <string name="chart_range_week">7 дней</string>
+    <string name="chart_range_month">30 дней</string>
+    <string name="chart_range_all">всё время</string>
+    <string name="chart_weight">Вес</string>
+    <string name="chart_steps">Шаги</string>
+    <string name="chart_water">Вода</string>
+    <string name="chart_kcal">Калории</string>
+    <string name="chart_feel">Самочувствие</string>
+    <string name="chart_feel_source">из календаря</string>
+    <string name="chart_avg_day">в среднем за день</string>
+    <string name="chart_goal_avg">цели в среднем</string>
+    <string name="chart_today">сегодня</string>
+    <string name="chart_no_data">пока нет данных</string>
+    <string name="chart_tip_today">%1$s · сегодня</string>
+    <string name="chart_tip_ago">%1$s · %2$s дн. назад</string>
+    <string name="chart_a11y">%1$s: %2$s</string>
+    <string name="chart_weight_empty">Добавьте вес в календаре — здесь появится линия.</string>
+    <string name="chart_weight_note">Тонкая линия — каждый день, толстая — среднее за 7 дней. Смотрите на неё, а не на скачки.</string>
+    <string name="chart_steps_empty">Шаги появятся после первого дня.</string>
+    <string name="chart_goal_dashed">Цель %1$s — пунктир.</string>
+    <string name="chart_feel_empty">Отмечайте самочувствие в календаре — здесь будет видно, каких дней больше.</string>
+    <string name="chart_feel_halves">Хороших дней во второй половине периода — %1$s %%, в первой — %2$s %%.</string>
+    <string name="chart_feel_share">%1$s %2$s %%</string>
+
+    <!-- Виджет -->
+    <string name="widget_name">Баланс дня</string>
+    <string name="widget_description">Кольцо «Баланса дня» и кнопка «+250 мл»</string>
+    <string name="widget_ring_a11y">Баланс дня %1$s процентов. Открыть приложение</string>
+    <string name="widget_add_a11y">Добавить %1$s воды</string>
+
+    <!-- Модули волны 2 -->
+    <string name="module_fasting">Голодание</string>
+    <string name="module_sleep">Сон</string>
+    <string name="module_habits">Привычки</string>
+    <string name="module_breathing">Дыхание</string>
+    <string name="module_fasting_sub">интервальное голодание по таймеру</string>
+    <string name="module_sleep_sub">сколько спали и как спалось</string>
+    <string name="module_habits_sub">отметки, серии, тренировки дома</string>
+    <string name="module_breathing_sub">ровное дыхание 1–5 минут</string>
+    <string name="tab_more">Ещё</string>
+    <string name="dur_h_min">%1$s ч %2$s мин</string>
+    <string name="dur_h">%1$s ч</string>
+    <string name="dur_min">%1$s мин</string>
+    <string name="of_hours">из %1$s ч</string>
+    <string name="of_habits">из %1$s</string>
+    <string name="of_minutes">из %1$s мин</string>
+    <string name="module_move_up">Выше</string>
+    <string name="module_move_down">Ниже</string>
+
+    <!-- Общее для таймеров -->
+    <string name="time_today">сегодня</string>
+    <string name="time_yesterday">вчера</string>
+    <string name="time_30_ago">30 мин назад</string>
+    <string name="time_hour_ago">Час назад</string>
+    <string name="time_now">Сейчас</string>
+
+    <!-- Сон -->
+    <string name="sleep_state_night">Спокойной ночи</string>
+    <string name="sleep_state_last">Прошлая ночь</string>
+    <string name="sleep_cap_going">легли в %1$s · подъём по плану %2$s</string>
+    <string name="sleep_cap_range">%1$s–%2$s</string>
+    <string name="sleep_cap_rated"> · спалось %1$s</string>
+    <string name="sleep_cap_exact">ровно по плану</string>
+    <string name="sleep_cap_over">на %1$s дольше плана</string>
+    <string name="sleep_cap_under">до цели не хватило %1$s</string>
+    <string name="sleep_cap_none">Ночей пока нет. Вечером нажмите «Ложусь спать».</string>
+    <string name="sleep_row_schedule">Отбой и подъём</string>
+    <string name="sleep_row_started">Легли в</string>
+    <string name="sleep_row_regularity">Регулярность, 7 ночей</string>
+    <string name="sleep_regularity_value">отбой %1$s ± %2$s мин</string>
+    <string name="sleep_row_remind">Напомнить за 30 мин</string>
+    <string name="sleep_week_title">Ночи недели</string>
+    <string name="sleep_week_a11y">Ночей на графике: %1$s</string>
+    <string name="sleep_rate_again">Как спалось? Изменить оценку</string>
+    <string name="sleep_bed">Ложусь спать</string>
+    <string name="sleep_wake">Встаю</string>
+    <string name="sleep_alarm">Поставить будильник на %1$s</string>
+    <string name="sleep_wake_earlier">Проснулись раньше? Указать время</string>
+    <string name="sleep_wake_when">Когда проснулись?</string>
+    <string name="sleep_wake_hint">Не раньше отбоя (%1$s) и не позже, чем сейчас.</string>
+    <string name="sleep_started_when">Когда легли?</string>
+    <string name="sleep_started_hint">Отсчёт пойдёт от этого времени. Не раньше чем сутки назад.</string>
+    <string name="sleep_note">Цель сна по умолчанию 8 часов, рекомендуют не меньше 7. Это ориентир, а не медицинское назначение. Короче 10 минут сном не считается.</string>
+    <string name="sleep_moon_a11y">Сон: %1$s процентов цели</string>
+    <string name="sleep_schedule_title">Отбой и подъём</string>
+    <string name="sleep_bed_time">Отбой</string>
+    <string name="sleep_wake_time">Подъём</string>
+    <string name="sleep_goal_line">Цель сна: %1$s</string>
+    <string name="sleep_goal_hint">Не меньше 7 часов для взрослых</string>
+    <string name="sleep_rate_title">Как спалось?</string>
+    <string name="sleep_rate_skip">Пропустить</string>
+    <string name="sleep_rate_0">Плохо</string>
+    <string name="sleep_rate_1">Так себе</string>
+    <string name="sleep_rate_2">Нормально</string>
+    <string name="sleep_rate_3">Хорошо</string>
+    <string name="sleep_rate_4">Отлично</string>
+    <string name="sleep_notif_bed_title">Скоро спать</string>
+    <string name="sleep_notif_bed_body">Отбой по плану в %1$s. Нажмите, когда ляжете.</string>
+    <string name="sleep_notif_wake_title">Отметить сон?</string>
+    <string name="sleep_notif_wake_body">Сон всё ещё отмечен. Нажмите «Встаю», когда будете готовы.</string>
+
+    <!-- Голодание -->
+    <string name="fast_state_window">Окно еды</string>
+    <string name="fast_state_going">Голодание идёт</string>
+    <string name="fast_state_past">Цель позади</string>
+    <string name="fast_cap_done">%1$s ч пройдено · +%2$s</string>
+    <string name="fast_cap_left">ещё %1$s · цель %2$s ч</string>
+    <string name="fast_cap_last">прошлое голодание · закончено %1$s в %2$s</string>
+    <string name="fast_cap_none">голодание не начато</string>
+    <string name="fast_row_start">Начало</string>
+    <string name="fast_row_window">Окно еды</string>
+    <string name="fast_row_can">Можно начать</string>
+    <string name="fast_row_can_value">в любой момент</string>
+    <string name="fast_row_tip">Совет</string>
+    <string name="fast_row_tip_value">после последнего приёма пищи</string>
+    <string name="fast_start">Начать сейчас</string>
+    <string name="fast_start_earlier">Начали раньше? Указать время</string>
+    <string name="fast_finish">Закончить голодание</string>
+    <string name="fast_finish_earlier">Закончили раньше? Указать время</string>
+    <string name="fast_history">Последние голодания</string>
+    <string name="fast_hist_done">цель %1$s ч пройдена</string>
+    <string name="fast_hist_goal">цель %1$s ч</string>
+    <string name="fast_note">Время идёт по часам телефона, приложение можно закрыть. Закончить раньше цели можно в любой момент: запись сохранится как есть. XO ничего не обещает: это не лечение и не способ быстро похудеть.</string>
+    <string name="fast_start_when">Когда начали?</string>
+    <string name="fast_start_hint">Отсчёт пойдёт от этого времени. Не раньше чем сутки назад.</string>
+    <string name="fast_after_supper">После ужина, 20:00</string>
+    <string name="fast_end_when">Когда закончили?</string>
+    <string name="fast_end_hint">Не раньше начала (%1$s) и не позже, чем сейчас.</string>
+    <string name="fast_dial_a11y">Циферблат на 24 часа: дуга показывает, сколько прошло с начала голодания</string>
+    <string name="fast_safety_title">Перед началом</string>
+    <string name="fast_safety_lead">Интервальное голодание подходит не всем. Не начинайте без разговора с врачом, если:</string>
+    <string name="fast_safety_1">вы беременны или кормите грудью;</string>
+    <string name="fast_safety_2">есть или были расстройства пищевого поведения;</string>
+    <string name="fast_safety_3">у вас диабет и вы принимаете сахароснижающие препараты;</string>
+    <string name="fast_safety_4">вам нет 18 лет или есть хроническое заболевание.</string>
+    <string name="fast_safety_tail">Если во время голодания стало плохо, закончите его и поешьте.</string>
+    <string name="fast_safety_ok">Ничего из этого, начать</string>
+    <string name="fast_safety_no">Это про меня</string>
+    <string name="fast_notif_title">Голодание · %1$s</string>
+    <string name="fast_notif_body">Окно еды с %1$s</string>
+    <string name="fast_notif_finish">Закончить</string>
+    <string name="fast_notif_goal_title">Цель пройдена: %1$s ч</string>
+    <string name="fast_notif_goal_body">Можно есть, когда будете готовы. Окно еды открыто до %1$s.</string>
+    <string name="fast_notif_window_title">Окно еды скоро закроется</string>
+    <string name="fast_notif_window_body">Через 15 минут сутки с начала голодания закончатся.</string>
+
+    <!-- Привычки -->
+    <string name="habits_settings">Настройки привычек</string>
+    <string name="habits_add">Новая привычка</string>
+    <string name="habits_new">Новая привычка</string>
+    <string name="habits_edit">Привычка</string>
+    <string name="habits_name">Название</string>
+    <string name="habits_editing">Изменение списка</string>
+    <string name="habits_done">Готово</string>
+    <string name="habits_empty">Привычек пока нет. Нажмите «+», чтобы добавить первую.</string>
+    <string name="habits_summary">Сегодня %1$s из %2$s</string>
+    <string name="habits_all_done"> · всё на сегодня сделано</string>
+    <string name="habits_mark_a11y">Отметить «%1$s» сегодня</string>
+    <string name="habits_day_a11y">%1$s, %2$s</string>
+    <string name="habits_today_short">Сег</string>
+    <string name="habits_workout_sub">тренировка дома · пн, ср, пт</string>
+    <string name="habits_workout_start">Начать</string>
+    <string name="habits_week_progress">%1$s из %2$s на неделе</string>
+    <string name="habits_streak">серия %1$s</string>
+    <string name="habits_percent"> · %1$s %% за месяц</string>
+    <string name="habits_start_today">начните сегодня</string>
+    <string name="habits_ring_a11y">Сегодня сделано %1$s из %2$s привычек</string>
+    <string name="habits_ring_count">%1$s из %2$s</string>
+    <string name="habits_ring_label">на сегодня</string>
+    <string name="habits_not_today">Не на сегодня</string>
+    <string name="habits_card_streak">серия %1$s · лучшая %2$s</string>
+    <string name="habits_card_empty">история появится после первых отметок</string>
+    <string name="habits_freq_daily">каждый день</string>
+    <string name="habits_freq_week">%1$s раз в неделю</string>
+    <string name="habits_remind_at"> · напомнить в %1$s</string>
+    <string name="habits_deleted">Привычка удалена</string>
+    <string name="habits_delete_a11y">Удалить «%1$s»</string>
+    <string name="habits_edit_a11y">Изменить «%1$s»</string>
+    <string name="habits_kind_daily">Каждый день</string>
+    <string name="habits_kind_week">N в неделю</string>
+    <string name="habits_kind_days">По дням</string>
+    <string name="habits_per_week">Раз в неделю</string>
+    <string name="habits_target">Раз в день</string>
+    <string name="habits_remind">Напоминание</string>
+    <string name="habits_remind_time">Время напоминания</string>
+    <string name="habits_view">Вид экрана</string>
+    <string name="habits_view_ring">Кольцо дня</string>
+    <string name="habits_view_list">Список</string>
+    <string name="habits_view_cards">Карточки</string>
+    <string name="habits_workout_toggle">Тренировки дома</string>
+    <string name="habits_workout_toggle_sub">привычка «Тренировка» по дням</string>
+    <string name="habits_edit_list">Изменить список</string>
+    <string name="habits_seed_1">Утренняя зарядка</string>
+    <string name="habits_seed_2">Читать 20 минут</string>
+    <string name="habits_seed_3">Без телефона за час до сна</string>
+    <string name="habits_seed_4">Растяжка</string>
+    <string name="habits_workout_name">Тренировка</string>
+    <string name="habits_notif_body">Ещё не отмечено сегодня. Можно и завтра: серия не сгорит за один день.</string>
+    <string name="habits_notif_done">Сделано</string>
+
+    <!-- Ещё -->
+    <string name="more_title">Ещё</string>
+    <string name="more_modules">Модули</string>
+    <string name="more_none">Все включённые модули уже во вкладках.</string>
+
+    <!-- Дыхание -->
+    <string name="breath_ready">Готовы?</string>
+    <string name="breath_ready_sub">Выберите ритм и нажмите «Начать»</string>
+    <string name="breath_done">Готово</string>
+    <string name="breath_done_sub">Как вы себя чувствуете?</string>
+    <string name="breath_in">Вдох</string>
+    <string name="breath_out">Выдох</string>
+    <string name="breath_hold">Пауза</string>
+    <string name="breath_left">Осталось %1$s</string>
+    <string name="breath_today_none">Сегодня дыхания по ритму ещё не было</string>
+    <string name="breath_today">Сегодня: %1$s мин, сеансов: %2$s</string>
+    <string name="breath_summary">%1$s мин · %2$s</string>
+    <string name="breath_summary_sub">Записано в «Сегодня». Можно повторить.</string>
+    <plurals name="breath_cycles">
+        <item quantity="one">%d цикл</item>
+        <item quantity="few">%d цикла</item>
+        <item quantity="many">%d циклов</item>
+        <item quantity="other">%d цикла</item>
+    </plurals>
+    <string name="breath_minutes">%1$s мин</string>
+    <string name="breath_start">Начать</string>
+    <string name="breath_stop">Остановить</string>
+    <string name="breath_rhythm_even">Ровное</string>
+    <string name="breath_rhythm_box">Квадрат</string>
+    <string name="breath_rhythm_long">Длинный выдох</string>
+    <string name="breath_note">Дышите спокойно, без усилия. Если закружилась голова, вернитесь к обычному дыханию. Это не лечение.</string>
+
+    <!-- Тренировки дома -->
+    <string name="ex_pushups">Отжимания</string>
+    <string name="ex_squats">Приседания</string>
+    <string name="ex_plank">Планка</string>
+    <string name="ex_crunches">Пресс</string>
+    <string name="ex_unit_sec">%1$s с</string>
+    <string name="pushup_wall">от стены</string>
+    <string name="pushup_knees">с колен</string>
+    <string name="pushup_classic">классические</string>
+    <string name="workout_title">Тренировка дома</string>
+    <string name="workout_lead">Выберите упражнение. Нагрузка растёт, когда вам становится легче.</string>
+    <string name="workout_ex_new">проверим уровень перед первой тренировкой</string>
+    <string name="workout_ex_level">сейчас %1$s · тренировок: %2$s</string>
+    <string name="workout_ex_level_variant">сейчас %1$s, %2$s · тренировок: %3$s</string>
+    <string name="workout_safety">Если появилась боль, остановитесь.</string>
+    <string name="workout_stop">Остановить</string>
+    <string name="workout_check_reps">Сколько получается подряд без ошибки в технике?</string>
+    <string name="workout_check_seconds">Сколько секунд получается держать без ошибки в технике?</string>
+    <string name="workout_begin">Начать</string>
+    <string name="workout_set_of">Подход %1$s из %2$s</string>
+    <string name="workout_last_short">макс</string>
+    <string name="workout_rest">Отдых</string>
+    <string name="workout_next_up">дальше: %1$s</string>
+    <string name="workout_skip_rest">Пропустить отдых</string>
+    <string name="workout_add_rest">+30 с</string>
+    <string name="workout_goal_reps">Цель подхода. Если вышло иначе, поправьте.</string>
+    <string name="workout_goal_seconds">Цель подхода в секундах. Если вышло иначе, поправьте.</string>
+    <string name="workout_tap_hint">Касайтесь экрана на каждый повтор. Цель: %1$s</string>
+    <string name="workout_set_done">Подход сделан</string>
+    <string name="workout_set_last">Последний подход сделан</string>
+    <string name="workout_rate_title">Как было?</string>
+    <string name="workout_rate_all">Все подходы выполнены.</string>
+    <string name="workout_rate_partial">В одном из подходов вышло меньше цели. Это нормально.</string>
+    <string name="workout_set_n">Подход %1$s</string>
+    <string name="workout_rate_easy">Легко</string>
+    <string name="workout_rate_normal">Нормально</string>
+    <string name="workout_rate_hard">Тяжело</string>
+    <string name="workout_done_title">Тренировка записана</string>
+    <string name="workout_done_up">%1$s: следующая цель выше, было %2$s, станет %3$s.</string>
+    <string name="workout_done_same">%1$s: уровень остаётся %2$s.</string>
+    <string name="workout_done_habit">Привычка «Тренировка» на сегодня отмечена.</string>
+    <string name="habits_counting">Как считать подходы</string>
+    <string name="habits_counting_ladder">Лесенка</string>
+    <string name="habits_counting_tap">Счёт касанием</string>
+    <string name="habits_open_workout">Открыть тренировку</string>
+
+    <!-- Тренировки: проверка, планка, отдых, итог -->
+    <string name="workout_check_again">Прошло несколько тренировок, сверим уровень ещё раз.</string>
+    <string name="workout_plan_line">План: %1$s</string>
+    <string name="workout_plan_sec">сек</string>
+    <string name="workout_prep">Приготовьтесь</string>
+    <string name="workout_hold_start">Начать удержание</string>
+    <string name="workout_hold_stop">Закончить подход</string>
+    <string name="workout_hold_now">держим</string>
+    <string name="workout_hold_hint">Держите положение до сигнала. Если станет трудно, остановитесь раньше.</string>
+    <string name="workout_hold_a11y">Удержание, осталось %1$s секунд</string>
+    <string name="workout_untap">Убрать повтор</string>
+    <string name="workout_abort_title">Остановить тренировку?</string>
+    <string name="workout_abort_body">Подходы этой тренировки не сохранятся.</string>
+    <string name="workout_abort_continue">Продолжить</string>
+    <string name="workout_abort_confirm">Остановить</string>
+    <string name="workout_today_done">Сегодня записано тренировок: %1$s</string>
+    <string name="workout_next_tag">следующее</string>
+    <string name="workout_history">Последние тренировки</string>
+    <string name="workout_rest_a11y">Отдых, осталось %1$s секунд</string>
+    <string name="workout_done_total">Всего за тренировку: %1$s</string>
+
+    <!-- Первый запуск: тренировки дома -->
+    <string name="onb_workout_title">Тренироваться дома?</string>
+    <string name="onb_workout_lead">Короткие тренировки без инвентаря. План растёт, когда становится легче.</string>
+    <string name="onb_workout_days">По умолчанию в пн, ср и пт. Дни можно поменять в привычках.</string>
+    <string name="onb_workout_yes">Включить тренировки</string>
+    <string name="onb_workout_no">Не сейчас</string>
+    <string name="ex_pushups_sub">от стены, с колен или классические</string>
+    <string name="ex_squats_sub">без веса</string>
+    <string name="ex_plank_sub">на локтях, с таймером</string>
+    <string name="ex_crunches_sub">скручивания</string>
+
+    <!-- Язык -->
+    <string name="set_language">Язык</string>
+    <string name="lang_title">Язык</string>
+    <string name="lang_lead">Меняется сразу. «По телефону» следует за языком Android.</string>
+    <string name="lang_system">По телефону</string>
+    <string name="lang_ru" translatable="false">Русский</string>
+    <string name="lang_en" translatable="false">English</string>
+
+    <!-- Итог недели и выгрузка -->
+    <string name="week_title">Итог недели</string>
+    <string name="week_avg_caption">в среднем за 7 дней</string>
+    <string name="week_days_full">Дней, когда баланс дошёл до 100 %%: %1$s из %2$s</string>
+    <string name="week_best">Лучший день: %1$s, %2$s %%</string>
+    <string name="week_prev">Предыдущие 7 дней: %1$s %%</string>
+    <string name="week_module_a11y">%1$s: в среднем %2$s процентов цели</string>
+    <string name="set_export">Выгрузить данные</string>
+    <string name="set_export_sub">таблица CSV: день за днём</string>
+    <string name="export_done">Файл сохранён</string>
+    <string name="export_failed">Не удалось сохранить файл</string>
+
+    <!-- Итог недели: уведомление -->
+    <string name="rem_weekly">Итог недели</string>
+    <string name="rem_weekly_sub">по воскресеньям в 19:00, одной строкой</string>
+    <string name="notif_weekly_title">Итог недели</string>
+    <string name="notif_weekly_body">В среднем %1$s %% за 7 дней. Подробности в профиле.</string>
+
+    <!-- Вид таймера тренировок -->
+    <string name="habits_timer">Вид таймера</string>
+    <string name="habits_timer_ring">Кольцо</string>
+    <string name="habits_timer_bar">Полоса</string>
+    <string name="habits_timer_ticks">Деления</string>
+</resources>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Появление плана</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);margin:0}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg)}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:30}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:30}
+canvas{position:absolute;left:0;top:0;width:360px;height:780px}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.primary-btn{background:var(--ink);color:var(--page);border-radius:999px;padding:9px 18px;font-weight:500}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>Project XO</b><span>Появление личного плана: три анимации</span></div>
+  <div class="ctrls">
+    <label class="chk"><input type="checkbox" id="slow"> Замедлить ×4</label>
+    <label class="chk"><input type="checkbox" id="rm"> Меньше анимаций</label>
+    <button class="ghost" id="theme" type="button">Тёмная тема</button>
+  </div>
+</header>
+<main class="layout">
+  <section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen">
+    <div class="status"><span>14:20</span><span>100 %</span></div>
+    <canvas id="cv" aria-label="Ваш план: калории 2 140 ккал, вода 2 300 мл, шаги 8 000, голодание 12:12"></canvas>
+    <div class="gesture"></div><div class="punch"></div>
+  </div></div></section>
+  <aside class="panel">
+    <div class="group"><div class="label">Вариант</div><div class="variants" id="variants"></div></div>
+    <div class="group acts"><button class="primary-btn" id="play" type="button">Повторить</button></div>
+    <div class="desc"><h2 id="dName"></h2><p id="dIdea"></p><ul class="pc" id="dPc"></ul></div>
+    <p class="note">Момент сразу после ввода роста, веса, возраста и тренировок. Длина каждой ~2 с, затем экран статичен. «Меньше анимаций»: сразу итог с плавным появлением 200 мс. Приёмы взяты из присланных роликов, но без размытия, свечения и цветных переливов. Те же движения можно переиспользовать: поле штрихов — ожидание, столбики — недельный итог, отскок — добавление записи. Клавиши 1–3.</p>
+  </aside>
+</main>
+<script>
+(function(){
+'use strict';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+function bezier(x1,y1,x2,y2){const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;const sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,dx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t);if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t-=e/d;}return sy(t);};}
+const std=bezier(.2,0,0,1),acc=bezier(.4,0,1,1),emph=bezier(.05,.7,.1,1);
+const back=x=>{x=clamp(x);const c1=1.4,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2);};
+const $=id=>document.getElementById(id);
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ | /g,' ');
+const DPR=Math.min(2,devicePixelRatio||1);
+const g=(()=>{const c=$('cv');c.width=360*DPR;c.height=780*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return x;})();
+const st={v:0,slow:1,reduced:false,t0:performance.now()};
+
+const ROWS=[
+ {shape:'sq',label:'Калории',val:2140,unit:'ккал',sub:'Б 130 · Ж 70 · У 245 г',h:.78},
+ {shape:'ci',label:'Вода',val:2300,unit:'мл',sub:'в дни тренировок +500 мл',h:.62},
+ {shape:'tr',label:'Ходьба',val:8000,unit:'шагов',sub:'≈ 6 км',h:.86},
+ {shape:'di',label:'Голодание',val:null,text:'12 ч',unit:'',sub:'окно еды 08:00–20:00',h:.5},
+];
+const RY=i=>206+i*76;
+// иконки набора «Предметы» (Р40): контурная отметка строки рисуется ими, заливка — фигурой для отскока
+const ICP={sq:['M7 3.5v5.5a2 2 0 0 0 2 2M11 3.5v5.5a2 2 0 0 1-2 2v9.5M9 3.5v5','M17 20.5V3.5c-2 1.5-3 4-3 7.5h3'],ci:['M12 3.5c3.4 4.2 5.8 7.4 5.8 10.2a5.8 5.8 0 0 1-11.6 0C6.2 10.9 8.6 7.7 12 3.5z','M9.2 14.2a2.8 2.8 0 0 0 2.8 2.8'],tr:['M8.5 3.5c1.8 0 2.7 1.6 2.7 3.8 0 2.4-.9 4.2-2.7 4.2S5.8 9.7 5.8 7.3c0-2.2.9-3.8 2.7-3.8zM7 13.8l3.4.3-.3 2.1a1.7 1.7 0 0 1-3.3-.5z','M15.5 8c1.8 0 2.7 1.6 2.7 3.8 0 2.4-.9 4.2-2.7 4.2s-2.7-1.8-2.7-4.2c0-2.2.9-3.8 2.7-3.8zM14 18.3l3.4.3-.3 2.1a1.7 1.7 0 0 1-3.3-.5z'],di:['M12 20.5a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15z','M12 9v4l2.5 2M10 2.5h4']};
+const ICP2={};for(const k in ICP)ICP2[k]=ICP[k].map(d=>new Path2D(d));
+function mark(shape,x,y,r,sx,sy,fill){if(!fill){g.save();g.translate(x,y);g.scale((sx||1)*r/6.5,(sy||1)*r/6.5);g.translate(-12,-12);g.strokeStyle=C.ink;g.lineWidth=1.5;g.lineCap='round';g.lineJoin='round';ICP2[shape].forEach(p=>g.stroke(p));g.restore();return;}
+  g.save();g.translate(x,y);g.scale(sx||1,sy||1);g.beginPath();
+  if(shape==='sq')g.rect(-r,-r,2*r,2*r);else if(shape==='ci')g.arc(0,0,r,0,Math.PI*2);
+  else if(shape==='tr'){g.moveTo(0,-r*1.05);g.lineTo(r*1.05,r*.8);g.lineTo(-r*1.05,r*.8);g.closePath();}
+  else{g.moveTo(0,-r*1.2);g.lineTo(r*1.2,0);g.lineTo(0,r*1.2);g.lineTo(-r*1.2,0);g.closePath();}
+  if(fill){g.fillStyle=fill;g.fill();}else{g.strokeStyle=C.ink;g.lineWidth=1.3/Math.max(sx||1,sy||1);g.stroke();}g.restore();}
+function valText(r,p){return r.val==null?(p>.55?r.text:''):fmt(r.val*std(p))+(r.unit?' '+r.unit:'');}
+// заголовок: слова по одному, подъём 8 dp
+function title(t,start){const words=['Ваш','план'];let x=24;g.font='600 26px Inter, sans-serif';g.textBaseline='alphabetic';g.fillStyle=C.ink;
+  words.forEach((w,i)=>{const p=st.reduced?1:std(clamp((t-start-i*90)/420));g.globalAlpha=p;g.fillText(w,x,124+8*(1-p));x+=g.measureText(w+' ').width;});
+  const p=st.reduced?1:std(clamp((t-start-260)/420));g.globalAlpha=p;g.font='400 13px Inter, sans-serif';g.fillStyle=C.muted;g.fillText('Посчитан по вашим данным. Всё можно поменять',24,150);
+  g.globalAlpha=1;}
+function row(i,p,opt){opt=opt||{};const r=ROWS[i],y=RY(i),a=opt.alpha==null?std(clamp(p*2)):opt.alpha,dy=opt.dy==null?12*(1-std(clamp(p*1.5))):opt.dy;
+  g.globalAlpha=a;g.fillStyle=C.line;g.fillRect(24,y+dy,312,1);
+  if(!opt.noMark)mark(r.shape,30,y+26+dy,5);
+  g.font='400 13px Inter, sans-serif';g.fillStyle=C.muted;g.textBaseline='middle';g.textAlign='left';if(!opt.noLabel)g.fillText(r.label,46,y+26+dy);
+  if(!opt.noVal){g.font='500 20px Inter, sans-serif';g.fillStyle=C.ink;g.textAlign='right';g.fillText(valText(r,opt.vp==null?clamp(p*1.3):opt.vp),336,y+26+dy);}
+  g.font='400 12px Inter, sans-serif';g.fillStyle=C.muted;g.textAlign='right';g.globalAlpha=a*clamp((p-.5)*2);g.fillText(r.sub,336,y+52+dy);
+  g.textAlign='left';g.globalAlpha=1;}
+function button(p){g.globalAlpha=std(clamp(p));g.fillStyle=C.ink;g.beginPath();g.roundRect(24,620+10*(1-std(clamp(p))),312,52,26);g.fill();
+  g.fillStyle=C.bg;g.font='500 15px Inter, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('Продолжить',180,646+10*(1-std(clamp(p))));g.textAlign='left';
+  g.globalAlpha=clamp(p);g.fillStyle=C.line;g.fillRect(24,RY(4),312,1);g.globalAlpha=1;}
+function final(a){g.globalAlpha=a;title(1e6,0);ROWS.forEach((r,i)=>row(i,1,{alpha:a,dy:0,vp:1}));button(1);g.globalAlpha=1;}
+
+/* 01 Поле штрихов: штрихи поворачиваются по кругу вокруг центра, затем уходят от краёв к центру */
+const FIELD=(()=>{const a=[];let s=7;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647;};
+  for(let y=52;y<720;y+=22)for(let x=18;x<350;x+=22)a.push({x,y,a0:rnd()*Math.PI,d:Math.hypot(x-180,y-330)});return a;})();
+const MAXD=Math.max(...FIELD.map(f=>f.d));
+function drawA(t){
+  FIELD.forEach(f=>{const turn=std(clamp((t-f.d*1.2)/700)),ta=Math.atan2(f.y-330,f.x-180)+Math.PI/2,a=lerp(f.a0,ta,turn),
+    out=std(clamp((t-900-(MAXD-f.d)*1.4)/360)),len=8*(1-out);if(len<.3)return;
+    g.strokeStyle=C.ink;g.globalAlpha=.55*(1-out);g.lineWidth=1.3;g.beginPath();g.moveTo(f.x-Math.cos(a)*len/2,f.y-Math.sin(a)*len/2);g.lineTo(f.x+Math.cos(a)*len/2,f.y+Math.sin(a)*len/2);g.stroke();});
+  g.globalAlpha=1;
+  // центральная точка акцентом пульсирует один раз и уходит
+  const cp=clamp((t-200)/1500),cr=4+3*Math.sin(Math.PI*clamp(cp*2));if(cp<1){g.globalAlpha=1-std(clamp((t-1300)/300));g.fillStyle=C.accent;g.beginPath();g.arc(180,330,cr,0,Math.PI*2);g.fill();g.globalAlpha=1;}
+  title(t,1150);ROWS.forEach((r,i)=>row(i,clamp((t-1250-i*80)/700)));button((t-1700)/400);
+}
+/* 02 Столбики: растут по очереди с перелётом, затем ложатся в строки */
+function drawB(t){
+  const base=600,H=300,bw=52,gap=(312-bw*4)/3;
+  title(t,0);
+  ROWS.forEach((r,i)=>{const grow=back(clamp((t-120-i*90)/620)),morph=std(clamp((t-1450-i*70)/480)),
+    bx=24+i*(bw+gap),bh=H*r.h*grow,by=base-bh,y=RY(i);
+    // прямоугольник: столбик → полоса под строкой
+    const fold=std(clamp((t-1200-i*70)/260)),x=lerp(bx,24,morph),w=lerp(bw,312,morph),hh=lerp(bh,1,fold),yy=lerp(by+bh-hh,y,morph); // сначала столбик оседает, затем едет в строку
+    g.fillStyle=morph<1?(i===0?C.accent:C.ink):C.line;g.globalAlpha=morph<.98?1:1;g.beginPath();g.roundRect(x,yy,w,Math.max(1,hh),Math.min(4,hh/2));g.fill();
+    // число над столбиком → справа в строке
+    const vp=clamp((t-120-i*90)/700);g.font='500 '+Math.round(lerp(15,20,morph))+'px Inter, sans-serif';g.fillStyle=C.ink;g.textBaseline='middle';
+    g.textAlign=morph>.5?'right':'center';const tx=morph>.5?lerp(bx+bw,336,morph):lerp(bx+bw/2,336,morph),ty=lerp(by+bh-hh-14,y+26,morph);
+    if(grow>0)g.fillText(valText(r,vp).replace(' ккал','').replace(' мл','').replace(' шагов','')+(morph>.5&&r.unit?' '+r.unit:''),tx,ty);
+    // подпись под столбиком → слева в строке
+    g.font='400 12px Inter, sans-serif';g.fillStyle=C.muted;g.textAlign=morph>.5?'left':'center';g.globalAlpha=clamp(grow*2);
+    g.fillText(r.label,morph>.5?lerp(bx,46,morph):lerp(bx+bw/2,46,morph),lerp(base+16,y+26,morph));
+    g.globalAlpha=morph;mark(r.shape,30,y+26,5);
+    g.font='400 12px Inter, sans-serif';g.textAlign='right';g.globalAlpha=clamp((t-1900-i*70)/300);g.fillText(r.sub,336,y+52);g.globalAlpha=1;g.textAlign='left';});
+  if(t<1250){g.fillStyle=C.line;g.fillRect(24,base,312,1);}
+  button((t-2150)/400);
+}
+/* 03 Отскок: знаки падают по дуге с пунктирным следом, сжимаются при касании и встают на место */
+function fallPos(i,t){const t0=i*150,T=560,lx=30,ly=RY(i)+26,sx=320-i*26,sy=-30,p=(t-t0)/T;
+  if(p<0)return null;
+  if(p<1){const k=acc(p);return{x:lerp(sx,lx,std(p)),y:lerp(sy,ly,k),sx:1-.12*k,sy:1+.25*k,land:false};}
+  const q=(t-t0-T);// после касания: сжатие и маленький отскок
+  const sq=q<90?Math.sin(Math.PI*q/90):0,b=q<360?Math.sin(Math.PI*clamp((q-60)/300))*10:0;
+  return{x:lx,y:ly-Math.max(0,b),sx:1+.45*sq,sy:1-.38*sq,land:true,q};}
+function drawC(t){
+  title(t,0);
+  ROWS.forEach((r,i)=>{const y=RY(i),p=fallPos(i,t);
+    // пунктирный след
+    for(let k=1;k<=9;k++){const pp=fallPos(i,t-k*28);if(!pp||pp.land)continue;g.globalAlpha=(1-k/10)*.6;g.fillStyle=C.muted;g.beginPath();g.arc(pp.x,pp.y,1.4,0,Math.PI*2);g.fill();}
+    g.globalAlpha=1;
+    const after=p&&p.land?p.q:-1,rp=after<0?0:clamp(after/600);
+    row(i,rp,{noMark:true,dy:0,alpha:std(clamp(rp*2.5))});
+    if(p){mark(r.shape,p.x,p.y,5,p.sx,p.sy,p.land?null:C.ink);if(p.land&&p.q<160){g.globalAlpha=1-p.q/160;mark(r.shape,p.x,p.y,5,p.sx,p.sy,C.ink);g.globalAlpha=1;}}});
+  button((t-1500)/400);
+}
+const DUR=[2200,2700,2000];
+const HASH=new URLSearchParams(location.hash.slice(1)); // для проверки кадров: #v=1&t=1500
+function frame(t){g.clearRect(0,0,360,780);if(st.reduced){final(clamp(t/200));}else if(t>DUR[st.v]+400)final(1);else[drawA,drawB,drawC][st.v](t);}
+window.__xoFrame=(v,t)=>{HASH.set('t',t);setV(v);frame(t);}; // отладка кадров: рисует сразу, даже в фоновой вкладке
+function loop(now){let t=(now-st.t0)/st.slow;if(HASH.has('t'))t=+HASH.get('t');frame(t);requestAnimationFrame(loop);}
+
+const V=[
+ {name:'Поле штрихов',idea:'Экран покрыт короткими штрихами, как в ролике с жёлтым полем. Они поворачиваются и выстраиваются по кругу вокруг центральной точки — «план собирается». Затем штрихи гаснут от краёв к центру, а на их месте по одной появляются строки плана, числа отсчитываются.',
+  pc:[['Плюсы','Самый «вау», хорошо показывает, что идёт расчёт. То же поле подходит как экран ожидания.'],['Минусы','Много элементов: на слабом телефоне нужна проверка 60 fps (≈ 450 штрихов на Canvas — должно хватать).'],['В коде','Один Canvas, угол каждого штриха — от расстояния до центра.']]},
+ {name:'Столбики',idea:'Четыре столбика растут по очереди с лёгким перелётом, сверху отсчитываются числа, как в ролике с графиком. Потом столбики ложатся и превращаются в линии строк, числа и подписи переезжают на свои места.',
+  pc:[['Плюсы','Понятно и «инфографично»; тот же приём — для недельного итога и календаря.'],['Минусы','Высота столбиков условная (разные единицы), это надо принять как образ.'],['В коде','Интерполяция прямоугольников, без сложной физики.']]},
+ {name:'Отскок',idea:'Знаки модулей — квадрат, круг, треугольник, ромб — падают по дуге с пунктирным следом, при касании сжимаются и подпрыгивают, как мяч в ролике. Каждый «приносит» свою строку: подпись и число появляются в момент касания. Заголовок — по словам.',
+  pc:[['Плюсы','Живо и тактильно, знакомит со знаками модулей. Тот же отскок — при добавлении записи.'],['Минусы','Игривее остального приложения; важно не переборщить с отскоком.'],['В коде','Анимация по формуле: падение с ускорением, сжатие 90 мс, отскок 10 dp.']]},
+];
+const vw=$('variants');
+V.forEach((v,i)=>{const b=document.createElement('button');b.type='button';const n=document.createElement('span');n.className='n';n.textContent='0'+(i+1);const s=document.createElement('span');s.textContent=v.name;b.append(n,s);b.onclick=()=>setV(i);vw.appendChild(b);});
+function setV(i){st.v=i;[...vw.children].forEach((b,k)=>b.classList.toggle('on',k===i));const v=V[i];$('dName').textContent=v.name;$('dIdea').textContent=v.idea;
+  const pc=$('dPc');pc.textContent='';v.pc.forEach(([a,b])=>{const li=document.createElement('li');const x=document.createElement('b');x.textContent=a;const y=document.createElement('span');y.textContent=b;li.append(x,y);pc.appendChild(li);});st.t0=performance.now();}
+$('play').onclick=()=>{st.t0=performance.now();};
+document.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3')setV(+e.key-1);if(e.key===' '){e.preventDefault();st.t0=performance.now();}});
+$('slow').onchange=e=>{st.slow=e.target.checked?4:1;st.t0=performance.now();};
+const mq=matchMedia('(prefers-reduced-motion: reduce)');$('rm').checked=mq.matches;st.reduced=mq.matches;$('rm').onchange=e=>{st.reduced=e.target.checked;st.t0=performance.now();};
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';readColors();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setV(HASH.has('v')?+HASH.get('v'):0);
+document.fonts&&document.fonts.ready.then(()=>{st.t0=performance.now();});requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

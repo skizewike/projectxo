@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Xo" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/xo_background</item>
+    </style>
+
+    <!-- Системная заставка: только фон, без иконки. Логотип рисует Compose-заставка (docs/DESIGN.md, 6.6). -->
+    <style name="Theme.Xo.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/xo_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_blank</item>
+        <item name="postSplashScreenTheme">@style/Theme.Xo</item>
+    </style>
+</resources>

@@ -1,0 +1,24 @@
+# Сборка и кэши
+app/.gradle/
+app/.kotlin/
+app/build/
+app/build-alt/
+app/app/build/
+app/app/build-alt/
+**/build/
+captures/
+
+# Локальное: путь к SDK и ключи подписи. Никогда не коммитить.
+app/local.properties
+local.properties
+app/keystore.properties
+keystore.properties
+*.keystore
+*.jks
+
+# IDE
+.idea/
+*.iml
+
+# Личные настройки Claude Code
+.claude/settings.local.json

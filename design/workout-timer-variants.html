@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Тренировка: таймер, 3 варианта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.top b{font-weight:600}.top span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);margin:0}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px;flex-wrap:wrap}
+.panel{width:360px;flex:0 0 360px}
+.device{width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);user-select:none}
+.back{position:absolute;left:24px;top:52px;font-size:13px;color:var(--muted)}
+.cap{position:absolute;left:24px;top:84px;font-size:13px;color:var(--muted)}
+.ttl{position:absolute;left:24px;top:100px;font-size:26px;font-weight:600;letter-spacing:-.015em}
+.rail{position:absolute;left:24px;right:24px;top:150px;display:flex;gap:4px}
+.rung{flex:1;border:1px solid var(--line);border-radius:12px;padding:8px 0;text-align:center;font-size:15px;font-weight:500;transition:all .28s cubic-bezier(.2,0,0,1)}
+.rung small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.rung.now{border:2px solid var(--ink);padding:7px 0}
+.rung.done{background:var(--track);color:var(--muted)}
+.stage{position:absolute;left:0;right:0;top:230px;height:300px}
+.stage canvas{position:absolute;left:50%;top:0;margin-left:-100px}
+.big{position:absolute;left:0;right:0;top:100px;text-align:center;font-size:52px;font-weight:500;letter-spacing:-.02em}
+.sub{position:absolute;left:0;right:0;top:162px;text-align:center;font-size:13px;color:var(--muted)}
+.bar{position:absolute;left:24px;right:24px;top:200px;height:4px;background:var(--track);border-radius:2px;overflow:hidden;display:none}
+.bar i{display:block;height:100%;background:var(--ink)}
+.next{position:absolute;left:0;right:0;top:250px;text-align:center;font-size:13px;color:var(--muted)}
+.cta{position:absolute;left:24px;right:24px;top:560px;height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:15px}
+.txt{position:absolute;left:0;right:0;top:622px;text-align:center;font-size:14px;color:var(--muted)}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><b>XO</b><span>Тренировка: таймер отдыха и удержания. Выберите один из трёх</span></div>
+  <div class="ctrls">
+    <label class="chk"><input type="checkbox" id="rm"> Меньше анимаций</label>
+    <button class="ghost" id="theme">Тема: светлая</button>
+  </div>
+</div>
+<div class="layout">
+  <div class="panel">
+    <div class="group">
+      <div class="label">Вариант</div>
+      <div class="variants" id="variants">
+        <button class="on" data-v="0"><span class="n">01</span>Кольцо</button>
+        <button data-v="1"><span class="n">02</span>Полоса</button>
+        <button data-v="2"><span class="n">03</span>Деления</button>
+      </div>
+    </div>
+    <div class="desc" id="desc"></div>
+    <div class="group">
+      <div class="label">Показать</div>
+      <div class="row">
+        <button class="ghost" id="bRest">Отдых 20 с</button>
+        <button class="ghost" id="bHold">Планка 15 с</button>
+        <button class="ghost" id="bAdd">+30 с к отдыху</button>
+      </div>
+    </div>
+  </div>
+  <div class="device"><div class="screen" id="screen">
+    <div class="back">‹ Остановить</div>
+    <div class="cap">Планка</div>
+    <div class="ttl" id="ttl">Подход 2 из 5</div>
+    <div class="rail" id="rail"></div>
+    <div class="stage" id="stage">
+      <canvas id="cv" width="400" height="400" style="width:200px;height:200px"></canvas>
+      <div class="big" id="big">0:20</div>
+      <div class="sub" id="sub">Отдых</div>
+      <div class="bar" id="bar"><i id="barFill"></i></div>
+      <div class="next" id="next">дальше: 15 с</div>
+    </div>
+    <button class="cta" id="cta">Пропустить отдых</button>
+    <div class="txt" id="txt">+30 с</div>
+  </div></div>
+</div>
+<script>
+const DESCS=[
+ ['01 Кольцо','Тонкое кольцо вокруг цифр. Отдых: дуга убывает. Удержание: дуга растёт. Это то, что сейчас в приложении.',[['Плюс','тот же язык, что кольцо «Баланса дня»'],['Минус','самый привычный вид, ничем не удивляет']]],
+ ['02 Полоса','Крупные цифры по центру и тонкая полоса под ними, как полосы модулей на «Сегодня». Без круга, больше воздуха.',[['Плюс','самый тихий вид, читается с расстояния'],['Минус','на экране подходов остаётся пустое место']]],
+ ['03 Деления','60 коротких штрихов по кругу, как на циферблате голодания: каждую секунду один гаснет (отдых) или зажигается (удержание). Последние три секунды штрих чуть длиннее.',[['Плюс','видно каждую секунду, ощущение механизма'],['Минус','больше деталей, шумнее на фоне цифр']]]
+];
+let v=0, mode='rest', t0=0, dur=20000, running=false, raf=0, theme=0;
+const $=id=>document.getElementById(id), cv=$('cv'), g=cv.getContext('2d');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rail(done){const plan=[15,15,15,10,15];$('rail').innerHTML=plan.map((p,i)=>`<div class="rung ${i<done?'done':i==done?'now':''}">${p}<small>${i==4?'макс':i+1}</small></div>`).join('')}
+function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function draw(frac,prep,left){
+  const ink=css('--ink'),track=css('--track');
+  g.clearRect(0,0,400,400);
+  $('bar').style.display=v==1?'block':'none';
+  cv.style.display=v==1?'none':'block';
+  if(v==1){$('barFill').style.width=(frac*100)+'%';$('big').style.top='80px';$('sub').style.top='150px';$('bar').style.top='190px';return}
+  $('big').style.top='100px';$('sub').style.top='162px';
+  if(v==0){
+    g.lineWidth=8;g.lineCap='round';g.strokeStyle=track;g.beginPath();g.arc(200,200,192,0,7);g.stroke();
+    if(frac>0){g.strokeStyle=ink;g.beginPath();g.arc(200,200,192,-Math.PI/2,-Math.PI/2+Math.PI*2*frac);g.stroke()}
+  } else {
+    const n=60;
+    for(let i=0;i<n;i++){
+      const a=-Math.PI/2+i/n*Math.PI*2, lit=(i+0.5)/n<=frac;
+      const last3=(mode=='rest'&&left<=3500&&left>0)&&lit;
+      const r1=last3?168:176,r2=192;
+      g.lineWidth=last3?5:4;g.lineCap='round';g.strokeStyle=lit?ink:track;
+      g.beginPath();g.moveTo(200+Math.cos(a)*r1,200+Math.sin(a)*r1);g.lineTo(200+Math.cos(a)*r2,200+Math.sin(a)*r2);g.stroke();
+    }
+  }
+}
+function tick(now){
+  const el=now-t0; let frac,left,label,sub;
+  if(mode=='rest'){left=dur-el;frac=left/dur;label=fmt(left);sub='Отдых'}
+  else{ // hold: 3 s prep then 15 s
+    if(el<3000){left=15000;frac=0;label=String(Math.ceil((3000-el)/1000));sub='Приготовьтесь'}
+    else{const h=el-3000;left=15000-h;frac=h/15000;label=fmt(left);sub='держим'}
+    dur=18000;
+  }
+  if($('rm').checked&&v!=1){frac=Math.round(frac*20)/20}
+  $('big').textContent=label;$('sub').textContent=sub;draw(Math.max(0,Math.min(1,frac)),false,left);
+  const end=(mode=='rest')?dur:18000;
+  if(el>=end){running=false;mode=='hold'?finishHold():startRest(20000);return}
+  raf=requestAnimationFrame(tick);
+}
+function startRest(d){cancelAnimationFrame(raf);mode='rest';dur=d;t0=performance.now();$('ttl').textContent='Подход 2 из 5';rail(1);$('cta').textContent='Пропустить отдых';$('txt').textContent='+30 с';$('next').textContent='дальше: 15 с';running=true;raf=requestAnimationFrame(tick)}
+function startHold(){cancelAnimationFrame(raf);mode='hold';t0=performance.now();$('ttl').textContent='Подход 1 из 5';rail(0);$('cta').textContent='Закончить подход';$('txt').textContent='';$('next').textContent='Держите положение до сигнала';running=true;raf=requestAnimationFrame(tick)}
+function finishHold(){startRest(20000)}
+$('bRest').onclick=()=>startRest(20000);
+$('bHold').onclick=startHold;
+$('bAdd').onclick=()=>{if(mode=='rest'){dur+=30000}};
+$('txt').onclick=()=>{if(mode=='rest'){dur+=30000}};
+$('cta').onclick=()=>{if(mode=='rest')startHold();else startRest(20000)};
+document.querySelectorAll('#variants button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#variants button').forEach(x=>x.classList.toggle('on',x==b));
+  v=+b.dataset.v;const d=DESCS[v];
+  $('desc').innerHTML=`<h2>${d[0]}</h2><p>${d[1]}</p><ul class="pc">${d[2].map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul>`;
+});
+$('theme').onclick=()=>{theme=1-theme;document.documentElement.dataset.theme=theme?'dark':'light';$('theme').textContent='Тема: '+(theme?'тёмная':'светлая')};
+document.querySelector('#variants button.on').click();
+rail(1);startRest(20000);
+</script>
+</body>
+</html>

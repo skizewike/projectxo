@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Сон: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;--scrim:rgba(23,22,20,.32);--shade:#2A2927;--shadeInk:#F1EEE7;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--scrim:rgba(0,0,0,.5);--shade:#242321;--shadeInk:#ECE9E2;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--scrim:rgba(0,0,0,.5);--shade:#242321;--shadeInk:#ECE9E2;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);margin:0}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.hd{position:absolute;left:24px;right:24px;top:58px;z-index:2}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.art{position:absolute;left:0;top:0;width:360px;height:780px;pointer-events:none;z-index:1}
+.sum{position:absolute;left:24px;right:24px;top:118px;z-index:2}
+.sum .st{font-size:13px;color:var(--muted)}
+.sum .big{font-size:48px;font-weight:500;letter-spacing:-.035em;line-height:1.05;margin:2px 0;transform-origin:0 100%}
+.sum .big small{font-size:20px;color:var(--muted);font-weight:400;letter-spacing:0;margin:0 6px 0 3px}
+.sum .cap{font-size:13px;color:var(--muted)}
+.sum .cap .done{color:var(--ink);font-weight:500}
+.info{position:absolute;left:24px;right:24px;top:470px;z-index:2}
+.irow{display:flex;justify-content:space-between;align-items:center;height:44px;border-top:1px solid var(--line);font-size:15px;width:100%;text-align:left}
+.irow:last-child{border-bottom:1px solid var(--line)}
+.irow span{color:var(--muted);font-size:13px}
+.irow b{font-weight:500;display:flex;align-items:center;gap:6px}
+.irow b svg{width:14px;height:14px;color:var(--muted)}
+.sw{position:relative;width:42px;height:26px;border-radius:13px;background:var(--track);flex:0 0 42px}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 1px var(--line);transition:transform .32s cubic-bezier(.2,1.3,.4,1)}
+.sw[aria-checked="true"]{background:var(--ink)}
+.sw[aria-checked="true"]::after{transform:translateX(16px);box-shadow:none}
+.main{position:absolute;left:24px;right:24px;top:596px;height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:15px;z-index:3;display:flex;align-items:center;justify-content:center;gap:10px}
+.main svg.i{width:18px;height:18px}
+.sub{position:absolute;left:24px;right:24px;top:648px;height:40px;z-index:3;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+.sub svg.i{width:15px;height:15px}
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;z-index:4;background:var(--bg)}
+.nav span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:var(--muted)}
+.nav span.on{color:var(--ink);font-weight:500}
+/* ночь: экран приглушён */
+.screen.night .nightveil{opacity:1}
+.nightveil{position:absolute;inset:0;background:color-mix(in srgb,#000 38%,transparent);opacity:0;pointer-events:none;transition:opacity .8s;z-index:3}
+.screen.night .main{z-index:6}
+.screen.night .sum{z-index:6}
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:40;opacity:0;pointer-events:none;transition:opacity .28s}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:41;background:var(--bg);border-radius:24px 24px 0 0;padding:12px 24px 34px;transform:translateY(102%);transition:transform .36s cubic-bezier(.2,0,0,1)}
+.sheet.show{transform:none}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+.sheet h3{margin:0 0 4px;font-size:20px;font-weight:600}
+.sheet p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.rate{display:flex;gap:6px;margin-bottom:16px}
+.rate button{flex:1;height:64px;border:1px solid var(--line);border-radius:14px;font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.rate button i{display:block;height:4px;border-radius:2px;background:var(--ink)}
+.rate button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tp2{display:flex;gap:10px;margin-bottom:16px}
+.tp2 div{flex:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;text-align:center}
+.tp2 span{font-size:12px;color:var(--muted);display:block}
+.tp2 b{font-size:26px;font-weight:500;display:block;margin:2px 0 6px}
+.tp2 .b{display:flex;gap:6px;justify-content:center}
+.tp2 .b button{width:44px;height:34px;border:1px solid var(--line);border-radius:10px;font-size:12px}
+.sb{display:flex;gap:10px}
+.sb button{flex:1;height:50px;border-radius:999px;font-weight:500}
+.sb .ok{background:var(--ink);color:var(--bg)}
+.sb .no{border:1px solid var(--line)}
+.notif{position:absolute;left:10px;right:10px;top:40px;z-index:50;background:var(--shade);color:var(--shadeInk);border-radius:22px;padding:14px 16px 12px;transform:translateY(-130%);transition:transform .42s cubic-bezier(.2,0,0,1)}
+.notif.show{transform:none}
+.notif .nh{display:flex;align-items:center;gap:8px;font-size:12px;opacity:.75}
+.notif .nh svg{width:14px;height:14px}
+.notif .nt{font-size:15px;font-weight:500;margin-top:8px}
+.notif .nx{font-size:13px;opacity:.75;margin-top:2px}
+.notif .na{display:flex;gap:18px;margin-top:10px;font-size:13px;font-weight:600}
+.toast{position:absolute;left:16px;right:16px;top:640px;height:48px;border-radius:14px;background:var(--ink);color:var(--bg);z-index:45;display:flex;align-items:center;padding:0 16px;font-size:13px;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .3s;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><b>Project XO</b><span>Экран «Сон»: три варианта</span></div><div class="ctrls"><button class="ghost" id="theme" type="button">Тёмная тема</button></div></header>
+<main class="layout">
+<section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen" id="scr">
+  <div class="status"><span id="clk"></span><span>100 %</span></div>
+  <canvas class="art" id="art" aria-hidden="true"></canvas>
+  <div class="hd"><div class="title">Сон</div><div class="date" id="date"></div></div>
+  <div class="sum" aria-live="polite"><div class="st" id="stt"></div><div class="big" id="big"></div><div class="cap" id="cap"></div></div>
+  <div class="info" id="info"></div>
+  <button class="main" id="main" type="button"></button>
+  <button class="sub" id="sub" type="button"></button>
+  <nav class="nav" id="nav" aria-hidden="true"></nav>
+  <div class="nightveil"></div>
+  <div class="notif" id="notif" role="status"><div class="nh" id="nH"></div><div class="nt" id="nT"></div><div class="nx" id="nX"></div><div class="na" id="nA"></div></div>
+  <div class="toast" id="toast"></div>
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="gesture"></div><div class="punch"></div>
+</div></div></section>
+<aside class="panel">
+  <div class="group"><div class="label">Вариант</div><div class="variants" id="variants"></div></div>
+  <div class="group"><div class="label">Только для превью</div><div class="acts">
+    <label class="chk"><input type="checkbox" id="fast"> Ускорить ×600</label>
+    <button class="ghost" id="nBed" type="button">Напоминание «пора спать»</button>
+    <button class="ghost" id="nOn" type="button">Уведомление ночью</button>
+    <button class="ghost" id="nMorn" type="button">Утро: «отметить сон?»</button>
+    <button class="ghost" id="reset" type="button">Сбросить</button></div></div>
+  <div class="desc"><h2 id="dName"></h2><p id="dIdea"></p><ul class="pc" id="dPc"></ul></div>
+  <p class="note">Как и голодание, сон — настоящий таймер: «Ложусь спать» и «Проснулся», время можно поправить. Цель по умолчанию 8 ч, рекомендация — не меньше 7 ч для взрослых (AASM/SRS, 2015). Регулярность — разброс времени отбоя за 7 ночей. Утром — «Как спалось?» из пяти слов. Будильник ставится в системных «Часах» Android одним нажатием: приложению не нужно особое разрешение на точный будильник. Напоминание за 30 мин до отбоя, тихое уведомление ночью, утром — «Отметить сон?», если забыли нажать. В тихие часы без звука. Клавиши 1–3.</p>
+</aside>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+function bezier(x1,y1,x2,y2){const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;const sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,dx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const e=sx(t)-x,d=dx(t);if(Math.abs(e)<1e-6||Math.abs(d)<1e-6)break;t-=e/d;}return sy(t);};}
+const std=bezier(.2,0,0,1);
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const MIN=60000,H=3600000;
+let speed=1,base=Date.now(),virt=Date.now();const now=()=>virt+(Date.now()-base)*speed;const setSpeed=s=>{virt=now();base=Date.now();speed=s;};
+const DAYS=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],DS=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const hm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
+const hmM=m=>{m=((Math.round(m)%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');};
+const durP=ms=>{const m=Math.max(0,Math.round(ms/MIN));return [Math.floor(m/60),String(m%60).padStart(2,'0')];};
+const durT=ms=>{const [h,m]=durP(ms);return !h?`${+m} мин`:+m?`${h} ч ${+m} мин`:`${h} ч`;};
+const minOfDay=t=>{const d=new Date(t);return d.getHours()*60+d.getMinutes();};
+const RATE=['Плохо','Так себе','Нормально','Хорошо','Отлично'];
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* состояние */
+const KEY='xo-sleep-v1';
+function fresh(){const t=Date.now(),day=new Date(t);day.setHours(0,0,0,0);const nights=[];
+  const bed=[23*60+10,23*60+45,22*60+50,24*60+20,23*60+5,23*60+30],wake=[6*60+50,7*60+5,6*60+40,7*60+55,6*60+55,7*60+10],rate=[3,2,4,1,3,3];
+  for(let i=7;i>=2;i--){const k=7-i,s=day.getTime()-i*86400000+bed[k]*MIN,e=day.getTime()-(i-1)*86400000+wake[k]*MIN;nights.push({start:s,end:e,rate:rate[k]});} // вечер дня −i → утро дня −(i−1)
+  // прошлая ночь
+  nights.push({start:day.getTime()-86400000+23*60*MIN+40*MIN,end:day.getTime()+6*60*MIN+45*MIN,rate:3});
+  return{sleeping:false,start:null,bed:23*60,wake:7*60,remind:true,nights};}
+let S=null;try{S=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+if(!S||!Array.isArray(S.nights))S=fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const goalH=()=>((S.wake-S.bed+1440)%1440)/60;
+const ICON={today:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8" stroke-width="3"/>',water:'<path d="M12 3.2c3.6 4.4 6.6 7.6 6.6 10.8a6.6 6.6 0 0 1-13.2 0c0-3.2 3-6.4 6.6-10.8z"/><path d="M8.6 15.4h6.8"/>',food:'<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="12" r="4.5"/>',
+  sleep:'<path d="M18.5 15.5A8 8 0 1 1 9 4.6a6.5 6.5 0 0 0 9.5 10.9z"/><path d="M17.5 4.5v3M16 6h3"/>',more:'<path d="M5 9h14M5 15h14"/>',pen:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',alarm:'<circle cx="12" cy="13" r="7"/><path d="M12 9.5V13l2.2 1.6M4.5 5.5l3-2M19.5 5.5l-3-2"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>'};
+const svg=k=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg>`;
+$('nav').innerHTML=[['today','Сегодня'],['water','Вода'],['food','Еда'],['sleep','Сон',1],['more','Ещё']].map(([k,n,on])=>`<span class="${on?'on':''}">${svg(k)}${n}</span>`).join('');
+let V=0,cel=-1;
+function lastNight(){return S.nights[S.nights.length-1];}
+function regularity(){const b=S.nights.slice(-7).map(n=>{let m=minOfDay(n.start);if(m<12*60)m+=1440;return m;});const avg=b.reduce((a,x)=>a+x,0)/b.length;const sd=Math.sqrt(b.reduce((a,x)=>a+(x-avg)**2,0)/b.length);return{avg,sd};}
+function render(){
+  const t=now(),d=new Date(t);$('clk').textContent=hm(t);$('date').textContent=`${DAYS[d.getDay()][0].toUpperCase()+DAYS[d.getDay()].slice(1)}, ${d.getDate()} ${MON[d.getMonth()]}`;
+  $('scr').classList.toggle('night',S.sleeping);
+  const cap=$('cap');cap.textContent='';
+  if(S.sleeping){const [h,m]=durP(t-S.start);$('stt').textContent='Спокойной ночи';$('big').innerHTML=h?`${h}<small>ч</small>${m}<small>мин</small>`:`${+m}<small>мин</small>`;cap.append(`легли в ${hm(S.start)} · подъём по плану ${hmM(S.wake)}`);}
+  else{const n=lastNight(),[h,m]=durP(n.end-n.start),g=goalH()*H;$('stt').textContent='Прошлая ночь';$('big').innerHTML=h?`${h}<small>ч</small>${m}<small>мин</small>`:`${+m}<small>мин</small>`;
+    cap.append(`${hm(n.start)}–${hm(n.end)}`);if(n.rate!=null)cap.append(` · ${RATE[n.rate].toLowerCase()}`);cap.append(el('br'));
+    const diff=n.end-n.start-g;cap.append(Math.abs(diff)<10*MIN?el('span','done','ровно по плану'):diff>0?`на ${durT(diff)} больше плана`:`на ${durT(-diff)} меньше плана`);}
+  const info=$('info');info.textContent='';const r=regularity();
+  const rows=[['Отбой и подъём',`${hmM(S.bed)} — ${hmM(S.wake)} · ${dec(goalH())} ч`,'sched'],['Напомнить за 30 мин',null,'remind']];
+  if(V===0)rows.splice(1,0,['Регулярность, 7 ночей',`отбой ${hmM(r.avg)} ± ${Math.round(r.sd)} мин`,null]);
+  rows.forEach(([a,b,act])=>{const row=el(act==='sched'?'button':'div','irow');if(act==='sched'){row.type='button';row.onclick=openSched;}
+    row.appendChild(el('span',null,a));if(act==='remind'){const s=el('button','sw');s.type='button';s.setAttribute('role','switch');s.setAttribute('aria-checked',S.remind);s.setAttribute('aria-label','Напоминание перед сном');s.onclick=()=>{S.remind=!S.remind;save();render();};row.appendChild(s);}
+    else{const bb=el('b');bb.append(b);if(act)bb.insertAdjacentHTML('beforeend',svg('pen'));row.appendChild(bb);}info.appendChild(row);});
+  info.style.top=(V===1?(S.sleeping?498:470):V===0?452:486)+'px';
+  $('main').innerHTML=S.sleeping?`${svg('sun')}Проснулся`:`${svg('sleep')}Ложусь спать`;
+  $('sub').innerHTML=S.sleeping?'Проснулся раньше — указать время':`${svg('alarm')}Поставить будильник на ${hmM(S.wake)}`;
+  draw();
+}
+const dec=n=>n.toLocaleString('ru-RU',{maximumFractionDigits:1});
+/* рисование */
+const DPR=Math.min(2,devicePixelRatio||1);
+const g=(()=>{const c=$('art');c.width=360*DPR;c.height=780*DPR;const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return x;})();
+const bump=(t,i,step)=>{const k=(t-500-i*step)/300;return (k>0&&k<1)?Math.sin(Math.PI*k):0;};
+// полумесяц — тот же контур, что у иконки сна (сетка 24, центр ≈ 11,12, высота 16)
+const MOON=new Path2D('M18.5 15.5A8 8 0 1 1 9 4.6a6.5 6.5 0 0 0 9.5 10.9z');
+function moonAt(x,y,r){g.translate(x,y);g.scale(r/8,r/8);g.translate(-11,-12);}
+function moon(x,y,r,fill){g.save();moonAt(x,y,r);g.fillStyle=fill;g.fill(MOON);g.restore();}
+// 01 Горизонт: полукруг от отбоя до подъёма
+function drawA(t){
+  const cx=180,cy=412,R=140,from=S.bed-90,to=S.bed+goalH()*60+90,span=to-from,A=m=>Math.PI+Math.PI*clamp((m-from)/span);
+  g.lineWidth=12;g.strokeStyle=C.track;g.beginPath();g.arc(cx,cy,R,Math.PI,2*Math.PI);g.stroke();
+  // окно плана
+  g.lineWidth=1.2;g.strokeStyle=C.ink;g.setLineDash([3,4]);g.beginPath();g.arc(cx,cy,R+12,A(S.bed),A(S.bed+goalH()*60));g.stroke();g.setLineDash([]);
+  let s,e;if(S.sleeping){s=minOfDay(S.start);e=minOfDay(now());}else{const n=lastNight();s=minOfDay(n.start);e=minOfDay(n.end);}
+  if(s<12*60)s+=1440;if(e<12*60||e<s)e+=1440;let fm=from;if(fm<0)fm+=1440;
+  const norm=m=>{while(m<from)m+=1440;while(m>from+1440)m-=1440;return m;};s=norm(s);e=norm(e);if(e<s)e+=1440;
+  g.lineWidth=12;g.lineCap='round';g.strokeStyle=C.accent;g.beginPath();g.arc(cx,cy,R,A(s),A(Math.max(s+1,e)));g.stroke();g.lineCap='butt';
+  for(let h=0;h<=Math.ceil(span/60);h++){const m=Math.ceil(from/60)*60+h*60;if(m>to)break;const a=A(m),b=t>=0?bump(t,h,30):0,len=(m%180===0?8:4)+5*b,r1=R-14;
+    g.strokeStyle=m%180===0?C.ink:C.line;g.lineWidth=1;g.beginPath();g.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);g.lineTo(cx+Math.cos(a)*(r1-len),cy+Math.sin(a)*(r1-len));g.stroke();
+    if(m%180===0){g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(hmM(m),cx+Math.cos(a)*(r1-22),cy+Math.sin(a)*(r1-22));}}
+  const ma=A(e);moon(cx+Math.cos(ma)*R,cy+Math.sin(ma)*R,9,C.ink);
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textAlign='left';g.fillText('отбой '+hmM(S.bed),24,cy+18);g.textAlign='right';g.fillText('подъём '+hmM(S.wake),336,cy+18);g.textAlign='left';
+}
+// 02 Ночи недели: полосы на шкале 21:00–10:00
+function drawB(t){
+  const x0=58,w=278,top=226,rowH=28,from=21*60,to=34*60,X=m=>x0+w*(m-from)/(to-from);
+  const nights=S.nights.slice(-7);
+  g.fillStyle=C.track;const gb=X(S.bed<12*60?S.bed+1440:S.bed),ge=X(S.wake+1440);g.globalAlpha=.6;g.fillRect(gb,top-6,ge-gb,rowH*7+6);g.globalAlpha=1;
+  nights.forEach((n,i)=>{let s=minOfDay(n.start),e=minOfDay(n.end);if(s<12*60)s+=1440;e+=1440;if(S.sleeping&&i===nights.length-1){}
+    const y=top+i*rowH+8,b=t>=0?bump(t,i,50):0;g.fillStyle=i===nights.length-1?C.accent:C.ink;g.beginPath();g.roundRect(X(s),y-b*3,Math.max(4,X(e)-X(s)),10,5);g.fill();
+    g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textBaseline='middle';g.textAlign='left';g.fillText(DS[new Date(n.end).getDay()],24,y+5);});
+  if(S.sleeping){let s=minOfDay(S.start);if(s<12*60)s+=1440;let e=minOfDay(now());if(e<12*60)e+=1440;const y=top+7*rowH+8;g.fillStyle=C.accent;g.globalAlpha=.6;g.beginPath();g.roundRect(X(s),y,Math.max(4,X(e)-X(s)),10,5);g.fill();g.globalAlpha=1;g.fillStyle=C.muted;g.fillText('сейчас',24,y+5);}
+  g.textAlign='center';[21,24,27,30,33].forEach(h=>{g.fillStyle=C.line;g.fillRect(X(h*60),top-6,1,rowH*7+(S.sleeping?rowH:0)+6);g.fillStyle=C.muted;g.fillText(hmM(h*60),X(h*60),top+rowH*7+(S.sleeping?rowH:0)+14);});
+  g.textAlign='left';
+  const r=regularity();g.fillStyle=C.muted;g.font='400 12px Inter, sans-serif';g.fillText(`Регулярность: отбой ${hmM(r.avg)} ± ${Math.round(r.sd)} мин · серым — план`,24,top+rowH*7+(S.sleeping?rowH:0)+38);
+}
+// 03 Полумесяц заполняется по часам сна
+function drawC(t){
+  const cx=180,cy=318,R=92,g8=goalH();let hrs;if(S.sleeping)hrs=(now()-S.start)/H;else{const n=lastNight();hrs=(n.end-n.start)/H;}const f=clamp(hrs/g8);
+  const top=cy-R,bot=cy+R;
+  g.save();moonAt(cx,cy,R);g.clip(MOON);g.setTransform(DPR,0,0,DPR,0,0);g.fillStyle=C.track;g.fillRect(cx-R,top,2*R,2*R);const fy=bot-2*R*f;g.fillStyle=C.accent;g.fillRect(cx-R,fy,2*R,bot-fy);
+  for(let h=1;h<Math.ceil(g8);h++){const y=bot-2*R*h/g8,b=t>=0?bump(t,h,40):0;g.strokeStyle=h/g8<=f?C.bg:C.muted;g.globalAlpha=h/g8<=f?.8:.5;g.lineWidth=1;g.beginPath();g.moveTo(cx-R,y+.5);g.lineTo(cx-R+40+12*b,y+.5);g.stroke();}
+  g.globalAlpha=1;g.restore();
+  g.save();moonAt(cx,cy,R);g.strokeStyle=C.ink;g.lineWidth=1.2*8/R;g.setLineDash(f>=1?[]:[4*8/R,4*8/R]);g.stroke(MOON);g.restore();
+  g.fillStyle=C.muted;g.font='400 11px Inter, sans-serif';g.textAlign='left';g.textBaseline='middle';g.fillText(`${dec(g8)} ч`,cx-R-4,top+4);g.fillText('0',cx-R-4,bot-4);
+  // неделя маленькими лунами
+  const ns=S.nights.slice(-7),step=312/7;ns.forEach((n,i)=>{const x=24+step*i+step/2,y=444,fr=clamp((n.end-n.start)/H/g8);
+    g.save();moonAt(x,y,11);g.clip(MOON);g.setTransform(DPR,0,0,DPR,0,0);g.fillStyle=C.track;g.fillRect(x-12,y-12,24,24);g.fillStyle=i===ns.length-1?C.accent:C.ink;g.fillRect(x-12,y+11-22*fr,24,22*fr);g.restore();
+    g.fillStyle=C.muted;g.textAlign='center';g.fillText(DS[new Date(n.end).getDay()],x,y+20);});g.textAlign='left';
+}
+function draw(){g.clearRect(0,0,360,780);const t=cel>0?performance.now()-cel:-1;[drawA,drawB,drawC][V](t);if(t>1500)cel=-1;}
+/* листы */
+function sheet(html){$('sheet').innerHTML='<div class="grab"></div>'+html;$('scrim').classList.add('show');$('sheet').classList.add('show');}
+const close=()=>{$('scrim').classList.remove('show');$('sheet').classList.remove('show');};$('scrim').onclick=close;
+function openRate(rec){sheet(`<h3>Как спалось?</h3><p>${durT(rec.end-rec.start)}, ${hm(rec.start)}–${hm(rec.end)}. Можно пропустить.</p><div class="rate" id="rate"></div><div class="sb"><button class="no" type="button" id="skip">Пропустить</button><button class="ok" type="button" id="rOk">Готово</button></div>`);
+  let pick=null;const box=$('rate');RATE.forEach((n,i)=>{const b=el('button');b.type='button';b.setAttribute('aria-pressed','false');const bar=el('i');bar.style.width=(8+i*6)+'px';b.append(bar,n);b.onclick=()=>{pick=i;[...box.children].forEach((x,k)=>x.setAttribute('aria-pressed',k===i));};box.appendChild(b);});
+  $('skip').onclick=close;$('rOk').onclick=()=>{rec.rate=pick;save();close();render();};}
+function openSched(){let b=S.bed,w=S.wake;const upd=()=>{$('bV').textContent=hmM(b);$('wV').textContent=hmM(w);$('gV').textContent=`${dec(((w-b+1440)%1440)/60)} ч сна по плану`+(((w-b+1440)%1440)<420?' — меньше 7 ч, рекомендованных взрослым':'');};
+  sheet(`<h3>Отбой и подъём</h3><p id="gV"></p><div class="tp2"><div><span>Отбой</span><b id="bV"></b><div class="b"><button type="button" data-k="b" data-d="-15">−15</button><button type="button" data-k="b" data-d="15">+15</button></div></div><div><span>Подъём</span><b id="wV"></b><div class="b"><button type="button" data-k="w" data-d="-15">−15</button><button type="button" data-k="w" data-d="15">+15</button></div></div></div><div class="sb"><button class="no" type="button" id="sNo">Отмена</button><button class="ok" type="button" id="sOk">Сохранить</button></div>`);
+  $('sheet').querySelectorAll('[data-k]').forEach(x=>x.onclick=()=>{const d=+x.dataset.d;if(x.dataset.k==='b')b=(b+d+1440)%1440;else w=(w+d+1440)%1440;upd();});upd();
+  $('sNo').onclick=close;$('sOk').onclick=()=>{S.bed=b;S.wake=w;save();close();render();};}
+function openWakeEdit(){let p=Math.floor(now()/MIN)*MIN;const upd=()=>{p=Math.min(Math.floor(now()/MIN)*MIN,Math.max(S.start+MIN,p));$('pV').textContent=hm(p);};
+  sheet(`<h3>Когда проснулись?</h3><p>Не раньше отбоя (${hm(S.start)}) и не позже, чем сейчас.</p><div class="tp2"><div><span>Подъём</span><b id="pV"></b><div class="b"><button type="button" data-d="-15">−15</button><button type="button" data-d="-5">−5</button><button type="button" data-d="5">+5</button></div></div></div><div class="sb"><button class="no" type="button" id="pNo">Отмена</button><button class="ok" type="button" id="pOk">Сохранить</button></div>`);
+  $('sheet').querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{p+=(+x.dataset.d)*MIN;upd();});upd();$('pNo').onclick=close;$('pOk').onclick=()=>{wake(p);};}
+function wake(at){if(at-S.start<10*MIN){S.sleeping=false;S.start=null;save();close();render();toast('Меньше 10 минут — не записываем как сон');return;} // случайное нажатие
+  const rec={start:S.start,end:at,rate:null};S.nights.push(rec);S.nights=S.nights.slice(-30);S.sleeping=false;S.start=null;save();render();
+  if(rec.end-rec.start>=goalH()*H&&!reduced){cel=performance.now();}openRate(rec);}
+$('main').onclick=()=>{if(S.sleeping)wake(now());else{S.sleeping=true;S.start=now();save();render();}};
+$('sub').onclick=()=>{if(S.sleeping)openWakeEdit();else toast(`Откроются «Часы» Android с будильником на ${hmM(S.wake)}`);};
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+function notif(kind){const n=$('notif');if(n.classList.contains('show')&&n.dataset.k===kind){n.classList.remove('show');return;}n.dataset.k=kind;
+  const H0=`${svg('sleep')}XO · `;
+  if(kind==='bed'){$('nH').innerHTML=H0+'22:30';$('nT').textContent='Через 30 минут — отбой';$('nX').textContent=`Чтобы проснуться в ${hmM(S.wake)} и поспать ${dec(goalH())} ч.`;$('nA').innerHTML='<span>Ложусь спать</span><span>Через 15 мин</span>';}
+  if(kind==='on'){$('nH').innerHTML=H0+'сейчас · без звука';$('nT').textContent=S.sleeping?`Сон · ${durT(now()-S.start)}`:'Сон · 0 мин';$('nX').textContent=`легли в ${S.sleeping?hm(S.start):hm(now())}`;$('nA').innerHTML='<span>Проснулся</span>';}
+  if(kind==='morn'){$('nH').innerHTML=H0+'07:30';$('nT').textContent='Доброе утро. Отметить сон?';$('nX').textContent='Похоже, вы не нажали «Проснулся». Время можно поправить.';$('nA').innerHTML='<span>Проснулся в 07:00</span><span>Указать время</span>';}
+  n.classList.add('show');}
+$('nBed').onclick=()=>notif('bed');$('nOn').onclick=()=>notif('on');$('nMorn').onclick=()=>notif('morn');
+$('fast').onchange=e=>setSpeed(e.target.checked?600:1);
+$('reset').onclick=()=>{S=fresh();save();close();render();};
+const VS=[
+ {name:'Горизонт',idea:'Полукруг от отбоя до подъёма, как путь луны по небу. Синяя дуга — сон, пунктир — план. Луна стоит там, где закончился сон или где он сейчас. Ниже регулярность и расписание.',
+  pc:[['Плюсы','Образно и спокойно; сразу видно, лёг ли вовремя и встал ли по плану.'],['Минусы','Не видно предыдущих ночей на главном экране.'],['В коде','Canvas дуги, как у голодания, только полукруг.']]},
+ {name:'Ночи недели',idea:'Семь полос по ночам на шкале 21:00–10:00, серым — план. Последняя ночь акцентом, во время сна растёт полоса «сейчас». Регулярность видна глазом: ровная лесенка или разброс.',
+  pc:[['Плюсы','Лучше всего показывает регулярность — самый полезный показатель сна. Как «Часы дня» у ходьбы.'],['Минусы','Меньше «образа»; цифра прошлой ночи — только сверху.'],['В коде','Простые полосы; данные — время отбоя и подъёма.']]},
+ {name:'Полумесяц',idea:'Полумесяц — знак сна — заполняется по часам относительно цели, как сосуд воды и квадрат еды. Ниже неделя маленькими лунами с заполнением.',
+  pc:[['Плюсы','Единый язык с другими модулями: фигура, которая наполняется.'],['Минусы','Время отбоя и подъёма видно только цифрами.'],['В коде','Canvas, клип по полумесяцу.']]},
+];
+VS.forEach((v,i)=>{const b=el('button');b.type='button';b.append(el('span','n','0'+(i+1)),el('span',null,v.name));b.onclick=()=>setV(i);$('variants').appendChild(b);});
+function setV(i){V=i;[...$('variants').children].forEach((b,k)=>b.classList.toggle('on',k===i));$('dName').textContent=VS[i].name;$('dIdea').textContent=VS[i].idea;$('dPc').innerHTML='';
+  VS[i].pc.forEach(([a,b])=>{const li=el('li');li.append(el('b',null,a),el('span',null,b));$('dPc').appendChild(li);});render();}
+document.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3')setV(+e.key-1);});
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';readColors();render();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setV(0);
+let lastM=-1;(function loop(){const m=Math.floor(now()/MIN);if(m!==lastM||cel>0){lastM=m;render();}requestAnimationFrame(loop);})();
+window.__xo={setV};
+})();
+</script>
+</body>
+</html>

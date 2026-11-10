@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="xo_background">#141413</color>
+    <color name="xo_widget_ink">#ECE9E2</color>
+    <color name="xo_widget_muted">#8C887F</color>
+    <color name="xo_widget_line">#2B2A27</color>
+    <color name="xo_widget_track">#252422</color>
+    <color name="xo_widget_accent">#6E9BEB</color>
+</resources>

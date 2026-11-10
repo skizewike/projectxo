@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Привычки: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;--scrim:rgba(23,22,20,.32);--shade:#2A2927;--shadeInk:#F1EEE7;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--scrim:rgba(0,0,0,.5);--shade:#242321;--shadeInk:#ECE9E2;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--scrim:rgba(0,0,0,.5);--shade:#242321;--shadeInk:#ECE9E2;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.hd{position:absolute;left:24px;right:80px;top:58px;z-index:2}
+.title{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.date{font-size:13px;color:var(--muted);margin-top:3px}
+.add{position:absolute;right:20px;top:60px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);z-index:3;display:flex;align-items:center;justify-content:center}
+.add svg{width:18px;height:18px}
+.body{position:absolute;left:0;right:0;top:118px;bottom:76px;overflow-y:auto;scrollbar-width:none;padding:0 24px 20px}
+.body::-webkit-scrollbar{display:none}
+.sumline{font-size:13px;color:var(--muted);margin-bottom:12px}
+.sumline b{color:var(--ink);font-weight:500}
+/* X-отметка: два штриха, как в логотипе */
+.x{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.x path{stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .26s cubic-bezier(.2,0,0,1)}
+.x path+path{transition-delay:.12s}
+.on .x path{stroke-dashoffset:0}
+.reduce .x path{transition:none}
+/* 01 список и неделя */
+.h1row{border-top:1px solid var(--line);padding:12px 0 10px}
+.h1row:last-child{border-bottom:1px solid var(--line)}
+.h1row .nm{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.h1row .nm b{font-weight:500;font-size:15px}
+.h1row .nm span{font-size:12px;color:var(--muted);white-space:nowrap}
+.days{display:flex;justify-content:space-between;margin-top:10px}
+.dc{width:38px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.dc .cell{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);color:var(--ink);padding:7px;position:relative}
+.dc .cell.off{border-style:dashed;opacity:.45}
+.dc.today .cell{border-color:var(--ink)}
+.dc .cell.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dc .cell.fut{opacity:.35}
+/* 02 карточки */
+.card{border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px}
+.card .ch{display:flex;align-items:center;gap:12px}
+.card .ch .t{flex:1;min-width:0}.card .ch .t b{font-weight:500;font-size:15px;display:block}.card .ch .t span{font-size:12px;color:var(--muted)}
+.big{width:44px;height:44px;flex:0 0 44px;border-radius:50%;border:1.4px solid var(--ink);color:var(--bg);padding:12px;transition:background .2s}
+.big.on{background:var(--ink)}
+.heat{display:grid;grid-template-columns:repeat(18,1fr);gap:3px;margin-top:12px}
+.heat i{aspect-ratio:1;border-radius:3px;background:var(--track)}
+.heat i.on{background:var(--ink)}
+.heat i.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.heat i.td{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.heat i.fut{opacity:0}
+.card .cf{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
+/* 03 кольцо */
+.ringbox{position:relative;height:176px;display:flex;align-items:center;gap:18px}
+.ringbox canvas{width:150px;height:150px;flex:0 0 150px}
+.ringbox .rt b{font-size:40px;font-weight:500;letter-spacing:-.03em;line-height:1}
+.ringbox .rt b small{font-size:16px;color:var(--muted);font-weight:400;letter-spacing:0}
+.ringbox .rt span{display:block;font-size:13px;color:var(--muted);margin-top:4px}
+.h3row{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);min-height:60px;width:100%;text-align:left}
+.h3row:last-child{border-bottom:1px solid var(--line)}
+.h3row .t{flex:1;min-width:0}.h3row .t b{font-weight:500;font-size:15px;display:block}.h3row .t span{font-size:12px;color:var(--muted)}
+.h3row .num{font-size:13px;color:var(--muted);margin-right:4px}
+.cnt{display:flex;align-items:center;gap:6px}
+.cnt button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);font-size:16px}
+.sec{font-size:12px;color:var(--muted);margin:16px 0 6px;text-transform:none}
+.nav{position:absolute;left:0;right:0;top:704px;bottom:0;padding-bottom:22px;border-top:1px solid var(--line);display:flex;z-index:4;background:var(--bg)}
+.nav span{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:var(--muted)}
+.nav span.on{color:var(--ink);font-weight:500}
+.toast{position:absolute;left:16px;right:16px;top:640px;height:48px;border-radius:14px;background:var(--ink);color:var(--bg);z-index:45;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 16px;font-size:13px;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .3s;pointer-events:none}
+.toast.show{opacity:1;transform:none;pointer-events:auto}
+.toast button{color:var(--bg);font-weight:600;height:40px;padding:0 10px}
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:40;opacity:0;pointer-events:none;transition:opacity .28s}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:41;background:var(--bg);border-radius:24px 24px 0 0;padding:12px 24px 34px;transform:translateY(102%);transition:transform .36s cubic-bezier(.2,0,0,1);max-height:88%;overflow-y:auto}
+.sheet.show{transform:none}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+.sheet h3{margin:0 0 12px;font-size:20px;font-weight:600}
+.f{display:block;margin-bottom:14px}
+.f>span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.f input{width:100%;height:46px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--ink);font:inherit;font-size:16px;padding:0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.wd{display:flex;gap:4px;margin-top:8px}
+.wd button{flex:1;height:36px;border:1px solid var(--line);border-radius:10px;font-size:12px}
+.wd button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sb{display:flex;gap:10px;margin-top:6px}
+.sb button{flex:1;height:50px;border-radius:999px;font-weight:500}
+.sb .ok{background:var(--ink);color:var(--bg)}
+.sb .no{border:1px solid var(--line)}
+.notif{position:absolute;left:10px;right:10px;top:40px;z-index:50;background:var(--shade);color:var(--shadeInk);border-radius:22px;padding:14px 16px 12px;transform:translateY(-130%);transition:transform .42s cubic-bezier(.2,0,0,1)}
+.notif.show{transform:none}
+.notif .nh{font-size:12px;opacity:.75}
+.notif .nt{font-size:15px;font-weight:500;margin-top:8px}
+.notif .nx{font-size:13px;opacity:.75;margin-top:2px}
+.notif .na{display:flex;gap:18px;margin-top:10px;font-size:13px;font-weight:600}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.variants{border-top:1px solid var(--line)}
+.variants button{display:flex;width:100%;align-items:baseline;gap:14px;padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.variants button .n{color:var(--muted);font-size:12px;width:18px}
+.variants button.on{background:var(--ink);color:var(--page)}
+.variants button.on .n{color:inherit;opacity:.6}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.desc h2{font-size:20px;font-weight:600;margin:0 0 6px}
+.desc p{margin:0 0 12px;color:var(--muted)}
+.pc{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+.pc li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pc li b{flex:0 0 64px;font-weight:500;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><b>Project XO</b><span>Экран «Привычки»: три варианта</span></div><div class="ctrls"><button class="ghost" id="theme" type="button">Тёмная тема</button></div></header>
+<main class="layout">
+<section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen" id="scr">
+  <div class="status"><span>14:20</span><span>100 %</span></div>
+  <div class="hd"><div class="title">Привычки</div><div class="date">Понедельник, 9 ноября</div></div>
+  <button class="add" id="add" type="button" aria-label="Новая привычка"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  <div class="body" id="body"></div>
+  <nav class="nav" id="nav" aria-hidden="true"></nav>
+  <div class="toast" id="toast"><span id="tT"></span><button type="button" id="tU">Вернуть</button></div>
+  <div class="notif" id="notif" role="status"><div class="nh">XO · 21:00</div><div class="nt">Читать 20 минут</div><div class="nx">Ещё не отмечено сегодня. Можно и завтра — серия не сгорит за один день.</div><div class="na"><span>Сделано</span><span>Позже</span></div></div>
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="gesture"></div><div class="punch"></div>
+</div></div></section>
+<aside class="panel">
+  <div class="group"><div class="label">Вариант</div><div class="variants" id="variants"></div></div>
+  <div class="group acts"><button class="ghost" id="nShow" type="button">Напоминание</button><button class="ghost" id="reset" type="button">Сначала</button></div>
+  <div class="desc"><h2 id="dName"></h2><p id="dIdea"></p><ul class="pc" id="dPc"></ul></div>
+  <p class="note">Как устроены трекеры привычек (HabitGo, Loop, Habitify, Streaks): привычка с частотой (каждый день, N раз в неделю, по дням недели), напоминание на время, отметка за день, серия и лучшая серия, процент за месяц, сетка-календарь, шаблоны. Мы берём это, но без давления: пропуск одного дня не обнуляет серию, а «N раз в неделю» считает неделю, а не дни подряд. Отметка — крестик X из логотипа, прописывается двумя штрихами. Вода, шаги и сон не дублируются: они уже свои модули. Клавиши 1–3.</p>
+</aside>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduced)$('scr').classList.add('reduce');
+const C={};function readColors(){const cs=getComputedStyle(document.documentElement);['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const WD=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const TODAY=0; // индекс дня: 0 = сегодня (понедельник 9 ноября), 1 = вчера…
+const wdOf=back=>((0-back)%7+7)%7; // 0 = Пн
+/* частота: {t:'daily'} | {t:'week',n:3} | {t:'days',d:[5,6]} */
+const freqText=f=>f.t==='daily'?'каждый день':f.t==='week'?`${f.n} раза в неделю`:'по '+f.d.map(i=>WD[i].toLowerCase()).join(', ');
+const planned=(f,back)=>f.t!=='days'||f.d.includes(wdOf(back));
+function seed(h,salt){const r=n=>{const x=Math.sin((n+1)*12.9898+salt*78.233)*43758.5453;return x-Math.floor(x);};const done=new Set();for(let b=1;b<=126;b++)if(planned(h.f,b)&&r(b)<h.p)done.add(b);return done;}
+function fresh(){const H=[
+  {id:1,name:'Читать 20 минут',f:{t:'daily'},rem:'21:00',p:.75},
+  {id:2,name:'Витамины',f:{t:'daily'},rem:'09:00',p:.9},
+  {id:3,name:'Растяжка',f:{t:'week',n:3},rem:'19:30',p:.45},
+  {id:4,name:'Без сладкого после 18:00',f:{t:'daily'},rem:null,p:.6},
+  {id:5,name:'Прогулка без телефона',f:{t:'days',d:[5,6]},rem:'11:00',p:.8},
+  {id:6,name:'Отжимания, подходы',f:{t:'daily'},rem:'18:00',p:.7,count:3},
+ ];H.forEach((h,i)=>{h.done=seed(h,i+1);h.val=h.count?2:0;});H[1].done.add(0);return H;}
+let HB=fresh(),V=0,last=null;
+const isDone=(h,b)=>h.count&&b===0?h.val>=h.count:h.done.has(b);
+function streak(h){let s=0,miss=0;for(let b=isDone(h,0)?0:1;b<=126;b++){if(!planned(h.f,b))continue;if(isDone(h,b)){s++;miss=0;}else{miss++;if(miss>1)break;}}return s;} // один пропуск подряд серию не обнуляет
+function best(h){let s=0,m=0,miss=0;for(let b=126;b>=0;b--){if(!planned(h.f,b))continue;if(isDone(h,b)){s++;miss=0;m=Math.max(m,s);}else{miss++;if(miss>1)s=0;}}return m;}
+function weekCount(h){let n=0;for(let b=0;b<=wdOf(0);b++)if(isDone(h,b))n++;return n;}
+function weekTarget(h){return h.f.t==='daily'?7:h.f.t==='week'?h.f.n:h.f.d.length;}
+function month(h){let a=0,d=0;for(let b=0;b<30;b++){if(!planned(h.f,b))continue;a++;if(isDone(h,b))d++;}return a?Math.round(d/a*100):0;}
+const todayList=()=>HB.filter(h=>planned(h.f,0)&&!(h.f.t==='week'&&weekCount(h)>=h.f.n&&!isDone(h,0)));
+const X=()=>'<svg class="x" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 3l12 12"/><path d="M15 3L3 15"/></svg>';
+function toggle(h,b){if(b>0&&!planned(h.f,b))return;const was=isDone(h,b);if(h.count&&b===0){h.val=was?0:h.count;}else{was?h.done.delete(b):h.done.add(b);}
+  last={h,b,was};if(was)toast(`«${h.name}» — отметка снята`);if(navigator.vibrate&&!was)try{navigator.vibrate(10);}catch(e){}
+  render();if(!was&&todayList().every(x=>isDone(x,0)))celebrate();}
+function toast(m){$('tT').textContent=m;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),4000);}
+$('tU').onclick=()=>{if(!last)return;const{h,b,was}=last;if(h.count&&b===0)h.val=was?h.count:0;else was?h.done.add(b):h.done.delete(b);last=null;$('toast').classList.remove('show');render();};
+function summary(){const L=todayList(),d=L.filter(h=>isDone(h,0)).length;return [d,L.length];}
+function sumline(){const [d,n]=summary(),s=el('div','sumline');s.append('Сегодня ',el('b',null,`${d} из ${n}`),d===n&&n?' · всё на сегодня сделано':'');return s;}
+/* 01 */
+function r1(box){box.appendChild(sumline());const list=el('div');
+  HB.forEach(h=>{const row=el('div','h1row'),nm=el('div','nm');nm.append(el('b',null,h.name),el('span',null,h.f.t==='week'?`${weekCount(h)} из ${h.f.n} на неделе`:`серия ${streak(h)}`));row.appendChild(nm);
+    const days=el('div','days');for(let i=0;i<7;i++){const back=6-i;const dc=el('div','dc'+(back===0?' today':'')); // последние 7 дней, сегодня справа
+      const cell=el('button','cell');cell.type='button';const fut=back<0;if(fut)cell.classList.add('fut');else if(!planned(h.f,back))cell.classList.add('off');if(!fut&&isDone(h,back))cell.classList.add('on');
+      cell.innerHTML=X();cell.disabled=fut;cell.setAttribute('aria-label',`${h.name}, ${WD[wdOf(back)]}`);cell.setAttribute('aria-pressed',!fut&&isDone(h,back));cell.onclick=()=>toggle(h,back);
+      dc.append(cell,el('span',null,back===0?'Сег':WD[wdOf(back)]));days.appendChild(dc);}
+    row.appendChild(days);list.appendChild(row);});box.appendChild(list);}
+/* 02 */
+function r2(box){box.appendChild(sumline());
+  HB.forEach(h=>{const c=el('div','card'),ch=el('div','ch'),t=el('div','t');t.append(el('b',null,h.name),el('span',null,freqText(h.f)+(h.rem?` · напомнить в ${h.rem}`:'')));
+    const big=el('button','big'+(isDone(h,0)?' on':''));big.type='button';big.innerHTML=X();big.setAttribute('aria-label',`Отметить «${h.name}» сегодня`);big.setAttribute('aria-pressed',isDone(h,0));
+    if(!planned(h.f,0)){big.style.opacity=.35;big.disabled=true;}big.onclick=()=>toggle(h,0);ch.append(t,big);c.appendChild(ch);
+    const heat=el('div','heat');const cols=18,startBack=cols*7-1-(6-wdOf(0)); // столбцы — недели, строки — дни
+    const cells=[];for(let col=0;col<cols;col++)for(let r=0;r<7;r++){const back=(cols-1-col)*7+(wdOf(0)-r);cells[r*cols+col]=back;}
+    cells.forEach(back=>{const i=el('i');if(back<0)i.className='fut';else if(!planned(h.f,back))i.className='off';else if(isDone(h,back))i.className='on';if(back===0)i.classList.add('td');heat.appendChild(i);});
+    c.appendChild(heat);const cf=el('div','cf');cf.append(el('span',null,`серия ${streak(h)} · лучшая ${best(h)}`),el('span',null,`${month(h)} % за 30 дней`));c.appendChild(cf);box.appendChild(c);});}
+/* 03 */
+let ringCv=null;
+function r3(box){const rb=el('div','ringbox');ringCv=el('canvas');ringCv.width=300;ringCv.height=300;const rt=el('div','rt');const [d,n]=summary();
+  rt.innerHTML=`<b>${d}<small> из ${n}</small></b><span>на сегодня</span>`;rb.append(ringCv,rt);box.appendChild(rb);
+  const L=todayList(),rest=HB.filter(h=>!L.includes(h));
+  const row=h=>{const r=el(h.count?'div':'button','h3row');if(!h.count){r.type='button';r.onclick=()=>toggle(h,0);r.setAttribute('aria-pressed',isDone(h,0));}
+    const big=el('span','big'+(isDone(h,0)?' on':''));big.innerHTML=X();const t=el('div','t');t.append(el('b',null,h.name),el('span',null,h.f.t==='week'?`${weekCount(h)} из ${h.f.n} на неделе`:`серия ${streak(h)} · ${month(h)} % за месяц`));
+    r.append(big,t);if(h.count){const c=el('div','cnt');const m=el('button',null,'−');m.type='button';m.setAttribute('aria-label','Меньше');const p=el('button',null,'+');p.type='button';p.setAttribute('aria-label','Больше');
+      m.onclick=()=>{h.val=Math.max(0,h.val-1);render();};p.onclick=()=>{const was=isDone(h,0);h.val=Math.min(h.count,h.val+1);render();if(!was&&isDone(h,0)&&todayList().every(x=>isDone(x,0)))celebrate();};
+      c.append(m,el('span','num',`${h.val} / ${h.count}`),p);r.appendChild(c);}return r;};
+  L.forEach(h=>box.appendChild(row(h)));if(rest.length){box.appendChild(el('div','sec','Не на сегодня'));rest.forEach(h=>{const r=row(h);r.style.opacity=.55;box.appendChild(r);});}
+  drawRing(-1);}
+let cel=-1;
+function drawRing(t){if(!ringCv)return;const g=ringCv.getContext('2d');g.setTransform(2,0,0,2,0,0);g.clearRect(0,0,150,150);const L=todayList(),n=L.length,R=62,gap=.06;
+  L.forEach((h,i)=>{const a0=-Math.PI/2+i/n*Math.PI*2+gap/2,a1=-Math.PI/2+(i+1)/n*Math.PI*2-gap/2;g.lineWidth=10;g.lineCap='round';g.strokeStyle=isDone(h,0)?(t>=0?C.ink:C.accent):C.track;
+    let lift=0;if(t>=0){const k=(t-i*80)/320;lift=k>0&&k<1?Math.sin(Math.PI*k)*5:0;}g.beginPath();g.arc(75,75,R+lift,a0,a1);g.stroke();
+    if(h.count&&!isDone(h,0)&&h.val>0){g.strokeStyle=C.accent;g.globalAlpha=.5;g.beginPath();g.arc(75,75,R,a0,a0+(a1-a0)*h.val/h.count);g.stroke();g.globalAlpha=1;}});}
+function celebrate(){if(reduced)return;cel=performance.now();
+  const rows=[...$('body').querySelectorAll('.h1row,.card,.h3row')];rows.forEach((r,i)=>r.animate([{transform:'none'},{transform:'translateY(-4px)'},{transform:'none'}],{duration:300,delay:500+i*40,easing:'cubic-bezier(.2,0,0,1)'}));
+  (function f(){const t=performance.now()-cel;drawRing(t<900?t:-1);if(t<900)requestAnimationFrame(f);})();toast('Всё на сегодня сделано');}
+function render(){readColors();const b=$('body'),st=b.scrollTop;b.textContent='';[r1,r2,r3][V](b);b.scrollTop=st;}
+/* новая привычка */
+const TPL=['Читать 20 минут','Растяжка','Медитация 10 минут','Без соцсетей до 10:00','Лечь до 23:30','Дневник'];
+$('add').onclick=()=>{let f={t:'daily'},days=[0,2,4],n=3,rem='20:00';
+  $('sheet').innerHTML=`<div class="grab"></div><h3>Новая привычка</h3>
+   <label class="f"><span>Название</span><input id="hN" placeholder="Например, читать 20 минут" autocomplete="off"></label>
+   <div class="f"><span>Шаблоны</span><div class="chips" id="hT"></div></div>
+   <div class="f"><span>Как часто</span><div class="chips" id="hF"></div><div id="hX"></div></div>
+   <div class="f"><span>Напоминание</span><div class="chips" id="hR"></div></div>
+   <div class="sb"><button class="no" type="button" id="hNo">Отмена</button><button class="ok" type="button" id="hOk">Добавить</button></div>`;
+  TPL.forEach(t=>{const c=el('button','chip',t);c.type='button';c.onclick=()=>{$('hN').value=t;};$('hT').appendChild(c);});
+  const drawF=()=>{const box=$('hF');box.textContent='';[['daily','Каждый день'],['week','N раз в неделю'],['days','По дням']].forEach(([k,n2])=>{const c=el('button','chip',n2);c.type='button';c.setAttribute('aria-pressed',f.t===k);c.onclick=()=>{f={t:k};drawF();};box.appendChild(c);});
+    const x=$('hX');x.textContent='';
+    if(f.t==='week'){const w=el('div','wd');[1,2,3,4,5,6].forEach(k=>{const b=el('button',null,String(k));b.type='button';b.setAttribute('aria-pressed',n===k);b.onclick=()=>{n=k;drawF();};w.appendChild(b);});x.appendChild(w);}
+    if(f.t==='days'){const w=el('div','wd');WD.forEach((d,i)=>{const b=el('button',null,d);b.type='button';b.setAttribute('aria-pressed',days.includes(i));b.onclick=()=>{days=days.includes(i)?days.filter(z=>z!==i):days.concat(i).sort();drawF();};w.appendChild(b);});x.appendChild(w);}};
+  drawF();
+  const drawR=()=>{const box=$('hR');box.textContent='';[['Без напоминания',null],['Утром 09:00','09:00'],['Днём 14:00','14:00'],['Вечером 20:00','20:00']].forEach(([n2,v])=>{const c=el('button','chip',n2);c.type='button';c.setAttribute('aria-pressed',rem===v);c.onclick=()=>{rem=v;drawR();};box.appendChild(c);});};drawR();
+  $('scrim').classList.add('show');$('sheet').classList.add('show');
+  $('hNo').onclick=close;$('hOk').onclick=()=>{const name=($('hN').value||'').trim();if(!name){$('hN').focus();return;}const ff=f.t==='week'?{t:'week',n}:f.t==='days'?{t:'days',d:days.length?days:[0]}:{t:'daily'};
+    HB.unshift({id:Date.now(),name,f:ff,rem,p:0,done:new Set()});close();render();};};
+const close=()=>{$('scrim').classList.remove('show');$('sheet').classList.remove('show');};$('scrim').onclick=close;
+/* оформление */
+const ICON={today:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8" stroke-width="3"/>',water:'<path d="M12 3.2c3.6 4.4 6.6 7.6 6.6 10.8a6.6 6.6 0 0 1-13.2 0c0-3.2 3-6.4 6.6-10.8z"/><path d="M8.6 15.4h6.8"/>',food:'<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="12" r="4.5"/>',habit:'<circle cx="12" cy="12" r="8"/><path d="M9 9l6 6M15 9l-6 6"/>',more:'<path d="M5 9h14M5 15h14"/>'};
+$('nav').innerHTML=[['today','Сегодня'],['water','Вода'],['food','Еда'],['habit','Привычки',1],['more','Ещё']].map(([k,n,on])=>`<span class="${on?'on':''}"><svg class="i" viewBox="0 0 24 24">${ICON[k]}</svg>${n}</span>`).join('');
+$('nShow').onclick=()=>$('notif').classList.toggle('show');
+$('reset').onclick=()=>{HB=fresh();render();};
+const VS=[
+ {name:'Список и неделя',idea:'Каждая привычка — строка с семью клетками текущей недели. Нажатие на клетку прописывает X двумя штрихами; можно отметить и вчерашний день. Пунктир — день не по плану. Справа серия или «2 из 3 на неделе».',
+  pc:[['Плюсы','Видно всю неделю сразу и легко отметить забытый вчерашний день. Самый быстрый.'],['Минусы','Мелкие клетки; при 10+ привычках длинный список.'],['В коде','Одна таблица отметок (привычка, день).']]},
+ {name:'Карточки с сеткой',idea:'Карточка на привычку: большая кнопка-кружок с X на сегодня и сетка за 18 недель, как в Loop и GitHub. Внизу серия, лучшая серия и процент за 30 дней.',
+  pc:[['Плюсы','Самая наглядная история: видно месяцы постоянства, мотивирует без слов.'],['Минусы','Занимает много места: на экране 2–3 привычки.'],['В коде','Та же таблица; сетка — обычные квадраты.']]},
+ {name:'Кольцо дня',idea:'Сверху кольцо из сегментов — по одному на привычку сегодня, как маленький «Баланс дня». Ниже список с большими кружками. Есть привычки-счётчики (3 подхода отжиманий). Не на сегодня — отдельно и бледнее.',
+  pc:[['Плюсы','Фокус на сегодня: что осталось сделать. Родственно главному экрану.'],['Минусы','История видна только в цифрах серии и процента.'],['В коде','Canvas сегментов; поле «счётчик» у привычки.']]},
+];
+VS.forEach((v,i)=>{const b=el('button');b.type='button';b.append(el('span','n','0'+(i+1)),el('span',null,v.name));b.onclick=()=>setV(i);$('variants').appendChild(b);});
+function setV(i){V=i;[...$('variants').children].forEach((b,k)=>b.classList.toggle('on',k===i));$('dName').textContent=VS[i].name;$('dIdea').textContent=VS[i].idea;$('dPc').innerHTML='';
+  VS[i].pc.forEach(([a,b])=>{const li=el('li');li.append(el('b',null,a),el('span',null,b));$('dPc').appendChild(li);});$('body').scrollTop=0;render();}
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key>='1'&&e.key<='3')setV(+e.key-1);});
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';render();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');setV(0);
+window.__xo={setV};
+})();
+</script>
+</body>
+</html>

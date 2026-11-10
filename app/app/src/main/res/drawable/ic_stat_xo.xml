@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Значок уведомления: монограмма XO, одноцветная (X из двух штрихов и кольцо O). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M3,8L10,16M10,8L3,16"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.9" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M12.8,12a4.6,4.6 0,1 0,9.2 0a4.6,4.6 0,1 0,-9.2 0"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.9" />
+</vector>

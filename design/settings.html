@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Настройки и профиль</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--on-accent:#FFFFFF;--bezel:#1B1A18;--scrim:rgba(23,22,20,.32);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--on-accent:#141413;--bezel:#222120;--scrim:rgba(0,0,0,.5);}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--on-accent:#141413;--bezel:#222120;--scrim:rgba(0,0,0,.5);}
+/* темы 2–4 (Р49): всегда тёмные, акцент только для графики и кнопок */
+:root[data-th="acid"]{--page:#000;--bg:#0A0A0A;--ink:#F3F3EE;--muted:#8E8E86;--line:#262624;--track:#1C1C1A;--accent:#B6FF00;--on-accent:#0A0A0A;--bezel:#1A1A1A;--scrim:rgba(0,0,0,.6);}
+:root[data-th="volt"]{--page:#0A1233;--bg:#101A46;--ink:#EEF1FF;--muted:#98A3D3;--line:#26326E;--track:#1B265C;--accent:#245BFF;--on-accent:#FFFFFF;--bezel:#0A1030;--scrim:rgba(4,8,30,.6);}
+:root[data-th="blood"]{--page:#000;--bg:#080808;--ink:#F2EDED;--muted:#958B8B;--line:#2A1E1E;--track:#1C1414;--accent:#C1121F;--on-accent:#FFFFFF;--bezel:#181212;--scrim:rgba(0,0,0,.6);}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum";transition:background .3s}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:20px;height:20px;flex:0 0 20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:56px;padding:8px 28px 40px}
+.panel{width:360px;flex:0 0 360px;padding-top:4px}
+.device-box{position:relative;flex:0 0 auto}
+.device{position:absolute;left:0;top:0;width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line);transform-origin:0 0}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);color:var(--ink);transition:background .3s,color .3s}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5;background:var(--bg)}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.view{position:absolute;inset:34px 0 0;overflow-y:auto;scrollbar-width:none;padding:24px 24px 40px}
+.view::-webkit-scrollbar{display:none}
+.back{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:13px;height:28px;margin-bottom:4px}
+.back svg{width:16px;height:16px}
+h1{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15;margin:0 0 4px}
+.sub{font-size:13px;color:var(--muted)}
+.sec{font-size:12px;color:var(--muted);margin:22px 0 6px}
+.item{display:flex;align-items:center;gap:14px;min-height:54px;border-top:1px solid var(--line);width:100%;text-align:left}
+.grp .item:last-child{border-bottom:1px solid var(--line)}
+.item .t{flex:1;min-width:0}.item .t b{font-weight:500;display:block}.item .t span{font-size:12px;color:var(--muted)}
+.item .v{color:var(--muted);font-size:13px}
+.chev{width:16px;height:16px;color:var(--muted)}
+.sw{position:relative;width:42px;height:26px;border-radius:13px;background:var(--track);flex:0 0 42px}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 1px var(--line);transition:transform .32s cubic-bezier(.2,1.3,.4,1)}
+.sw[aria-checked="true"]{background:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(16px);box-shadow:none}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.seg button{flex:1;height:34px;border-radius:999px;font-size:13px;white-space:nowrap;padding:0 10px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.urow{padding:12px 0;border-top:1px solid var(--line)}
+.urow:last-child{border-bottom:1px solid var(--line)}
+.urow .h{display:flex;justify-content:space-between;margin-bottom:8px}
+.urow .h span{font-size:12px;color:var(--muted)}
+/* темы */
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.th{border-radius:18px;padding:12px;text-align:left;border:1.5px solid transparent;position:relative;height:148px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.th[aria-pressed="true"]{border-color:var(--ink)}
+.th .nm{font-weight:600;font-size:14px}
+.th .hx{font-size:11px;opacity:.7}
+.th .ring{width:46px;height:46px;border-radius:50%;border:5px solid;box-sizing:border-box}
+.th .ok{position:absolute;right:10px;top:10px;width:22px;height:22px;border-radius:50%;display:none;align-items:center;justify-content:center}
+.th[aria-pressed="true"] .ok{display:flex}
+/* профиль */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:16px 0 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kpis div{padding:10px 0}
+.kpis div+div{border-left:1px solid var(--line);padding-left:12px}
+.kpis span{font-size:12px;color:var(--muted);display:block}
+.kpis b{font-size:20px;font-weight:500}
+.kpis small{font-size:12px;color:var(--muted)}
+.chart{border-top:1px solid var(--line);padding:14px 0 6px}
+.chart .h{display:flex;justify-content:space-between;align-items:baseline}
+.chart .h b{font-weight:500}
+.chart .h span{font-size:12px;color:var(--muted)}
+.chart .big{font-size:24px;font-weight:500;letter-spacing:-.02em;margin-top:2px}
+.chart .big small{font-size:13px;color:var(--muted);font-weight:400;margin-left:4px}
+.chart canvas{width:312px;height:120px;display:block;margin-top:6px}
+.chart .note{font-size:12px;color:var(--muted);margin-top:4px}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:11px;padding:4px 7px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-120%);opacity:0;transition:opacity .12s}
+.label{font-size:13px;color:var(--muted);margin-bottom:10px}
+.group{margin-bottom:22px}
+.jump{display:flex;flex-wrap:wrap;gap:6px}
+.jump button{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12px}
+.desc ul{margin:0 0 10px;padding-left:18px;color:var(--muted)}
+@media (max-width:900px){.layout{flex-direction:column;align-items:center;gap:28px;padding:0 16px 32px}.panel{width:100%;max-width:380px;flex-basis:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><b>Project XO</b><span>Настройки, профиль с графиками, 4 темы</span></div><button class="ghost" id="theme" type="button">Тёмная тема</button></header>
+<main class="layout">
+<section class="device-box" id="deviceBox"><div class="device" id="device"><div class="screen" id="scr">
+  <div class="status"><span>14:20</span><span>100 %</span></div>
+  <div class="view" id="view"></div>
+  <div class="gesture"></div><div class="punch"></div>
+</div></div></section>
+<aside class="panel">
+  <div class="group"><div class="label">Экран</div><div class="jump" id="jump"></div></div>
+  <div class="group"><div class="label">Данные профиля</div><div class="jump" id="data"></div></div>
+  <div class="desc"><ul>
+    <li>Тема меняется сразу, на всём приложении. «Тёплая» следует за светлой и тёмной темой телефона, остальные три всегда тёмные.</li>
+    <li>Единицы влияют на ввод и показ: вес, рост, вода. В базе всё хранится в кг, см и мл.</li>
+    <li>Профиль — ваши данные и их изменение: вес и ИМТ, шаги, вода, сон, тренировки, самочувствие. Наведите на график — увидите значение.</li>
+    <li>«Через 2 месяца» — пример, как профиль выглядит, когда накопилась история. «Новый» — честно пустые графики.</li>
+  </ul></div>
+</aside>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+const C={};function readColors(){const cs=getComputedStyle($('scr'));['bg','ink','muted','line','track','accent'].forEach(n=>C[n]=cs.getPropertyValue('--'+n).trim());}
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/ | /g,' ');
+const dec=(n,d=1)=>n.toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const IC={user:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/>',
+ grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+ ruler:'<path d="M4 16L16 4l4 4L8 20z"/><path d="M8 12l1.5 1.5M10.5 9.5L12 11M13 7l1.5 1.5"/>',palette:'<path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.6-.9 1.2-1.8-.5-1.1.2-2.2 1.4-2.2H17a3.5 3.5 0 0 0 3.5-3.5c0-5.3-3.8-9.5-8.5-9.5z"/><circle cx="8" cy="11" r=".9"/><circle cx="11" cy="7.5" r=".9"/><circle cx="15.5" cy="8.5" r=".9"/>',
+ text:'<path d="M5 18L10 6l5 12M6.8 14h6.4M16 18l2.5-6 2.5 6"/>',bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+ lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',dumb:'<path d="M6.5 7v10M17.5 7v10M4 9.5v5M20 9.5v5M6.5 12h11"/>',
+ down:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/>',trash:'<path d="M4.5 6.5h15M9.5 6.5V4.5h5v2M6.5 6.5l1 13h9l1-13"/>',doc:'<path d="M7 3.5h7l4 4v13H7z"/><path d="M14 3.5v4h4M9.5 12h6M9.5 15.5h6"/>',
+ info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.2"/>',chev:'<path d="M9 5l7 7-7 7"/>',back:'<path d="M15 5l-7 7 7 7"/>',ok:'<path d="M6 12.5l4 4 8-9"/>'};
+const svg=(k,c)=>`<svg class="${c||'i'}" viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
+/* состояние */
+const ST={th:'warm',units:{w:'kg',h:'cm',v:'ml'},notif:true,steps:true,quiet:true,count:'ladder',hist:true,period:'month'};
+const P={sex:'f',age:32,h:168,w:71.8,startW:74};
+/* темы */
+const THEMES=[['warm','Тёплая','по умолчанию · светлая и тёмная по телефону','#F6F3EC','#171614','#2D64D2'],['acid','Кислотная','#0A0A0A · #B6FF00','#0A0A0A','#F3F3EE','#B6FF00'],
+ ['volt','Электрик','#101A46 · #245BFF','#101A46','#EEF1FF','#245BFF'],['blood','Красная','#080808 · #C1121F','#080808','#F2EDED','#C1121F']];
+function applyTheme(){if(ST.th==='warm')document.documentElement.removeAttribute('data-th');else document.documentElement.setAttribute('data-th',ST.th);readColors();}
+/* единицы */
+const wTxt=kg=>ST.units.w==='kg'?`${dec(kg)} кг`:`${dec(kg*2.20462)} фунта`;
+const hTxt=cm=>{if(ST.units.h==='cm')return `${cm} см`;const inch=cm/2.54,ft=Math.floor(inch/12);return `${ft}′ ${Math.round(inch-ft*12)}″`;};
+const vTxt=ml=>ST.units.v==='ml'?`${fmt(ml)} мл`:`${dec(ml/29.5735,0)} унц.`;
+/* история (пример за 9 недель) */
+function rnd(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return s/2147483647;};}
+function hist(){const r=rnd(42),D=63,days=[];for(let i=0;i<D;i++){const t=i/(D-1);days.push({w:74-2.2*t+(r()-.5)*.6,steps:5200+2600*t+(r()-.5)*2600,water:.62+.3*t+(r()-.5)*.25,sleep:6.6+.7*t+(r()-.5)*1.1,push:i%2===0?null:Math.round(14+12*t+(r()-.5)*2),feel:Math.min(4,Math.max(0,Math.round(2+1.2*t+(r()-.5)*2.2)))});}return days;}
+const H=hist();P.w=Math.round(H[H.length-1].w*10)/10; // профиль = последняя запись веса
+/* экраны */
+let view='settings';
+function go(v){view=v;render();$('view').scrollTop=0;}
+function render(){applyTheme();const v=$('view');v.textContent='';({settings:vSettings,profile:vProfile,theme:vTheme,units:vUnits,perm:vPerm})[view](v);}
+function back(v,t,to){const b=el('button','back');b.type='button';b.innerHTML=svg('back');b.append(t);b.onclick=()=>go(to);v.appendChild(b);}
+function item(icon,title,sub,right,onclick){const b=el(onclick?'button':'div','item');if(onclick){b.type='button';b.onclick=onclick;}b.insertAdjacentHTML('beforeend',svg(icon));const t=el('div','t');t.append(el('b',null,title));if(sub)t.append(el('span',null,sub));b.appendChild(t);
+  if(right instanceof Node)b.appendChild(right);else if(right!=null){b.appendChild(el('span','v',right));}if(onclick&&!(right instanceof Node))b.insertAdjacentHTML('beforeend',svg('chev','chev'));return b;}
+function sw(on,fn,label){const s=el('button','sw');s.type='button';s.setAttribute('role','switch');s.setAttribute('aria-checked',on);s.setAttribute('aria-label',label);s.onclick=e=>{e.stopPropagation();fn();render();};return s;}
+function group(v,title,items){v.appendChild(el('div','sec',title));const g=el('div','grp');items.forEach(i=>g.appendChild(i));v.appendChild(g);}
+function vSettings(v){v.append(el('h1',null,'Настройки'));
+  group(v,'Вы',[item('user','Мой профиль',ST.hist?`${wTxt(P.w)} · ${hTxt(P.h)} · ${P.age} лет`:'данные и графики',null,()=>go('profile')),item('target','Цели и план','вода, калории, шаги — пересчитать',null,()=>{}),item('grid','Модули','вода, еда, ходьба',null,()=>{})]);
+  group(v,'Вид',[item('palette','Тема',THEMES.find(t=>t[0]===ST.th)[1],null,()=>go('theme')),item('text','Размер текста и контраст','обычный',null,()=>{}),item('ruler','Единицы измерения',`${ST.units.w==='kg'?'кг':'фунты'}, ${ST.units.h==='cm'?'см':'футы'}, ${ST.units.v==='ml'?'мл':'унции'}`,null,()=>go('units'))]);
+  group(v,'Уведомления и доступ',[item('bell','Уведомления и разрешения',ST.notif?'включены · тихие часы 22:00–08:00':'выключены',null,()=>go('perm'))]);
+  const seg=el('div','seg');seg.style.width='100%';[['ladder','Лесенка'],['tap','Счёт касанием']].forEach(([k,n])=>{const b=el('button',null,n);b.type='button';b.setAttribute('aria-pressed',ST.count===k);b.onclick=()=>{ST.count=k;render();};seg.appendChild(b);});
+  v.appendChild(el('div','sec','Тренировки: как считать подходы'));v.appendChild(seg);v.appendChild(el('div','sub',ST.count==='ladder'?'Цель подхода крупно, «−» и «+», если вышло иначе.':'Касание экрана на каждый повтор — рукой или носом.')).style.marginTop='6px';
+  group(v,'Данные',[item('down','Выгрузить данные','файл CSV на телефон',null,()=>{}),item('trash','Удалить все данные','без восстановления',null,()=>{})]);
+  group(v,'О приложении',[item('doc','Политика конфиденциальности','данные только на телефоне',null,()=>{}),item('info','Связь и версия','varcolinz@gmail.com · 0.1 (тест)',null,()=>{})]);}
+function vTheme(v){back(v,'Настройки','settings');v.append(el('h1',null,'Тема'),el('div','sub','Меняется сразу. Акцент — только у колец, полос и кнопок.'));
+  const g=el('div','themes');g.style.marginTop='16px';
+  THEMES.forEach(([k,n,hx,bg,ink,acc])=>{const b=el('button','th');b.type='button';b.setAttribute('aria-pressed',ST.th===k);b.style.background=bg;b.style.color=ink;if(k==='warm')b.style.boxShadow='inset 0 0 0 1px #DCD7CC';
+    const ring=el('div','ring');ring.style.borderColor=acc;ring.style.borderRightColor=k==='warm'?'#E3DED3':'rgba(127,127,127,.25)';ring.style.transform='rotate(-45deg)';
+    const ok=el('span','ok');ok.style.background=acc;ok.style.color=k==='acid'?'#0A0A0A':'#fff';ok.innerHTML=svg('ok').replace('class="i"','class="i" style="width:14px;height:14px;stroke-width:2"');
+    const t=el('div');t.append(el('div','nm',n),el('div','hx',hx));b.append(ring,t,ok);b.onclick=()=>{ST.th=k;render();};g.appendChild(b);});
+  v.appendChild(g);v.appendChild(el('div','sec','Пример'));
+  const row=el('div','item');row.insertAdjacentHTML('beforeend',`<svg class="i" viewBox="0 0 24 24"><path d="M12 3.5c3.4 4.2 5.8 7.4 5.8 10.2a5.8 5.8 0 0 1-11.6 0C6.2 10.9 8.6 7.7 12 3.5z"/></svg>`);
+  const t=el('div','t');t.append(el('b',null,'Вода'),el('span',null,'1 450 из 2 200 мл'));row.appendChild(t);v.appendChild(row);
+  const bar=el('div');bar.style.cssText='height:3px;background:var(--track);margin:0 0 0 34px';const bi=el('div');bi.style.cssText='height:3px;width:66%;background:var(--accent)';bar.appendChild(bi);v.appendChild(bar);
+  const btn=el('button',null,'+250 мл');btn.type='button';btn.style.cssText='margin-top:18px;height:48px;width:100%;border-radius:999px;background:var(--accent);color:var(--on-accent);font-weight:500';v.appendChild(btn);}
+function vUnits(v){back(v,'Настройки','settings');v.append(el('h1',null,'Единицы'),el('div','sub','Влияют на ввод и показ. Пересчёт целей — автоматически.'));
+  const box=el('div');box.style.marginTop='16px';
+  [['w','Вес',[['kg','Килограммы'],['lb','Фунты']],wTxt(P.w)],['h','Рост',[['cm','Сантиметры'],['ft','Футы и дюймы']],hTxt(P.h)],['v','Вода',[['ml','Миллилитры'],['oz','Унции']],`цель ${vTxt(2200)} · порция ${vTxt(250)}`]].forEach(([k,n,opts,ex])=>{
+    const r=el('div','urow'),h=el('div','h');h.append(el('b',null,n),el('span',null,ex));const s=el('div','seg');opts.forEach(([o,on])=>{const b=el('button',null,on);b.type='button';b.setAttribute('aria-pressed',ST.units[k]===o);b.onclick=()=>{ST.units[k]=o;render();};s.appendChild(b);});r.append(h,s);box.appendChild(r);});
+  v.appendChild(box);v.appendChild(el('div','sub','В базе всё хранится в кг, см и мл — смена единиц ничего не теряет.')).style.marginTop='12px';}
+function vPerm(v){back(v,'Настройки','settings');v.append(el('h1',null,'Уведомления'),el('div','sub','Разрешения Android и что приложение с ними делает.'));
+  group(v,'Разрешения телефона',[item('bell','Уведомления',ST.notif?'разрешены':'не разрешены — напоминаний не будет',sw(ST.notif,()=>{ST.notif=!ST.notif;},'Уведомления')),
+    item('dumb','Физическая активность',ST.steps?'разрешено — шаги считаются':'не разрешено — шагов не будет',sw(ST.steps,()=>{ST.steps=!ST.steps;},'Физическая активность'))]);
+  group(v,'Напоминания',[item('bell','Вода','раз в 2 часа, если давно не отмечали',sw(true,()=>{},'Вода')),item('bell','Итог дня','в 21:00',sw(false,()=>{},'Итог дня')),
+    item('lock','Тихие часы','22:00–08:00 · без звука и вибрации',sw(ST.quiet,()=>{ST.quiet=!ST.quiet;},'Тихие часы'))]);
+  v.appendChild(el('div','sub','Если разрешение выключено в Android, переключатель откроет системные настройки приложения.')).style.marginTop='12px';}
+/* профиль */
+function vProfile(v){back(v,'Настройки','settings');const empty=!ST.hist;
+  v.append(el('h1',null,'Мой профиль'),el('div','sub',`${P.sex==='f'?'женский':'мужской'} · ${P.age} лет · ${hTxt(P.h)} · с 9 сентября`));
+  const bmi=P.w/((P.h/100)**2),k=el('div','kpis');[['Вес',empty?wTxt(P.startW):wTxt(P.w),empty?'':`${P.w-P.startW<0?'−':'+'}${dec(Math.abs(P.w-P.startW))} с начала`],['ИМТ',dec(bmi),bmi<25?'норма':'выше нормы'],['Дней с XO',empty?'1':'62','']].forEach(([a,b,c])=>{const d=el('div');d.append(el('span',null,a),el('b',null,b));if(c)d.append(el('br'),el('small',null,c));k.appendChild(d);});v.appendChild(k);
+  const seg=el('div','seg');seg.style.margin='14px 0 4px';[['week','Неделя'],['month','Месяц'],['all','Всё время']].forEach(([p,n])=>{const b=el('button',null,n);b.type='button';b.setAttribute('aria-pressed',ST.period===p);b.onclick=()=>{ST.period=p;render();};seg.appendChild(b);});v.appendChild(seg);
+  const N=ST.period==='week'?7:ST.period==='month'?30:H.length,D=empty?[]:H.slice(-N);
+  const avg=(f)=>D.length?D.reduce((a,d)=>a+f(d),0)/D.length:0;
+  chart(v,'Вес',empty?'—':wTxt(D[D.length-1].w),'',D.map(d=>d.w),'line',{trend:true,unit:ST.units.w==='kg'?'кг':'фунт',conv:x=>ST.units.w==='kg'?x:x*2.20462,note:empty?'Добавьте вес в календаре — здесь появится линия.':'Тонкая линия — каждый день, толстая — среднее за 7 дней. Смотрите на неё, а не на скачки.'});
+  chart(v,'Шаги',empty?'—':fmt(avg(d=>d.steps)),'в среднем за день',D.map(d=>d.steps),'bars',{goal:8000,note:empty?'Шаги появятся после первого дня.':`Цель 8 000 — пунктир.`});
+  chart(v,'Вода',empty?'—':`${Math.round(avg(d=>Math.min(1,d.water))*100)} %`,'цели в среднем',D.map(d=>Math.min(1.1,d.water)*100),'bars',{goal:100,unit:'%'});
+  chart(v,'Сон',empty?'—':`${dec(avg(d=>d.sleep))} ч`,'в среднем за ночь',D.map(d=>d.sleep),'line',{goal:8,unit:'ч'});
+  const pu=D.filter(d=>d.push!=null);chart(v,'Отжимания: уровень',empty||!pu.length?'—':String(pu[pu.length-1].push),pu.length>1?`было ${pu[0].push}`:'',pu.map(d=>d.push),'line',{unit:'',note:'Сколько подряд получается сейчас — по тренировкам.'});
+  feel(v,D);}
+const tip=el('div','tip');
+function chart(v,title,big,sub,data,type,o){o=o||{};const c=el('div','chart'),h=el('div','h');h.append(el('b',null,title),el('span',null,{week:'7 дней',month:'30 дней',all:'всё время'}[ST.period]));c.appendChild(h);
+  const bg=el('div','big');bg.append(big);if(sub)bg.append(el('small',null,sub));c.appendChild(bg);const cv=el('canvas');cv.width=624;cv.height=240;c.appendChild(cv);if(o.note)c.appendChild(el('div','note',o.note));v.appendChild(c);
+  const g=cv.getContext('2d');g.setTransform(2,0,0,2,0,0);const W=312,Hh=120,pad=6,conv=o.conv||(x=>x);
+  g.strokeStyle=C.line;g.lineWidth=1;[0,.5,1].forEach(f=>{const y=pad+(Hh-2*pad-14)*f;g.beginPath();g.moveTo(0,y+.5);g.lineTo(W,y+.5);g.stroke();});
+  if(!data.length){g.fillStyle=C.muted;g.font='400 12px Inter, sans-serif';g.textAlign='center';g.fillText('пока нет данных',W/2,Hh/2);return;}
+  const vals=data.map(conv);let mn=Math.min(...vals,o.goal!=null?conv(o.goal):Infinity),mx=Math.max(...vals,o.goal!=null?conv(o.goal):-Infinity);if(type==='bars')mn=0;const span=(mx-mn)||1;mn-=type==='bars'?0:span*.15;mx+=span*.15;
+  const ch=Hh-2*pad-14,X=i=>data.length===1?W/2:i/(data.length-1)*W,Y=x=>pad+ch*(1-(x-mn)/(mx-mn));
+  if(o.goal!=null){g.strokeStyle=C.muted;g.setLineDash([3,4]);g.beginPath();g.moveTo(0,Y(conv(o.goal)));g.lineTo(W,Y(conv(o.goal)));g.stroke();g.setLineDash([]);}
+  if(type==='bars'){const bw=Math.max(2,W/data.length-(data.length>40?1:3));vals.forEach((x,i)=>{const xx=i*(W/data.length);g.fillStyle=i===vals.length-1?C.accent:C.ink;g.globalAlpha=i===vals.length-1?1:.75;g.fillRect(xx,Y(x),bw,Y(mn)-Y(x));});g.globalAlpha=1;}
+  else{g.strokeStyle=C.ink;g.globalAlpha=o.trend?.35:1;g.lineWidth=1.5;g.beginPath();vals.forEach((x,i)=>i?g.lineTo(X(i),Y(x)):g.moveTo(X(i),Y(x)));g.stroke();g.globalAlpha=1;
+    if(o.trend){g.strokeStyle=C.accent;g.lineWidth=2.5;g.lineCap='round';g.beginPath();vals.forEach((x,i)=>{const s=vals.slice(Math.max(0,i-6),i+1),m=s.reduce((a,b)=>a+b,0)/s.length;i?g.lineTo(X(i),Y(m)):g.moveTo(X(i),Y(m));});g.stroke();}
+    else{g.fillStyle=C.accent;const i=vals.length-1;g.beginPath();g.arc(X(i),Y(vals[i]),3.5,0,Math.PI*2);g.fill();}}
+  g.fillStyle=C.muted;g.font='400 10px Inter, sans-serif';g.textAlign='left';g.fillText(ST.period==='week'?'7 дней назад':ST.period==='month'?'30 дней назад':'9 сентября',0,Hh-2);g.textAlign='right';g.fillText('сегодня',W,Hh-2);
+  cv.onpointermove=e=>{const r=cv.getBoundingClientRect(),i=Math.round((e.clientX-r.left)/r.width*(data.length-1));const x=vals[Math.max(0,Math.min(vals.length-1,i))];
+    tip.textContent=`${o.unit==='%'?Math.round(x)+' %':o.unit==='ч'?dec(x)+' ч':o.unit!=null&&o.unit!==''?dec(x)+' '+o.unit:fmt(x)} · ${data.length-1-i?`${data.length-1-i} дн. назад`:'сегодня'}`;
+    const sr=$('scr').getBoundingClientRect(),k=360/sr.width;tip.style.left=((e.clientX-sr.left)*k)+'px';tip.style.top=((r.top-sr.top)*k+16)+'px';tip.style.opacity=1;};cv.onpointerleave=()=>{tip.style.opacity=0;};}
+function feel(v,D){const c=el('div','chart'),h=el('div','h');h.append(el('b',null,'Самочувствие'),el('span',null,'из календаря'));c.appendChild(h);
+  const names=['Плохо','Так себе','Нормально','Хорошо','Отлично'],cnt=[0,0,0,0,0];D.forEach(d=>cnt[d.feel]++);const tot=D.length||1;
+  if(!D.length){c.appendChild(el('div','note','Отмечайте самочувствие в календаре — здесь будет видно, каких дней больше.'));v.appendChild(c);return;}
+  const bar=el('div');bar.style.cssText='display:flex;height:12px;border-radius:6px;overflow:hidden;margin:10px 0 8px;gap:2px';
+  cnt.forEach((n,i)=>{if(!n)return;const s=el('div');s.style.cssText=`flex:${n};background:var(--ink);opacity:${.25+i*.18}`;if(i===4){s.style.background='var(--accent)';s.style.opacity=1;}bar.appendChild(s);});c.appendChild(bar);
+  const lg=el('div');lg.style.cssText='display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted)';cnt.forEach((n,i)=>lg.appendChild(el('span',null,`${names[i]} ${Math.round(n/tot*100)} %`)));c.appendChild(lg);
+  const fr=D.slice(0,Math.floor(D.length/2)),la=D.slice(Math.floor(D.length/2)),g=a=>a.length?a.filter(d=>d.feel>=3).length/a.length:0;
+  c.appendChild(el('div','note',`Хороших дней во второй половине периода — ${Math.round(g(la)*100)} %, в первой — ${Math.round(g(fr)*100)} %.`));v.appendChild(c);}
+/* панель */
+[['settings','Настройки'],['profile','Мой профиль'],['theme','Тема'],['units','Единицы'],['perm','Уведомления']].forEach(([k,n])=>{const b=el('button',null,n);b.type='button';b.onclick=()=>go(k);$('jump').appendChild(b);});
+[['Через 2 месяца',true],['Новый пользователь',false]].forEach(([n,h])=>{const b=el('button',null,n);b.type='button';b.onclick=()=>{ST.hist=h;render();};$('data').appendChild(b);});
+$('scr').appendChild(tip);
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);$('theme').textContent=th==='dark'?'Светлая тема':'Тёмная тема';render();}
+$('theme').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+function fit(){const wide=innerWidth>900;let s=Math.min(1,(innerWidth-32)/380);if(wide)s=Math.min(s,(innerHeight-90)/800);s=Math.max(.5,s);$('device').style.transform=`scale(${s})`;const b=$('deviceBox');b.style.width=380*s+'px';b.style.height=800*s+'px';}
+addEventListener('resize',fit);fit();setTheme(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+window.__xo={go,ST,render};
+})();
+</script>
+</body>
+</html>
