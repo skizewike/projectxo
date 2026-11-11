@@ -108,6 +108,15 @@ class SettingsViewModel(
         }
     }
 
+    /** Поставить модуль на место [slot] нижней панели (Р76); если он уже закреплён в другом месте, они меняются местами. */
+    fun setTabSlot(slot: Int, m: Module) = repo.update {
+        val current = com.projectxo.app.core.model.BarLayout.pinned(it.modules, it.moduleOrder, it.tabPins)
+        it.copy(tabPins = com.projectxo.app.core.model.BarLayout.withSlot(current, slot, m))
+    }
+
+    /** Вернуть выбор по умолчанию: вода, еда, тренировки. */
+    fun resetTabPins() = repo.update { it.copy(tabPins = null) }
+
     fun setReminders(r: Reminders) = repo.update { it.copy(reminders = r) }
 
     /** Тихие часы двигаются по 30 минут по кругу суток. */

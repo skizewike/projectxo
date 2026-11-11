@@ -45,9 +45,6 @@ data class HabitsUiState(
     val editMode: Boolean = false,
     /** Привычка, удаление которой ещё можно отменить. */
     val pendingDelete: Habit? = null,
-    val workoutEnabled: Boolean = false,
-    val counting: com.projectxo.app.core.model.WorkoutCounting = com.projectxo.app.core.model.WorkoutCounting.Ladder,
-    val timer: com.projectxo.app.core.model.WorkoutTimerStyle = com.projectxo.app.core.model.WorkoutTimerStyle.Ring,
     val loaded: Boolean = false,
 ) {
     val dueToday: List<HabitItem> get() = items.filter { it.due || it.doneToday }
@@ -67,7 +64,8 @@ class HabitsViewModel(
     private val clock: AppClock,
     private val appScope: CoroutineScope,
     private val seeds: List<HabitSeed> = emptyList(),
-    private val workoutName: String = "",
+    /** Общие привычки (Р79): отметки сразу уходят другу. Null — режим «Вместе» не подключён. */
+    private val shared: com.projectxo.app.core.data.shared.SharedHabitRepository? = null,
 ) : ViewModel() {
     private val today = clock.today()
     private val edit = MutableStateFlow(false)
@@ -83,10 +81,6 @@ class HabitsViewModel(
             val s = settings.settings.value
             if (s.wave2.habitsSeeded) return@launch
             if (repo.habits().first().isEmpty()) seeds.forEach { repo.add(Habit(0, it.name, it.freq, it.reminderMin)) }
-            // Тренировки выбраны в первом запуске: привычка «Тренировка» создаётся при первом входе в «Привычки».
-            if (s.wave2.workoutEnabled && workoutName.isNotEmpty() && repo.habits().first().none { it.kind == HabitKind.Workout }) {
-                repo.add(Habit(0, workoutName, HabitFreq.Days(HabitMath.WORKOUT_DAYS), 19 * 60, kind = HabitKind.Workout))
-            }
             settings.update { it.copy(wave2 = it.wave2.copy(habitsSeeded = true)) }
         }
     }
@@ -104,7 +98,7 @@ class HabitsViewModel(
                 percent30 = HabitMath.percent30(h, m, today), weekCount = HabitMath.weekCount(m, today),
             )
         }
-        HabitsUiState(today, items, s.wave2.habitsView, editing, pend?.first, s.wave2.workoutEnabled, s.wave2.workoutCounting, s.wave2.workoutTimer, loaded = true)
+        HabitsUiState(today, items, s.wave2.habitsView, editing, pend?.first, loaded = true)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HabitsUiState(today))
 
     /** Отметить или снять отметку за день, [back] дней назад (0 — сегодня). Будущее и дни не по расписанию игнорируются. */
@@ -114,13 +108,19 @@ class HabitsViewModel(
         if (back > 0 && !HabitMath.planned(item.habit.freq, date)) return
         val was = item.marks.done(date)
         val value = if (was) 0 else item.habit.target
-        appScope.launch { repo.setCheck(item.habit.id, date, value) }
+        appScope.launch {
+            repo.setCheck(item.habit.id, date, value)
+            shared?.syncHabit(item.habit.id, today)
+        }
     }
 
     /** Счётчик на сегодня: [delta] шагов, от 0 до цели. */
     fun count(item: HabitItem, delta: Int) {
         val v = (item.valueToday + delta).coerceIn(0, item.habit.target)
-        appScope.launch { repo.setCheck(item.habit.id, today, v) }
+        appScope.launch {
+            repo.setCheck(item.habit.id, today, v)
+            shared?.syncHabit(item.habit.id, today)
+        }
     }
 
     fun save(habit: Habit) {
@@ -128,10 +128,6 @@ class HabitsViewModel(
         if (clean.name.isEmpty()) return
         appScope.launch { if (clean.id == 0L) repo.add(clean) else repo.update(clean) }
     }
-
-    fun setCounting(c: com.projectxo.app.core.model.WorkoutCounting) = settings.update { it.copy(wave2 = it.wave2.copy(workoutCounting = c)) }
-
-    fun setTimer(t: com.projectxo.app.core.model.WorkoutTimerStyle) = settings.update { it.copy(wave2 = it.wave2.copy(workoutTimer = t)) }
 
     fun setView(v: HabitsView) = settings.update { it.copy(wave2 = it.wave2.copy(habitsView = v)) }
 
@@ -162,18 +158,11 @@ class HabitsViewModel(
         pending.value = null
         val job = commitJob
         commitJob = null
-        appScope.launch { repo.delete(p.first.id) }
-        job?.cancel()
-    }
-
-    /** Включить или выключить домашние тренировки: создаёт привычку «Тренировка» по дням пн, ср, пт. */
-    fun setWorkoutEnabled(on: Boolean, workoutName: String) {
-        settings.update { it.copy(wave2 = it.wave2.copy(workoutEnabled = on)) }
-        if (!on) return
         appScope.launch {
-            val exists = repo.habits().first().any { it.kind == HabitKind.Workout }
-            if (!exists) repo.add(Habit(0, workoutName, HabitFreq.Days(HabitMath.WORKOUT_DAYS), 19 * 60, kind = HabitKind.Workout))
+            shared?.habitDeleted(p.first.id)
+            repo.delete(p.first.id)
         }
+        job?.cancel()
     }
 
     override fun onCleared() {

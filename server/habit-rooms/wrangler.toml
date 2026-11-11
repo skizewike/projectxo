@@ -1,0 +1,22 @@
+name = "xo-habit-rooms"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+# Адреса предпросмотра версий не нужны: открытым остаётся только основной адрес.
+preview_urls = false
+
+# Лимиты (все можно менять): человек в комнате, комнат в сутки с одного адреса, попыток войти по коду в час, отметок в сутки.
+[vars]
+MAX_MEMBERS = "2"
+CREATE_PER_DAY = "10"
+JOIN_PER_HOUR = "20"
+MARKS_PER_DAY = "400"
+
+# Раз в сутки в 03:00 UTC удаляются комнаты без отметок 90 дней.
+[triggers]
+crons = ["0 3 * * *"]
+
+# База комнат. id подставляется командой из README.md, шаг 3.
+[[d1_databases]]
+binding = "DB"
+database_name = "xo-habit-rooms"
+database_id = "ec29c11c-fd16-4b5d-a493-e63390202cde"

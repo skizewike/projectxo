@@ -9,7 +9,7 @@
     <string name="pushup_wall">wall</string>
     <string name="pushup_knees">on knees</string>
     <string name="pushup_classic">classic</string>
-    <string name="workout_title">Home workout</string>
+    <string name="workout_title">Workouts</string>
     <string name="workout_lead">Pick an exercise. The load grows when it gets easier for you.</string>
     <string name="workout_ex_new">we will check your level before the first workout</string>
     <string name="workout_ex_level">now %1$s · workouts: %2$s</string>

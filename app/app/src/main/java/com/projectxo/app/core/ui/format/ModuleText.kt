@@ -25,6 +25,8 @@ fun moduleGoalText(p: ModuleProgress): String {
         Module.Steps -> pluralText(R.plurals.of_steps, p.goal.toInt(), goal)
         Module.Fasting, Module.Sleep -> stringResource(R.string.of_hours, formatCount(p.goal / 60))
         Module.Habits -> stringResource(R.string.of_habits, goal)
+        Module.Workouts -> stringResource(R.string.of_workouts, goal)
+        Module.Mood -> "" // без цели
         Module.Breathing -> stringResource(R.string.of_minutes, formatCount(p.goal / 60))
     }
 }

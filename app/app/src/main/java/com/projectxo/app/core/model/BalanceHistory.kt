@@ -10,10 +10,14 @@ import com.projectxo.app.core.data.SettingsRepository
 import com.projectxo.app.core.data.SleepRepository
 import com.projectxo.app.core.data.StepsRepository
 import com.projectxo.app.core.data.WaterRepository
+import com.projectxo.app.core.data.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
+
+/** Сколько последних записей тренировок читать для итогов дней. */
+private const val WORKOUT_HISTORY = 4000
 
 /** Итоги одного дня по модулям в базовых единицах (мл, ккал, шаги, минуты, секунды, штуки). */
 data class DayTotals(
@@ -25,6 +29,9 @@ data class DayTotals(
     val breathSec: Int = 0,
     val habitsDone: Int = 0,
     val habitsTotal: Int = 0,
+    /** Тренировок за день и день из плана тренировок (Р73). */
+    val workoutsDone: Int = 0,
+    val workoutDay: Boolean = false,
 )
 
 /** Цели, с которыми сравниваются дни истории. Берутся текущие: история целей не хранится. */
@@ -49,6 +56,8 @@ object BalanceMath {
                 Module.Sleep -> ModuleProgress(m, t.sleepMin.toLong(), goals.sleepMin)
                 Module.Fasting -> ModuleProgress(m, t.fastingMin.toLong(), goals.fastingMin)
                 Module.Breathing -> ModuleProgress(m, t.breathSec.toLong(), goals.breathSec)
+                Module.Workouts -> if (t.workoutDay || t.workoutsDone > 0) ModuleProgress(m, minOf(t.workoutsDone, 1).toLong(), 1L) else null
+                Module.Mood -> null // у настроения нет цели: в «Баланс дня» не входит (Р74)
                 Module.Habits -> if (t.habitsTotal > 0) ModuleProgress(m, t.habitsDone.toLong(), t.habitsTotal.toLong()) else null
             }
         }
@@ -67,6 +76,7 @@ class HistoryExtras(
     val fasting: FastingRepository,
     val breathing: BreathingRepository,
     val habits: HabitRepository,
+    val workouts: WorkoutRepository,
     val settings: SettingsRepository,
     val nowMs: () -> Long,
 )
@@ -104,19 +114,31 @@ class BalanceHistory(
         }
     }
 
+    /** Тренировки по дням: сколько записано и какие дни входят в план (Р73). Без модуля пусто. */
+    private fun workoutFlow(from: LocalDate, to: LocalDate): Flow<Pair<Map<LocalDate, Int>, Int>> {
+        val e = extras ?: return flowOf(emptyMap<LocalDate, Int>() to 0)
+        return combine(e.workouts.sessions(WORKOUT_HISTORY), e.settings.settings) { sessions, st ->
+            sessions.filter { !it.date.isBefore(from) && !it.date.isAfter(to) }.groupingBy { it.date }.eachCount() to st.wave2.workoutDays
+        }
+    }
+
     fun totalsBetween(from: LocalDate, to: LocalDate): Flow<Map<LocalDate, DayTotals>> = combine(
         water.totalsBetween(from, to),
         food.kcalBetween(from, to),
         steps.totalsBetween(from, to),
         extraFlow(from, to),
-    ) { w, f, s, x ->
-        val dates = w.keys + f.keys + s.keys + x.sleep.keys + x.fasting.keys + x.breath.keys + x.habits.filterValues { it.second > 0 }.keys
+        workoutFlow(from, to),
+    ) { w, f, s, x, wk ->
+        val (workouts, planMask) = wk
+        val planned = extras != null && planMask != 0
+        val dates = w.keys + f.keys + s.keys + x.sleep.keys + x.fasting.keys + x.breath.keys + x.habits.filterValues { it.second > 0 }.keys + workouts.keys + if (planned) ProfileStats.datesBetween(from, to) else emptyList()
         dates.associateWith { d ->
             val h = x.habits[d]
             DayTotals(
                 waterMl = w[d] ?: 0, kcal = f[d] ?: 0, steps = s[d] ?: 0,
                 sleepMin = x.sleep[d] ?: 0, fastingMin = x.fasting[d] ?: 0, breathSec = x.breath[d] ?: 0,
                 habitsDone = h?.first ?: 0, habitsTotal = h?.second ?: 0,
+                workoutsDone = workouts[d] ?: 0, workoutDay = planned && HabitMath.dayBit(d.dayOfWeek) and planMask != 0,
             )
         }
     }

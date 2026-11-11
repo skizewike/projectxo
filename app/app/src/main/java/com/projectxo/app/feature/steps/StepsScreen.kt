@@ -214,7 +214,11 @@ private fun StepsTotal(state: StepsUiState, celebrationMs: () -> Float) {
     val goal = formatCount(state.goal)
     val done = state.left == 0L
     val over = state.total - state.goal
-    val first = if (done) stringResource(R.string.goal_done_title) else stringResource(R.string.steps_left, formatCount(state.left), goal)
+    val first = when {
+        done -> stringResource(R.string.goal_done_title)
+        state.total == 0 -> stringResource(R.string.goal_today_only, goal)
+        else -> stringResource(R.string.steps_left, formatCount(state.left), goal)
+    }
     val second = when {
         !done -> null
         over > 0 -> stringResource(R.string.steps_over, formatCount(over), goal)

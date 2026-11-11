@@ -87,6 +87,7 @@ fun ProfileGraphsPage(
             "${p.ageYears} ${stringResource(R.string.unit_years)}",
             heightText(p.heightCm, s.units.height),
         ).joinToString(" · ")
+        Spacer(Modifier.height(XoSpacing.headGap))
         Text(line, style = type.caption, color = colors.muted)
     }
     Spacer(Modifier.height(XoSpacing.s3))

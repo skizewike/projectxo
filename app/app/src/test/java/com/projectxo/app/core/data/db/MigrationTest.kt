@@ -137,6 +137,54 @@ class MigrationTest {
     }
 
     @Test
+    fun migrate6To7AddsMoodEntryAndKeepsOldData() {
+        val name = InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath("migration-test-7").absolutePath
+        helper.createDatabase(name, 6).apply {
+            execSQL("INSERT INTO food_entry(ts, localDate, name, kcal, protein, fat, carbs, photoFile, healthScore) VALUES(1, '2026-05-01', 'Овсянка', 320, 10, 6, 58, NULL, NULL)")
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(name, 7, true, XoDatabase.MIGRATION_6_7)
+
+        db.query("SELECT name FROM food_entry").use {
+            assertEquals(true, it.moveToFirst())
+            assertEquals("Овсянка", it.getString(0))
+        }
+        db.execSQL("INSERT INTO mood_entry(ts, localDate, mood, energy, tags) VALUES(5, '2026-05-01', 3, 1, 'sleep,work')")
+        db.query("SELECT mood, energy, tags FROM mood_entry").use {
+            assertEquals(true, it.moveToFirst())
+            assertEquals(3, it.getInt(0))
+            assertEquals(1, it.getInt(1))
+            assertEquals("sleep,work", it.getString(2))
+        }
+    }
+
+    @Test
+    fun migrate7To8AddsSharedTablesAndKeepsHabits() {
+        val name = InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath("migration-test-8").absolutePath
+        helper.createDatabase(name, 7).apply {
+            execSQL("INSERT INTO habit(name, freqType, freqN, daysMask, reminderMin, target, sortOrder, kind) VALUES('Йога', 'daily', 0, 0, NULL, 1, 0, 'habit')")
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(name, 8, true, XoDatabase.MIGRATION_7_8)
+
+        db.query("SELECT name FROM habit").use {
+            assertEquals(true, it.moveToFirst())
+            assertEquals("Йога", it.getString(0))
+        }
+        db.execSQL("INSERT INTO shared_room(roomId, habitId, memberId, secret, title, freqMask, myNick, code, codeExpires, lastSync) VALUES('r', 1, 'm', 's', 'Йога', 127, 'Вы', 'ABC234', 5, 0)")
+        db.execSQL("INSERT INTO shared_member(roomId, memberId, nick) VALUES('r', 'm', 'Вы')")
+        db.execSQL("INSERT INTO shared_mark(roomId, memberId, localDate) VALUES('r', 'm', '2026-11-11')")
+        listOf("shared_room", "shared_member", "shared_mark").forEach { t ->
+            db.query("SELECT COUNT(*) FROM $t").use {
+                it.moveToFirst()
+                assertEquals(t, 1, it.getInt(0))
+            }
+        }
+    }
+
+    @Test
     fun migrate3To4KeepsDataAndAddsDayLog() {
         val name = InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath("migration-test-4").absolutePath
         helper.createDatabase(name, 3).apply {

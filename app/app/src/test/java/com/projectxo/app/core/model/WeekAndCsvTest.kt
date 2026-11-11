@@ -58,13 +58,13 @@ class WeekAndCsvTest {
         val from = today.minusDays(1)
         val csv = CsvExport.build(
             from, today,
-            mapOf(today to DayTotals(waterMl = 1500, kcal = 1800, steps = 5000, sleepMin = 450, habitsDone = 2, habitsTotal = 3)),
+            mapOf(today to DayTotals(waterMl = 1500, kcal = 1800, steps = 5000, sleepMin = 450, habitsDone = 2, habitsTotal = 3, workoutsDone = 1)),
             mapOf(today to DayLog(today, feel = 3, tags = setOf("tired", "calm"), weightKg = 71.84, note = "ok")),
         )
         val lines = csv.removePrefix(CsvExport.BOM).trimEnd().split("\r\n")
         assertEquals(CsvExport.HEADER.joinToString(","), lines[0])
-        assertEquals("2026-11-09,0,0,0,0,0,0,0,0,,,,", lines[1])
-        assertEquals("2026-11-10,1500,1800,5000,450,0,0,2,3,3,71.8,calm;tired,ok", lines[2])
+        assertEquals("2026-11-09,0,0,0,0,0,0,0,0,0,,,,", lines[1])
+        assertEquals("2026-11-10,1500,1800,5000,450,0,0,2,3,1,3,71.8,calm;tired,ok", lines[2])
         assertTrue(csv.startsWith(CsvExport.BOM))
     }
 

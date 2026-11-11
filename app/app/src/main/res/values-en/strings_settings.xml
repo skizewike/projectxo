@@ -126,7 +126,7 @@
     <string name="module_breathing">Breathing</string>
     <string name="module_fasting_sub">intermittent fasting with a timer</string>
     <string name="module_sleep_sub">how long you slept and how well</string>
-    <string name="module_habits_sub">checks, streaks, home workouts</string>
+    <string name="module_habits_sub">checks and streaks</string>
     <string name="module_breathing_sub">calm breathing, 1–5 minutes</string>
     <string name="tab_more">More</string>
     <string name="dur_h_min">%1$s h %2$s min</string>

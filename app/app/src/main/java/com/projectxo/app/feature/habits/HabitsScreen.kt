@@ -94,10 +94,6 @@ class HabitsActions(
     val onEditMode: (Boolean) -> Unit,
     val onDelete: (HabitItem) -> Unit,
     val onUndo: () -> Unit,
-    val onWorkoutEnabled: (Boolean) -> Unit,
-    val onOpenWorkout: () -> Unit,
-    val onCounting: (com.projectxo.app.core.model.WorkoutCounting) -> Unit,
-    val onTimer: (com.projectxo.app.core.model.WorkoutTimerStyle) -> Unit = {},
 )
 
 /**
@@ -105,7 +101,13 @@ class HabitsActions(
  * прописывается двумя штрихами. Серия не обнуляется за один пропуск.
  */
 @Composable
-fun HabitsScreen(state: HabitsUiState, actions: HabitsActions, modifier: Modifier = Modifier) {
+fun HabitsScreen(
+    state: HabitsUiState,
+    actions: HabitsActions,
+    modifier: Modifier = Modifier,
+    together: com.projectxo.app.feature.shared.TogetherState? = null,
+    togetherActions: com.projectxo.app.feature.shared.TogetherActions? = null,
+) {
     val colors = XoTheme.colors
     val type = XoTheme.type
     var editing by rememberSaveable { mutableIntStateOf(NO_EDIT) } // -1 нет, 0 новая, иначе id
@@ -127,7 +129,7 @@ fun HabitsScreen(state: HabitsUiState, actions: HabitsActions, modifier: Modifie
                     Text(formatToday(state.today), style = type.caption, color = colors.muted)
                 }
                 IconButton(XoIcons.Settings, stringResource(R.string.habits_settings)) { settingsOpen = true }
-                IconButton(XoIcons.Plus, stringResource(R.string.habits_add)) { editing = NEW }
+                IconButton(XoIcons.Plus, stringResource(R.string.habits_add), ring = true) { editing = NEW }
             }
             Spacer(Modifier.height(XoSpacing.s4))
 
@@ -149,6 +151,10 @@ fun HabitsScreen(state: HabitsUiState, actions: HabitsActions, modifier: Modifie
                     HabitsView.List -> ListView(state, actions) { editing = it.habit.id.toInt() }
                     HabitsView.Cards -> CardsView(state, actions) { editing = it.habit.id.toInt() }
                 }
+            }
+            if (together != null && togetherActions != null && together.available && !state.editMode) {
+                Spacer(Modifier.height(XoSpacing.s6))
+                com.projectxo.app.feature.shared.TogetherSection(together, togetherActions)
             }
             Spacer(Modifier.height(XoSpacing.s8))
         }
@@ -179,11 +185,20 @@ private const val NO_EDIT = -1
 private const val NEW = 0
 
 @Composable
-private fun IconButton(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, onClick: () -> Unit) {
+private fun IconButton(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, ring: Boolean = false, onClick: () -> Unit) {
+    val colors = XoTheme.colors
     Box(
         Modifier.size(XoSize.touchMin).clickable(role = Role.Button, onClick = onClick).semantics { contentDescription = label },
         contentAlignment = Alignment.Center,
-    ) { Icon(icon, null, tint = XoTheme.colors.ink, modifier = Modifier.size(XoSize.navIcon)) }
+    ) {
+        if (ring) {
+            Box(Modifier.size(XoSize.addButton).border(XoSize.hairline, colors.line, CircleShape), contentAlignment = Alignment.Center) {
+                Icon(icon, null, tint = colors.ink, modifier = Modifier.size(XoSize.navIcon))
+            }
+        } else {
+            Icon(icon, null, tint = colors.ink, modifier = Modifier.size(XoSize.navIcon))
+        }
+    }
 }
 
 @Composable
@@ -246,7 +261,6 @@ private fun Check(item: HabitItem, onToggle: () -> Unit, big: Boolean = false) {
 private fun subtitle(item: HabitItem): String {
     val f = item.habit.freq
     return when {
-        item.habit.kind == HabitKind.Workout -> stringResource(R.string.habits_workout_sub)
         f is HabitFreq.PerWeek -> stringResource(R.string.habits_week_progress, item.weekCount.toString(), f.n.toString())
         item.streak > 0 -> stringResource(R.string.habits_streak, item.streak.toString()) +
             if (item.best >= 7) stringResource(R.string.habits_percent, item.percent30.toString()) else ""
@@ -342,8 +356,6 @@ private fun HabitRow(item: HabitItem, state: HabitsUiState, actions: HabitsActio
         }
         if (item.habit.target > 1 && !state.editMode) {
             Counter(item, actions)
-        } else if (item.habit.kind == HabitKind.Workout && !state.editMode && !item.doneToday) {
-            TextButton(onClick = actions.onOpenWorkout) { Text(stringResource(R.string.habits_workout_start), style = type.bodyStrong) }
         }
         RowActions(item, state, actions, onEdit)
     }
@@ -596,34 +608,6 @@ private fun SettingsDialog(state: HabitsUiState, actions: HabitsActions, onEditL
                     ),
                     state.view, actions.onView,
                 )
-                XoHairline(Modifier.padding(vertical = XoSpacing.s3))
-                XoSwitchRow(stringResource(R.string.habits_workout_toggle), stringResource(R.string.habits_workout_toggle_sub), state.workoutEnabled, actions.onWorkoutEnabled)
-                if (state.workoutEnabled) {
-                    Spacer(Modifier.height(XoSpacing.s2))
-                    Text(stringResource(R.string.habits_counting), style = type.bodyStrong, color = colors.ink)
-                    Spacer(Modifier.height(XoSpacing.s2))
-                    XoSegmented(
-                        listOf(
-                            com.projectxo.app.core.model.WorkoutCounting.Ladder to stringResource(R.string.habits_counting_ladder),
-                            com.projectxo.app.core.model.WorkoutCounting.Tap to stringResource(R.string.habits_counting_tap),
-                        ),
-                        state.counting, actions.onCounting,
-                    )
-                    Spacer(Modifier.height(XoSpacing.s3))
-                    Text(stringResource(R.string.habits_timer), style = type.bodyStrong, color = colors.ink)
-                    Spacer(Modifier.height(XoSpacing.s2))
-                    XoSegmented(
-                        listOf(
-                            com.projectxo.app.core.model.WorkoutTimerStyle.Ring to stringResource(R.string.habits_timer_ring),
-                            com.projectxo.app.core.model.WorkoutTimerStyle.Bar to stringResource(R.string.habits_timer_bar),
-                            com.projectxo.app.core.model.WorkoutTimerStyle.Ticks to stringResource(R.string.habits_timer_ticks),
-                        ),
-                        state.timer, actions.onTimer,
-                    )
-                }
-                if (state.workoutEnabled) {
-                    TextButton(onClick = { onDismiss(); actions.onOpenWorkout() }) { Text(stringResource(R.string.habits_open_workout), style = type.bodyStrong) }
-                }
                 XoHairline(Modifier.padding(vertical = XoSpacing.s2))
                 TextButton(onClick = onEditList) { Text(stringResource(R.string.habits_edit_list), style = type.bodyStrong) }
             }

@@ -151,6 +151,7 @@ internal fun WellbeingPicker(state: CalendarUiState, draft: DayLogDraft, actions
             }
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(title, style = type.subtitle, color = colors.ink, modifier = Modifier.semantics { heading() })
+                Spacer(Modifier.height(XoSpacing.textGap))
                 Text(weekday, style = type.caption, color = colors.muted)
             }
             Spacer(Modifier.width(XoSize.touchMin))

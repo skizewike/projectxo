@@ -71,6 +71,13 @@ class AppContainer(context: Context) {
     val breathing: BreathingRepository by lazy { RoomBreathingRepository(db.breathingDao()) }
     val habits: HabitRepository by lazy { RoomHabitRepository(db.habitDao()) }
     val workouts: WorkoutRepository by lazy { RoomWorkoutRepository(db.workoutDao()) }
+    val mood: com.projectxo.app.core.data.MoodRepository by lazy { com.projectxo.app.core.data.db.RoomMoodRepository(db.moodDao()) }
+    /** Привычки вместе (Р79): сервер комнат из `server/habit-rooms`; адрес задаётся при сборке (`sharedRoomsUrl`). */
+    val shared: com.projectxo.app.core.data.shared.SharedHabitRepository by lazy {
+        com.projectxo.app.core.data.db.DbSharedHabitRepository(
+            db.sharedDao(), com.projectxo.app.core.data.shared.HttpRoomsApi(BuildConfig.SHARED_ROOMS_URL), habits, clock,
+        )
+    }
     val dayLog: DayLogRepository by lazy { RoomDayLogRepository(db.dayLogDao()) }
     val goals: GoalsRepository by lazy { RoomGoalsRepository(db.goalDao()) }
     val steps: StepsRepository by lazy { RoomStepsRepository(db.stepsDao()) }
@@ -90,7 +97,7 @@ class AppContainer(context: Context) {
         )
     }
     val history by lazy {
-        BalanceHistory(water, food, steps, goals, HistoryExtras(sleep, fasting, breathing, habits, settings) { clock.nowMs() })
+        BalanceHistory(water, food, steps, goals, HistoryExtras(sleep, fasting, breathing, habits, workouts, settings) { clock.nowMs() })
     }
 
     /** Пример напоминания сразу: чтобы увидеть, как оно выглядит (Настройки, «Уведомления»). */
@@ -114,6 +121,10 @@ class AppContainer(context: Context) {
     /** «Удалить все данные»: записи, цели и настройки. После этого приложение стартует как новое. */
     fun deleteAllData() {
         appScope.launch {
+            // Общие привычки (Р79): сначала выйти из комнат, чтобы отметки не остались на сервере. Без сети ждём недолго.
+            runCatching {
+                kotlinx.coroutines.withTimeoutOrNull(DELETE_LEAVE_TIMEOUT_MS) { shared.rooms().first().forEach { shared.leave(it.roomId) } }
+            }
             withContext(Dispatchers.IO) {
                 db.clearAllTables()
                 foodPhotos.deleteAll()
@@ -125,6 +136,18 @@ class AppContainer(context: Context) {
     val stepsRecorder by lazy { StepsRecorder(steps) }
     val stepsLive by lazy { StepsLive(stepSensor, stepsRecorder, clock) }
     val motionSteps by lazy { com.projectxo.app.core.data.sensor.MotionSteps(appContext, stepSensor) }
+
+    init {
+        // Р73: привычка «Тренировка» превращается в модуль «Тренировки».
+        appScope.launch { com.projectxo.app.core.data.WorkoutMigration.run(habits, settings) }
+        // Фоновая синхронизация общих привычек идёт, только пока у человека есть хотя бы одна комната.
+        appScope.launch {
+            if (!shared.available) return@launch
+            shared.rooms().map { it.isNotEmpty() }.distinctUntilChanged().collect { has ->
+                runCatching { com.projectxo.app.core.data.shared.SharedSyncWorker.schedule(appContext, has) }
+            }
+        }
+    }
 }
 
 /** Виджет перерисовывается при каждом изменении дня, пока процесс жив. */
@@ -157,6 +180,9 @@ class StepsLive(private val sensor: StepSensor, private val recorder: StepsRecor
             .collect { counter -> recorder.onReading(counter, clock.nowMs()) }
     }
 }
+
+/** Сколько ждать выхода из общих привычек при «Удалить все данные», мс. */
+private const val DELETE_LEAVE_TIMEOUT_MS = 8_000L
 
 class XoApplication : Application() {
     lateinit var container: AppContainer

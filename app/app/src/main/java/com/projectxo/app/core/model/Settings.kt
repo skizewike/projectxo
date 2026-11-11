@@ -62,9 +62,13 @@ enum class AppLanguage { System, Ru, En }
 data class Wave2Settings(
     val habitsView: HabitsView = HabitsView.Ring,
     val habitsSeeded: Boolean = false,
-    val workoutEnabled: Boolean = false,
+    /** Дни плана тренировок: маска пн = 1 … вс = 64 (Р73). */
+    val workoutDays: Int = HabitMath.WORKOUT_DAYS,
     val workoutCounting: WorkoutCounting = WorkoutCounting.Ladder,
     val workoutTimer: WorkoutTimerStyle = WorkoutTimerStyle.Ring,
+    /** Привычки вместе (Р79): вид (по умолчанию «Пересечение») и псевдоним, который видит друг. */
+    val sharedView: SharedView = SharedView.Intersection,
+    val sharedNick: String = "",
     /** Сон: плановый отбой и подъём, минуты от полуночи; напоминание за 30 минут до отбоя. */
     val sleepBedMin: Int = 23 * 60,
     val sleepWakeMin: Int = 7 * 60,
@@ -89,6 +93,8 @@ data class AppSettings(
     val modules: Set<Module> = Module.BASE,
     /** Порядок модулей во вкладках и на «Сегодня» (Р38). */
     val moduleOrder: List<Module> = Module.entries,
+    /** Закреплённые во вкладках модули (Р76); null — по умолчанию вода, еда, тренировки. */
+    val tabPins: List<Module>? = null,
     val profile: Profile? = null,
     val reminders: Reminders = Reminders(),
     val wave2: Wave2Settings = Wave2Settings(),

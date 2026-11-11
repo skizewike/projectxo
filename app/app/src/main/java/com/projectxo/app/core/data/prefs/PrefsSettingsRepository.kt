@@ -8,6 +8,7 @@ import com.projectxo.app.core.model.Activity
 import com.projectxo.app.core.model.BreathRhythm
 import com.projectxo.app.core.model.BreathingMath
 import com.projectxo.app.core.model.FastingMath
+import com.projectxo.app.core.model.HabitMath
 import com.projectxo.app.core.model.HabitsView
 import com.projectxo.app.core.model.Wave2Settings
 import com.projectxo.app.core.model.WorkoutCounting
@@ -18,6 +19,7 @@ import com.projectxo.app.core.model.Module
 import com.projectxo.app.core.model.Profile
 import com.projectxo.app.core.model.Reminders
 import com.projectxo.app.core.model.Sex
+import com.projectxo.app.core.model.SharedView
 import com.projectxo.app.core.model.TextSize
 import com.projectxo.app.core.model.ThemeChoice
 import com.projectxo.app.core.model.Units
@@ -72,9 +74,11 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
             } else {
                 null
             }
-            val modules = p.getStringSet("modules", null)
+            val savedModules = p.getStringSet("modules", null)
                 ?.mapNotNull { n -> Module.entries.firstOrNull { it.name == n } }?.toSet()
                 ?.takeIf { it.isNotEmpty() } ?: d.modules
+            // Раньше тренировки включались в «Привычках» (Р44); теперь это модуль (Р73): прежний выбор переносится один раз.
+            val modules = if (p.getBoolean("w_workout", false) && !p.getBoolean("w_workout_migrated", false)) savedModules + Module.Workouts else savedModules
             return AppSettings(
                 onboarded = p.getBoolean("onboarded", false),
                 theme = p.enum("theme", d.theme),
@@ -85,12 +89,15 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
                 units = Units(p.enum("u_weight", WeightUnit.Kg), p.enum("u_height", HeightUnit.Cm), p.enum("u_volume", VolumeUnit.Ml)),
                 modules = modules,
                 moduleOrder = readOrder(p.getString("module_order", null)),
+                tabPins = p.getString("tab_pins", null)?.split(',')?.mapNotNull { n -> Module.entries.firstOrNull { it.name == n } }?.distinct(),
                 wave2 = Wave2Settings(
                     habitsView = p.enum("w_habits_view", HabitsView.Ring),
                     habitsSeeded = p.getBoolean("w_habits_seeded", false),
-                    workoutEnabled = p.getBoolean("w_workout", false),
+                    workoutDays = p.getInt("w_workout_days", HabitMath.WORKOUT_DAYS),
                     workoutCounting = p.enum("w_workout_count", WorkoutCounting.Ladder),
                     workoutTimer = p.enum("w_workout_timer", WorkoutTimerStyle.Ring),
+                    sharedView = p.enum("w_shared_view", SharedView.Intersection),
+                    sharedNick = p.getString("w_shared_nick", "").orEmpty(),
                     sleepBedMin = p.getInt("w_sleep_bed", 23 * 60),
                     sleepWakeMin = p.getInt("w_sleep_wake", 7 * 60),
                     sleepRemind = p.getBoolean("w_sleep_remind", true),
@@ -126,11 +133,16 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
             putString("u_volume", s.units.volume.name)
             putStringSet("modules", s.modules.map { it.name }.toSet())
             putString("module_order", s.moduleOrder.joinToString(",") { it.name })
+            if (s.tabPins != null) putString("tab_pins", s.tabPins.joinToString(",") { it.name }) else remove("tab_pins")
             putString("w_habits_view", s.wave2.habitsView.name)
             putBoolean("w_habits_seeded", s.wave2.habitsSeeded)
-            putBoolean("w_workout", s.wave2.workoutEnabled)
+            putBoolean("w_workout_migrated", true)
+            remove("w_workout")
+            putInt("w_workout_days", s.wave2.workoutDays)
             putString("w_workout_count", s.wave2.workoutCounting.name)
             putString("w_workout_timer", s.wave2.workoutTimer.name)
+            putString("w_shared_view", s.wave2.sharedView.name)
+            putString("w_shared_nick", s.wave2.sharedNick)
             putInt("w_sleep_bed", s.wave2.sleepBedMin)
             putInt("w_sleep_wake", s.wave2.sleepWakeMin)
             putBoolean("w_sleep_remind", s.wave2.sleepRemind)

@@ -15,6 +15,14 @@ import com.projectxo.app.feature.sleep.SleepScreen
 import com.projectxo.app.feature.sleep.SleepActions
 import com.projectxo.app.feature.breathing.BreathingViewModel
 import com.projectxo.app.feature.breathing.BreathingScreen
+import com.projectxo.app.feature.mood.MoodActions
+import com.projectxo.app.feature.shared.SharedActions
+import com.projectxo.app.feature.shared.SharedHabitScreen
+import com.projectxo.app.feature.shared.SharedHabitViewModel
+import com.projectxo.app.feature.shared.TogetherActions
+import com.projectxo.app.feature.shared.TogetherViewModel
+import com.projectxo.app.feature.mood.MoodScreen
+import com.projectxo.app.feature.mood.MoodViewModel
 import com.projectxo.app.core.ui.icons.ModuleUi
 import com.projectxo.app.core.model.HabitFreq
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +55,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.projectxo.app.core.model.BarLayout
 import com.projectxo.app.core.model.Module
 import com.projectxo.app.core.ui.icons.XoIcons
 import androidx.compose.runtime.Composable
@@ -108,6 +117,8 @@ import kotlinx.serialization.Serializable
 @Serializable data object SleepKey : NavKey
 @Serializable data object HabitsKey : NavKey
 @Serializable data object BreathingKey : NavKey
+@Serializable data object MoodKey : NavKey
+@Serializable data class SharedKey(val roomId: String) : NavKey
 @Serializable data object MoreKey : NavKey
 @Serializable data object WorkoutKey : NavKey
 
@@ -121,35 +132,31 @@ data class NavTab(val key: NavKey, @StringRes val label: Int, val icon: ImageVec
 object XoTabs {
     val Today = NavTab(TodayKey, R.string.tab_today, XoIcons.Today)
     val More = NavTab(MoreKey, R.string.tab_more, XoIcons.More)
-    private const val MAX_MODULE_TABS = 4
 
     fun keyOf(m: Module): NavKey = when (m) {
         Module.Water -> WaterKey
         Module.Food -> FoodKey
         Module.Steps -> StepsKey
+        Module.Workouts -> WorkoutKey
         Module.Fasting -> FastingKey
         Module.Sleep -> SleepKey
         Module.Habits -> HabitsKey
         Module.Breathing -> BreathingKey
+        Module.Mood -> MoodKey
     }
 
     fun moduleOf(key: NavKey?): Module? = Module.entries.firstOrNull { keyOf(it) == key }
 
     fun tabOf(m: Module) = NavTab(keyOf(m), ModuleUi.nameRes(m), ModuleUi.icon(m))
 
-    private fun enabled(modules: Set<Module>, order: List<Module>) = order.filter { it in modules }
-
-    fun visible(modules: Set<Module>, order: List<Module>): List<NavTab> {
-        val on = enabled(modules, order)
-        return if (on.size <= MAX_MODULE_TABS) listOf(Today) + on.map(::tabOf)
-        else listOf(Today) + on.take(MAX_MODULE_TABS - 1).map(::tabOf) + More
+    fun visible(modules: Set<Module>, order: List<Module>, pins: List<Module>?): List<NavTab> {
+        val r = BarLayout.resolve(modules, order, pins)
+        return listOf(Today) + r.bar.map(::tabOf) + if (r.hasMore) listOf(More) else emptyList()
     }
 
     /** Модули, которые не поместились во вкладки и открываются из «Ещё». */
-    fun overflow(modules: Set<Module>, order: List<Module>): List<Module> {
-        val on = enabled(modules, order)
-        return if (on.size <= MAX_MODULE_TABS) emptyList() else on.drop(MAX_MODULE_TABS - 1)
-    }
+    fun overflow(modules: Set<Module>, order: List<Module>, pins: List<Module>?): List<Module> =
+        BarLayout.resolve(modules, order, pins).overflow
 }
 
 @Composable
@@ -159,6 +166,7 @@ fun XoNavHost(
     todayVm: TodayViewModel,
     modules: Set<Module>,
     order: List<Module>,
+    pins: List<Module>?,
     /** Текущий день: ключ моделей экранов, чтобы после полуночи они считали новый день. */
     date: LocalDate,
     modifier: Modifier = Modifier,
@@ -251,6 +259,25 @@ fun XoNavHost(
                     val st by vm.state.collectAsStateWithLifecycle()
                     BreathingScreen(st, vm::setRhythm, vm::setMinutes, vm::start, vm::stop, vm::complete)
                 }
+                entry<SharedKey> { key ->
+                    val vm: SharedHabitViewModel = viewModel(
+                        key = "shared-${key.roomId}-$date",
+                        factory = viewModelFactory { initializer { SharedHabitViewModel(key.roomId, container.shared, container.habits, container.settings, container.clock, container.appScope) } },
+                    )
+                    val st by vm.state.collectAsStateWithLifecycle()
+                    SharedHabitScreen(
+                        st,
+                        SharedActions(onBack = ::pop, onToggle = vm::toggleToday, onView = vm::setView, onRefresh = vm::refresh, onNewCode = vm::newCode, onLeave = vm::leave),
+                    )
+                }
+                entry<MoodKey> {
+                    val vm: MoodViewModel = viewModel(
+                        key = "mood-$date",
+                        factory = viewModelFactory { initializer { MoodViewModel(container.mood, container.clock, container.appScope) } },
+                    )
+                    val st by vm.state.collectAsStateWithLifecycle()
+                    MoodScreen(st, MoodActions(vm::setMood, vm::setEnergy, vm::toggleTag, vm::save, vm::delete, vm::undoDelete))
+                }
                 entry<SleepKey> {
                     val context = LocalContext.current
                     val vm: SleepViewModel = viewModel(
@@ -305,26 +332,34 @@ fun XoNavHost(
                             HabitSeed(seedNames[3], HabitFreq.PerWeek(3), 19 * 60 + 30),
                         )
                     }
-                    val workoutName = stringResource(R.string.habits_workout_name)
                     val vm: HabitsViewModel = viewModel(
                         key = "habits-$date",
-                        factory = viewModelFactory { initializer { HabitsViewModel(container.habits, container.settings, container.clock, container.appScope, seeds, workoutName) } },
+                        factory = viewModelFactory { initializer { HabitsViewModel(container.habits, container.settings, container.clock, container.appScope, seeds, container.shared) } },
                     )
                     val st by vm.state.collectAsStateWithLifecycle()
+                    val togetherVm: TogetherViewModel = viewModel(
+                        key = "together-$date",
+                        factory = viewModelFactory { initializer { TogetherViewModel(container.shared, container.habits, container.settings, container.clock) } },
+                    )
+                    val together by togetherVm.state.collectAsStateWithLifecycle()
                     HabitsScreen(
                         st,
-                        HabitsActions(
+                        together = together,
+                        togetherActions = TogetherActions(
+                            onOpen = { id -> backStack.add(SharedKey(id)) },
+                            onCreate = togetherVm::create, onJoin = togetherVm::join, onShowInvite = togetherVm::showInvite,
+                            onDismissInvite = togetherVm::dismissInvite, onClearError = togetherVm::clearError, onOpened = togetherVm::opened,
+                        ),
+                        actions = HabitsActions(
                             onToggle = vm::toggle, onCount = vm::count, onSave = vm::save, onView = vm::setView,
                             onEditMode = vm::setEditMode, onDelete = vm::delete, onUndo = vm::undoDelete,
-                            onWorkoutEnabled = { vm.setWorkoutEnabled(it, workoutName) },
-                            onOpenWorkout = { backStack.add(WorkoutKey) }, onCounting = vm::setCounting, onTimer = vm::setTimer,
                         ),
                     )
                 }
                 entry<WorkoutKey> {
                     val vm: WorkoutViewModel = viewModel(
                         key = "workout-$date",
-                        factory = viewModelFactory { initializer { WorkoutViewModel(container.workouts, container.habits, container.settings, container.clock, container.appScope) } },
+                        factory = viewModelFactory { initializer { WorkoutViewModel(container.workouts, container.settings, container.clock, container.appScope) } },
                     )
                     val st by vm.state.collectAsStateWithLifecycle()
                     WorkoutScreen(
@@ -332,13 +367,14 @@ fun XoNavHost(
                         WorkoutActions(
                             onOpen = vm::open, onCheck = vm::setCheck, onConfirmLevel = vm::confirmLevel, onTap = vm::tap, onAdjust = vm::adjust,
                             onFinishSet = { vm.finishSet() }, onAddRest = vm::addRest, onEndRest = vm::endRest, onAbort = vm::abort, onRate = vm::rate,
-                            onBack = ::pop, onUntap = vm::untap, onStartHold = vm::startHold, onStopHold = vm::stopHold,
+                            onBack = vm::backToOverview, onUntap = vm::untap, onStartHold = vm::startHold, onStopHold = vm::stopHold,
+                            onCounting = vm::setCounting, onTimer = vm::setTimer, onDays = vm::setDays,
                         ),
                     )
                 }
                 entry<MoreKey> {
                     MoreScreen(
-                        modules = XoTabs.overflow(modules, order),
+                        modules = XoTabs.overflow(modules, order, pins),
                         onOpen = { m -> backStack.add(XoTabs.keyOf(m)) },
                         onSettings = { backStack.add(SettingsKey) },
                     )
@@ -372,7 +408,7 @@ fun XoNavHost(
             },
         )
         // Один включённый модуль — панели нет (docs/PRODUCT.md): «Сегодня» и экран модуля.
-        val tabs = XoTabs.visible(modules, order)
+        val tabs = XoTabs.visible(modules, order, pins)
         val current = backStack.lastOrNull() ?: TodayKey
         val onBarScreen = current == TodayKey || current == MoreKey || XoTabs.moduleOf(current) != null
         // Модуль из «Ещё» не стоит во вкладках: подсвечиваем «Ещё».
@@ -427,6 +463,7 @@ private fun XoBottomBar(tabs: List<NavTab>, selected: NavKey, onSelect: (NavKey)
                             style = if (isOn) type.tabActive else type.tab,
                             color = if (isOn) colors.ink else colors.muted,
                             maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                         )
                     }
                 }

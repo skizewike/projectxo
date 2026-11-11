@@ -3,13 +3,11 @@ package com.projectxo.app.feature.workout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectxo.app.core.data.AppClock
-import com.projectxo.app.core.data.HabitRepository
 import com.projectxo.app.core.data.SettingsRepository
 import com.projectxo.app.core.data.WorkoutProgram
 import com.projectxo.app.core.data.WorkoutRepository
 import com.projectxo.app.core.data.WorkoutSessionRecord
 import com.projectxo.app.core.model.Exercise
-import com.projectxo.app.core.model.HabitKind
 import com.projectxo.app.core.model.HabitMath
 import com.projectxo.app.core.model.WorkoutCounting
 import com.projectxo.app.core.model.WorkoutMath
@@ -57,38 +55,44 @@ data class WorkoutUiState(
     val counting: WorkoutCounting = WorkoutCounting.Ladder,
     val today: java.time.LocalDate? = null,
     val timer: com.projectxo.app.core.model.WorkoutTimerStyle = com.projectxo.app.core.model.WorkoutTimerStyle.Ring,
+    /** Дни плана тренировок: маска пн = 1 … вс = 64. */
+    val days: Int = HabitMath.WORKOUT_DAYS,
 ) {
     /** Тренировок, записанных сегодня. */
     val doneToday: Int get() = sessions.count { it.date == today }
     fun level(e: Exercise): Int? = programs[e]?.level
     fun sessionsOf(e: Exercise): List<WorkoutSessionRecord> = sessions.filter { it.exercise == e.id }
 
-    /** Упражнение, которое делали давнее всех (или ещё не делали): подсказка на обзоре. */
-    val suggested: Exercise? get() = Exercise.entries.minByOrNull { e -> sessionsOf(e).maxOfOrNull { it.timestampMs } ?: 0L }
+    /**
+     * Упражнение, которое делали давнее всех (или ещё не делали): подсказка на обзоре.
+     * Выбирается из базовой четвёрки и тех упражнений, которые уже есть в программе, чтобы новичку не предлагали берпи.
+     */
+    val suggested: Exercise?
+        get() = Exercise.entries.filter { it in Exercise.STARTER || programs.containsKey(it) || sessionsOf(it).isNotEmpty() }
+            .minByOrNull { e -> sessionsOf(e).maxOfOrNull { it.timestampMs } ?: 0L }
 }
 
 /**
- * Домашние тренировки (Р44, Р47, docs/SPORT.md): проверка уровня, 5 подходов с отдыхом, «Как было?» и рост нагрузки.
+ * Домашние тренировки, отдельный модуль (Р73, Р47, docs/SPORT.md): проверка уровня, 5 подходов с отдыхом, «Как было?» и рост нагрузки.
  * Пропуск тренировки ничего не снижает: план ждёт.
  */
 class WorkoutViewModel(
     private val repo: WorkoutRepository,
-    private val habits: HabitRepository,
-    settings: SettingsRepository,
+    private val settings: SettingsRepository,
     private val clock: AppClock,
     private val appScope: CoroutineScope,
 ) : ViewModel() {
     private val step = MutableStateFlow<WorkoutStep>(WorkoutStep.Overview)
 
     val state: StateFlow<WorkoutUiState> = combine(step, repo.programs(), repo.sessions(HISTORY), settings.settings) { st, p, s, set ->
-        WorkoutUiState(st, p.mapNotNull { pr -> Exercise.fromId(pr.exercise)?.let { it to pr } }.toMap(), s, set.wave2.workoutCounting, clock.today(), set.wave2.workoutTimer)
+        WorkoutUiState(st, p.mapNotNull { pr -> Exercise.fromId(pr.exercise)?.let { it to pr } }.toMap(), s, set.wave2.workoutCounting, clock.today(), set.wave2.workoutTimer, set.wave2.workoutDays)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WorkoutUiState())
 
     fun open(e: Exercise) {
         val s = state.value
         val level = s.level(e)
         val retest = WorkoutMath.needsRetest(s.sessionsOf(e).size)
-        if (level == null || retest) step.value = WorkoutStep.CheckLevel(e, level ?: DEFAULT_CHECK.getValue(e), retest = level != null) else begin(e, level)
+        if (level == null || retest) step.value = WorkoutStep.CheckLevel(e, level ?: e.defaultCheck, retest = level != null) else begin(e, level)
     }
 
     fun setCheck(delta: Int) = step.update {
@@ -167,7 +171,7 @@ class WorkoutViewModel(
         step.value = WorkoutStep.Overview
     }
 
-    /** «Как было?» — записать тренировку, обновить уровень и отметить привычку «Тренировка» за сегодня. */
+    /** «Как было?» — записать тренировку и обновить уровень. */
     fun rate(rating: Int) {
         val st = step.value as? WorkoutStep.Rate ?: return
         val previousMissed = state.value.sessionsOf(st.exercise).firstOrNull()?.let { !WorkoutMath.allDone(it.plan, it.actual) } ?: false
@@ -177,9 +181,18 @@ class WorkoutViewModel(
         appScope.launch {
             repo.addSession(record)
             repo.saveProgram(WorkoutProgram(st.exercise.id, next, state.value.programs[st.exercise]?.daysMask ?: HabitMath.WORKOUT_DAYS))
-            habits.habits().first().firstOrNull { it.kind == HabitKind.Workout }?.let { habits.setCheck(it.id, today, it.target) }
         }
         step.value = WorkoutStep.Done(st.exercise, st.level, next, st.allDone, st.actual.sum())
+    }
+
+    fun setCounting(c: WorkoutCounting) = settings.update { it.copy(wave2 = it.wave2.copy(workoutCounting = c)) }
+
+    fun setTimer(t: com.projectxo.app.core.model.WorkoutTimerStyle) = settings.update { it.copy(wave2 = it.wave2.copy(workoutTimer = t)) }
+
+    /** Включить или выключить день плана тренировок ([bit] из [HabitMath.dayBit]). Хотя бы один день остаётся. */
+    fun setDays(mask: Int) {
+        if (mask and HabitMath.ALL_DAYS == 0) return
+        settings.update { it.copy(wave2 = it.wave2.copy(workoutDays = mask and HabitMath.ALL_DAYS)) }
     }
 
     fun backToOverview() {
@@ -190,6 +203,5 @@ class WorkoutViewModel(
         const val HISTORY = 60
         const val EXTRA_REST_SEC = 30
         const val PREP_SEC = 3
-        val DEFAULT_CHECK = mapOf(Exercise.Pushups to 10, Exercise.Squats to 20, Exercise.Plank to 30, Exercise.Crunches to 15)
     }
 }

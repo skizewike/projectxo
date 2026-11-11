@@ -111,21 +111,21 @@
     <!-- First run: privacy -->
     <string name="onb_privacy_title">Your data stays with you</string>
     <string name="onb_privacy_lead">XO is a diary of water, food and movement. Here is how it treats what you enter.</string>
-    <string name="onb_privacy_1_t">On the phone only</string>
-    <string name="onb_privacy_1_s">No servers and no accounts. The app does not even need the internet.</string>
+    <string name="onb_privacy_1_t">Stored on the phone</string>
+    <string name="onb_privacy_1_s">Entries stay in the phone\'s memory, no accounts. Only what you send yourself goes online: a photo for “Food by photo” or the check-ins of a habit shared with a friend.</string>
     <string name="onb_privacy_2_t">No ads, no tracking</string>
-    <string name="onb_privacy_2_s">No analytics, no ad identifiers, nothing shared with third parties.</string>
+    <string name="onb_privacy_2_s">No analytics, no ad identifiers, no hidden data sharing.</string>
     <string name="onb_privacy_3_t">Delete any time</string>
     <string name="onb_privacy_3_s">“Delete all data” in settings erases everything at once.</string>
     <string name="onb_privacy_full">Full privacy policy</string>
     <string name="onb_privacy_accept">Accept and continue</string>
     <string name="policy_title">Privacy policy</string>
     <string name="policy_h1">In short</string>
-    <string name="policy_p1">Everything you enter in XO is stored only on your phone. We have no servers, accounts, ads or analytics. We cannot see your data and we share it with no one. The only exception: a photo of a dish is sent for recognition when you use Food from photo.</string>
+    <string name="policy_p1">Everything you enter in XO is stored only on your phone. We have no servers, accounts, ads or analytics. We cannot see your data and we share it with no one. Two exceptions, both only if you turn them on yourself: a photo of a dish for Food from photo, and the check-ins of a habit you share with a friend.</string>
     <string name="policy_h2">What data</string>
     <string name="policy_p2">The profile you provide yourself: sex (optional), age, height, weight, workouts, goal. Water, food and step entries. Photos of dishes if you logged food from a photo. Settings.</string>
     <string name="policy_h3">Where it is stored</string>
-    <string name="policy_p3">In the app’s private folder on the phone. Other apps cannot access it. The internet is used only for Food from photo: the photo goes to Google Gemini through our server, which does not store it. After you save the entry the photo stays only on the phone and is deleted with the entry.</string>
+    <string name="policy_p3">In the app’s private folder on the phone. Other apps cannot access it. The internet is used only for Food from photo and Habits together. Food from photo: the photo goes to Google Gemini through our server, which does not store it; after you save the entry the photo stays only on the phone and is deleted with the entry. Habits together: the name of the shared habit, your nickname and the days you checked it go to our server; only your friend with your code can see them. You can leave any time and your check-ins are erased from the server. Other data (weight, food, steps) never goes there.</string>
     <string name="policy_h4">Permissions</string>
     <string name="policy_p4">Physical activity is needed to count steps and can be declined. Notifications are for reminders, if you turned them on.</string>
     <string name="policy_h5">Deletion</string>
@@ -144,7 +144,7 @@
     <string name="text_size_small">Small</string>
     <string name="text_size_normal">Normal</string>
     <string name="text_size_large">Large</string>
-    <string name="text_size_huge">Very large</string>
+    <string name="text_size_huge">Huge</string>
     <string name="onb_theme">Theme</string>
     <string name="theme_warm">Warm</string>
     <string name="theme_acid">Acid</string>

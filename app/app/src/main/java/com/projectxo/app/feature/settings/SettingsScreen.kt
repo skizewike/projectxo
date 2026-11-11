@@ -36,6 +36,10 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.projectxo.app.core.ui.components.XoTextButton
+import androidx.compose.ui.semantics.selected
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -527,10 +531,86 @@ private fun PlanPage(vm: SettingsViewModel, s: AppSettings) {
 
 // ——— модули, вид, единицы ———
 
+/** Нижняя панель (Р76): «Сегодня» и «Ещё» стоят на месте, три места в середине выбирает пользователь. */
+@Composable
+private fun BarSection(vm: SettingsViewModel, s: AppSettings) {
+    val colors = XoTheme.colors
+    val type = XoTheme.type
+    val layout = com.projectxo.app.core.model.BarLayout.resolve(s.modules, s.moduleOrder, s.tabPins)
+    var picking by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableIntStateOf(-1) }
+    Text(stringResource(R.string.bar_title), style = type.caption, color = colors.muted, modifier = Modifier.semantics { heading() })
+    Spacer(Modifier.height(XoSpacing.s2))
+    Row(
+        Modifier.fillMaxWidth().border(XoSize.hairline, colors.line, RoundedCornerShape(16.dp)).padding(vertical = XoSpacing.s2),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        BarCell(XoIcons.Today, stringResource(R.string.tab_today), locked = true, onClick = null, modifier = Modifier.weight(1f))
+        layout.bar.forEachIndexed { i, m ->
+            BarCell(ModuleUi.icon(m), stringResource(ModuleUi.nameRes(m)), locked = false, onClick = { picking = i }, modifier = Modifier.weight(1f))
+        }
+        if (layout.hasMore) BarCell(XoIcons.More, stringResource(R.string.tab_more), locked = true, onClick = null, modifier = Modifier.weight(1f))
+    }
+    Spacer(Modifier.height(XoSpacing.s2))
+    Text(
+        stringResource(if (layout.hasMore) R.string.bar_hint else R.string.bar_hint_all),
+        style = type.caption, color = colors.muted,
+    )
+    if (s.tabPins != null) XoTextButton(stringResource(R.string.bar_reset), vm::resetTabPins)
+
+    if (picking >= 0 && picking < layout.bar.size) {
+        val slot = picking
+        val current = layout.bar[slot]
+        AlertDialog(
+            onDismissRequest = { picking = -1 },
+            containerColor = colors.background,
+            title = { Text(stringResource(R.string.bar_pick_title, (slot + 1).toString()), style = type.title, color = colors.ink) },
+            text = {
+                Column(Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
+                    s.moduleOrder.filter { it in s.modules }.forEach { m ->
+                        Row(
+                            Modifier.fillMaxWidth().heightIn(min = XoSize.touchMin).clickable(role = Role.RadioButton) { vm.setTabSlot(slot, m); picking = -1 }
+                                .semantics { selected = m == current },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(ModuleUi.icon(m), null, tint = colors.ink, modifier = Modifier.size(22.dp))
+                            Spacer(Modifier.width(XoSpacing.s3))
+                            Text(stringResource(ModuleUi.nameRes(m)), style = if (m == current) type.bodyStrong else type.body, color = colors.ink, modifier = Modifier.weight(1f))
+                            if (m == current) Icon(XoIcons.Check, null, tint = colors.ink, modifier = Modifier.size(18.dp))
+                        }
+                    }
+                }
+            },
+            confirmButton = { TextButton(onClick = { picking = -1 }) { Text(stringResource(R.string.cancel), style = type.bodyStrong) } },
+        )
+    }
+}
+
+@Composable
+private fun BarCell(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, locked: Boolean, onClick: (() -> Unit)?, modifier: Modifier = Modifier) {
+    val colors = XoTheme.colors
+    val type = XoTheme.type
+    val tint = if (locked) colors.muted else colors.ink
+    Column(
+        modifier
+            .heightIn(min = XoSize.touchMin)
+            .then(if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
+            .padding(vertical = XoSpacing.s1),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(icon, null, tint = tint, modifier = Modifier.size(22.dp))
+        Spacer(Modifier.height(XoSpacing.textGap))
+        Text(label, style = type.scale, color = tint, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+    }
+}
+
 @Composable
 private fun ModulesPage(vm: SettingsViewModel, s: AppSettings) {
     val colors = XoTheme.colors
     PageTitle(R.string.modules_title, R.string.modules_lead)
+    BarSection(vm, s)
+    Spacer(Modifier.height(XoSpacing.s5))
+    Text(stringResource(R.string.modules_list_title), style = XoTheme.type.caption, color = colors.muted, modifier = Modifier.semantics { heading() })
+    Spacer(Modifier.height(XoSpacing.s2))
     s.moduleOrder.forEachIndexed { i, m ->
         XoHairline()
         Row(verticalAlignment = Alignment.CenterVertically) {

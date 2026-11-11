@@ -34,11 +34,14 @@ android {
         applicationId = "com.projectxo.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 5
+        versionName = "0.5.0"
         // Адрес общего посредника «Еды по фото» (server/food-proxy, Р70). Пусто: работает только свой ключ пользователя.
         val proxy = (project.findProperty("foodAiProxyUrl") as String?).orEmpty().trim()
         buildConfigField("String", "FOOD_AI_PROXY_URL", "\"$proxy\"")
+        // Адрес сервера общих привычек (server/habit-rooms, Р79). Пусто: раздел «Вместе» скрыт.
+        val rooms = (project.findProperty("sharedRoomsUrl") as String?).orEmpty().trim()
+        buildConfigField("String", "SHARED_ROOMS_URL", "\"$rooms\"")
     }
 
     signingConfigs {

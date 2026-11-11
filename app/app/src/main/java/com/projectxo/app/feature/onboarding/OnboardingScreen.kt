@@ -116,7 +116,7 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
 
     Box(Modifier.fillMaxSize().background(c.background)) {
         Column(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-            TopBar(s.step, habits = Module.Habits in s.modules, onBack = vm::back)
+            TopBar(s.step, onBack = vm::back)
             AnimatedContent(
                 targetState = s.step,
                 transitionSpec = {
@@ -143,7 +143,6 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
                     OnbStep.About -> AboutStep(s, vm)
                     OnbStep.Activity -> ActivityStep(s.activity, vm::setActivity, vm::next)
                     OnbStep.Goal -> GoalStep(s, vm::setGoal, vm::next)
-                    OnbStep.Workout -> WorkoutStep(vm::answerWorkout)
                     OnbStep.Reminders -> RemindersStep(s, vm::setReminders, vm::next)
                     OnbStep.Calc -> CalcStep(s, onDone = vm::next)
                     OnbStep.Plan -> PlanStep(s, onAccept = vm::finish)
@@ -156,9 +155,9 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
 
 /** Полоса шагов сверху и «Назад». На экране расчёта и плана полосы нет. */
 @Composable
-private fun TopBar(step: OnbStep, habits: Boolean, onBack: () -> Unit) {
+private fun TopBar(step: OnbStep, onBack: () -> Unit) {
     val c = XoTheme.colors
-    val steps = OnbStep.entries.filter { it != OnbStep.Calc && it != OnbStep.Plan && (habits || it != OnbStep.Workout) }
+    val steps = OnbStep.entries.filter { it != OnbStep.Calc && it != OnbStep.Plan }
     val pos = steps.indexOf(step)
     Column(Modifier.padding(horizontal = XoSpacing.screenGutter).padding(top = XoSpacing.s3)) {
         if (pos >= 0) {
@@ -482,34 +481,6 @@ private fun GoalStep(s: OnbState, onSelect: (WeightGoal) -> Unit, onNext: () -> 
 }
 
 private fun hm(min: Int) = "%02d:%02d".format(min / 60, min % 60)
-
-@Composable
-private fun WorkoutStep(onAnswer: (Boolean) -> Unit) {
-    val c = XoTheme.colors
-    StepScaffold(R.string.onb_workout_title, stringResource(R.string.onb_workout_lead), footer = {
-        XoPrimaryButton(stringResource(R.string.onb_workout_yes), { onAnswer(true) })
-        XoTextButton(stringResource(R.string.onb_workout_no), { onAnswer(false) })
-    }) {
-        XoHairline()
-        listOf(
-            R.string.ex_pushups to R.string.ex_pushups_sub,
-            R.string.ex_squats to R.string.ex_squats_sub,
-            R.string.ex_plank to R.string.ex_plank_sub,
-            R.string.ex_crunches to R.string.ex_crunches_sub,
-        ).forEach { (name, sub) ->
-            Column(Modifier.fillMaxWidth().padding(vertical = XoSpacing.s3)) {
-                Text(stringResource(name), style = XoTheme.type.bodyStrong, color = c.ink)
-                Spacer(Modifier.height(XoSpacing.textGap))
-                Text(stringResource(sub), style = XoTheme.type.caption, color = c.muted)
-            }
-            XoHairline()
-        }
-        Spacer(Modifier.height(XoSpacing.s3))
-        Text(stringResource(R.string.onb_workout_days), style = XoTheme.type.caption, color = c.muted)
-        Spacer(Modifier.height(XoSpacing.s2))
-        Text(stringResource(R.string.workout_safety), style = XoTheme.type.caption, color = c.muted)
-    }
-}
 
 @Composable
 private fun RemindersStep(s: OnbState, onChange: (com.projectxo.app.core.model.Reminders) -> Unit, onNext: () -> Unit) {

@@ -2,7 +2,7 @@ package com.projectxo.app.core.model
 
 /** Модули волны 1. Различаются формой метки и подписью, не цветом. */
 enum class Module {
-    Water, Food, Steps, Fasting, Sleep, Habits, Breathing,
+    Water, Food, Steps, Workouts, Fasting, Sleep, Habits, Breathing, Mood,
     ;
 
     companion object {

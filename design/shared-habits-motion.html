@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Привычки вместе: ещё 3 варианта с анимацией</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;--ease:cubic-bezier(.05,.7,.1,1);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:inherit}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ctrls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.ghost.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);margin:0}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:40px;padding:8px 28px 48px;flex-wrap:wrap}
+.col{width:380px}
+.col h2{font-size:16px;font-weight:600;margin:0 0 2px}
+.col p{margin:0 0 14px;color:var(--muted);font-size:13px;min-height:76px}
+.device{width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.view{position:absolute;inset:0;padding:58px 24px 36px;display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+.back{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:13px;height:28px;margin-bottom:6px}
+h1{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15;margin:0}
+.sub{font-size:13px;color:var(--muted);margin-top:6px}
+.cap{font-size:12px;color:var(--muted);margin:20px 0 6px}
+.hero{margin-top:12px}
+.btn{height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:15px;width:100%;text-align:center;flex:0 0 52px;transition:background .3s var(--ease),color .3s var(--ease),box-shadow .3s var(--ease)}
+.btn.done{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn:active{transform:scale(.98)}
+.btn2{height:40px;border-radius:999px;font-size:13px;color:var(--muted);width:100%;text-align:center}
+.foot{margin-top:auto;padding-top:14px;display:flex;flex-direction:column;gap:2px}
+.big{font-size:52px;font-weight:500;letter-spacing:-.04em;line-height:1;display:flex;align-items:flex-end}
+.big small{font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0;margin:0 0 6px 10px}
+.odo{position:relative;display:inline-block;overflow:hidden;line-height:1.05;vertical-align:bottom}
+.odo .old{position:absolute;left:0;top:0}
+.ppl{margin-top:14px}
+.row{display:flex;align-items:center;gap:12px;min-height:46px;border-top:1px solid var(--line)}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .t{flex:1}.row .t b{display:block;font-weight:500;font-size:14px}.row .t span{font-size:12.5px;color:var(--muted)}
+.av{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500}
+.av.me{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.legend{display:flex;gap:16px;margin-top:6px;font-size:12px;color:var(--muted);align-items:center;flex-wrap:wrap}
+.legend i{display:inline-block;width:16px;border-radius:2px;margin-right:6px;vertical-align:middle}
+/* крестик отметки: два штриха (Р37) */
+svg.xm{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round}
+svg.xm.f{stroke:var(--muted)}
+/* 04 дорога */
+.p04{width:312px;height:150px;display:block;overflow:visible}
+.p04 path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.p04 .guide{stroke:var(--line);stroke-width:2;stroke-dasharray:1 6}
+.p04 .road{stroke:var(--ink);stroke-width:5}
+.p04 .dm,.p04 .df{fill:var(--bg);stroke:var(--line);stroke-width:1.5;transform-box:fill-box;transform-origin:center;transition:fill .3s var(--ease),stroke .3s var(--ease)}
+.p04 .dm.on{fill:var(--ink);stroke:var(--ink)}
+.p04 .df.on{fill:var(--muted);stroke:var(--muted)}
+.p04 text{font:10.5px var(--font);fill:var(--muted)}
+.p04 text.now{fill:var(--ink);font-weight:600}
+.p04 .now{fill:none;stroke:var(--muted);stroke-width:1.2;transition:stroke .4s var(--ease)}
+.p04 rect.now{animation:waitring 2.6s ease-in-out infinite}
+.p04 rect.now.on{stroke:var(--ink);animation:none;opacity:1}
+@keyframes waitring{50%{opacity:.25}}
+body.calm .p04 rect.now{animation:none}
+body.calm .p04 .dm,body.calm .p04 .df,body.calm .p04 .now{transition:none}
+/* 05 пересечение */
+.v05{position:relative;width:312px;height:196px;margin:0 auto}
+.v05 svg{position:absolute;inset:0;overflow:visible}
+.v05 .lens{fill:var(--ink);opacity:.08;transition:opacity .7s var(--ease)}
+.v05 .tr{fill:none;stroke:var(--track);stroke-width:7;stroke-linecap:round}
+.v05 .fl{fill:none;stroke-width:7;stroke-linecap:round}
+.v05 .lbl{position:absolute;transform:translate(-50%,-50%);text-align:center;line-height:1.1}
+.v05 .lbl small{display:block;font-size:10.5px;color:var(--muted);margin-bottom:3px;white-space:nowrap}
+.v05 .lbl .n{font-size:24px;font-weight:500;letter-spacing:-.02em}
+.v05 .lbl .n i{font-style:normal;color:var(--muted);font-size:14px;font-weight:400}
+.v05 .lbl.c .n{font-size:32px}
+/* 06 нить */
+.h06{display:flex;align-items:center;justify-content:space-between;margin:2px 0 10px}
+.nudge{height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;position:relative;overflow:visible;transition:opacity .3s var(--ease),border-color .3s var(--ease)}
+.nudge[disabled]{opacity:.45;cursor:default}
+.cols06{display:grid;grid-template-columns:92px 36px 1fr 36px;column-gap:0;font-size:11.5px;color:var(--muted);padding-bottom:6px}
+.cols06 span:nth-child(2){text-align:center}.cols06 span:nth-child(4){text-align:center}
+.r06{display:grid;grid-template-columns:92px 36px 1fr 36px;align-items:center;height:41px;border-top:1px solid var(--line);position:relative}
+.r06:last-child{border-bottom:1px solid var(--line)}
+.r06 .d{font-size:13px;color:var(--muted)}
+.r06.today .d{color:var(--ink);font-weight:500}
+.r06 .cell{width:32px;height:32px;border-radius:10px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:relative;transition:box-shadow .4s var(--ease),border-color .4s var(--ease)}
+.r06.both .cell{border-color:var(--ink)}
+.r06 .thr{position:relative;height:100%}
+.r06 .thr i{position:absolute;top:50%;height:0;border-top:2px solid var(--ink);margin-top:-1px;transform-origin:left center;transform:scaleX(0);transition:transform .6s var(--ease)}
+.r06 .thr i.full{left:0;right:0}
+.r06 .thr i.l,.r06 .thr i.r{border-top:2px dotted var(--muted);opacity:.7;width:36%}
+.r06 .thr i.l{left:6px}
+.r06 .thr i.r{right:6px;transform-origin:right center}
+.r06 .thr i.on{transform:scaleX(1)}
+.r06.hl::after{content:"";position:absolute;inset:3px -8px;border-radius:14px;box-shadow:inset 0 0 0 1px var(--line);pointer-events:none}
+.dotfly{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--ink);top:50%;margin:-4px 0 0 0;pointer-events:none}
+body.calm .r06 .thr i,body.calm .r06 .cell,body.calm .p04 .mk{transition:none}
+.notes{max-width:1240px;margin:0 auto;padding:0 28px 48px;color:var(--muted);font-size:13px;line-height:1.6}
+.notes b{color:var(--ink);font-weight:500}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><b>XO</b><span>Привычки вместе: ещё 3 варианта, анимация (Р20)</span></div>
+  <div class="ctrls">
+    <button class="ghost" id="friend">Друг отмечает сегодня</button>
+    <button class="ghost" id="replay">Сначала</button>
+    <label class="chk"><input type="checkbox" id="calm"> Меньше анимаций</label>
+    <button class="ghost" id="theme">Тема: по телефону</button>
+  </div>
+</div>
+<div class="layout" id="layout"></div>
+<div class="notes">
+  <p><b>Как смотреть.</b> Нажмите «Отметить сегодня» в телефоне: ваш крестик пропишется двумя штрихами. Нажмите «Друг отмечает сегодня» наверху: отметка друга придёт к вам. Когда отметили оба, происходит «общий момент», у каждого варианта свой. «Сначала» проигрывает появление экрана. «Меньше анимаций» убирает движение: всё меняется сразу, как в приложении при включённой настройке.</p>
+  <p><b>Анимация одна на все варианты.</b> Крестик — два штриха по 200 мс с паузой 150 мс (как отметка в «Привычках», Р37). Числа перекатываются вверх за 380 мс. Появление — по очереди с шагом 34–50 мс. Кривая «emphasizedDecelerate», как во всём приложении. Ни свечения, ни цветных всплесков: только линия, толщина и одно кольцо-волна в момент «вместе».</p>
+  <p><b>Варианты 04–06 продолжают 01–03</b> (<b>design/shared-habits-variants.html</b>). Описание, сервер и приватность — <b>docs/SHARED-HABITS.md</b>.</p>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const EASE='cubic-bezier(.05,.7,.1,1)',EASE_IN='cubic-bezier(.3,0,.8,.15)';
+const N=14,T=13;
+const BASE={me:[1,1,0,1,1,1,0,1,1,1,1,1,1,0],fr:[1,0,1,1,1,1,0,1,1,1,1,0,1,0]};
+const calmBox=document.getElementById('calm');
+const calm=()=>calmBox.checked||matchMedia('(prefers-reduced-motion: reduce)').matches;
+const D=ms=>calm()?0:ms;
+const $=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in (a||{}))e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const H=h=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild};
+const WDI=['П','В','С','Ч','П','С','В'],WDN=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const wdOf=i=>(((2-(T-i))%7)+7)%7;           /* сегодня среда */
+const dateOf=i=>11-(T-i);                    /* 11 ноября */
+/* серия «вместе»: оба отметили; сегодняшний день серию не обрывает; один пропуск прощается (как в Р37) */
+function streak(me,fr){let n=0,miss=0;for(let i=me.length-1;i>=0;i--){const b=me[i]&&fr[i];if(b)n++;else if(i===me.length-1)continue;else if(miss<1&&i>0&&me[i-1]&&fr[i-1])miss++;else break}return n}
+const unit=n=>n%10===1&&n%100!==11?'день':(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?'дня':'дней';
+
+/* крестик в два штриха */
+const XL=Math.hypot(9,9);
+function xMark(cls){const s=$('svg',{viewBox:'0 0 16 16',class:'xm '+(cls||'')});const a=$('path',{d:'M3.5 3.5L12.5 12.5'},s),b=$('path',{d:'M12.5 3.5L3.5 12.5'},s);[a,b].forEach(p=>{p.style.strokeDasharray=XL;p.style.strokeDashoffset=XL});return s}
+function setX(s,on,animate){const [a,b]=s.querySelectorAll('path');[a,b].forEach(p=>{p.getAnimations().forEach(x=>x.cancel());p.style.strokeDashoffset=on?0:XL});
+  if(!animate||!D(1))return;
+  if(on){a.animate([{strokeDashoffset:XL},{strokeDashoffset:0}],{duration:D(200),easing:EASE});b.animate([{strokeDashoffset:XL},{strokeDashoffset:0}],{duration:D(200),delay:D(150),easing:EASE,fill:'backwards'})}
+  else{[a,b].forEach(p=>p.animate([{strokeDashoffset:0},{strokeDashoffset:XL}],{duration:D(140),easing:EASE_IN}))}}
+/* число, которое перекатывается */
+function odo(v){const e=H('<span class="odo"><span class="cur"></span></span>');e.firstChild.textContent=v;return e}
+function setOdo(e,v,animate){const cur=e.querySelector('.cur');if(String(v)===cur.textContent)return;const up=+v>+cur.textContent;
+  if(!animate||!D(1)){cur.textContent=v;return}
+  const old=cur.cloneNode(true);old.className='old';e.appendChild(old);cur.textContent=v;
+  cur.animate([{transform:`translateY(${up?'70%':'-70%'})`,opacity:0},{transform:'none',opacity:1}],{duration:D(380),easing:EASE});
+  old.animate([{transform:'none',opacity:1},{transform:`translateY(${up?'-70%':'70%'})`,opacity:0}],{duration:D(260),easing:EASE_IN,fill:'forwards'}).onfinish=()=>old.remove()}
+/* кольцо-волна: единственный «всплеск» */
+function ripple(svg,x,y,r0,r1,ms,color){if(!D(1))return;const c=$('circle',{cx:x,cy:y,r:r0,fill:'none','stroke-width':1.5},svg);c.style.stroke=color||'var(--ink)';c.animate([{r:r0+'px',opacity:.55},{r:r1+'px',opacity:0}],{duration:D(ms||760),easing:EASE}).onfinish=()=>c.remove()}
+function drawLine(p,len,on,animate,delay){p.getAnimations().forEach(a=>a.cancel());const to=on?0:len;p.style.strokeDashoffset=to;if(animate&&D(1))p.animate([{strokeDashoffset:on?len:0},{strokeDashoffset:to}],{duration:D(on?420:180),delay:D(delay||0),easing:on?EASE:EASE_IN,fill:'backwards'})}
+
+/* ---------- 04 «Дорога вдвоём» ---------- */
+function v04(hero,api){
+  const st=api.st,W=312,Hh=150,m=10,step=(W-2*m)/(N-1),cx=i=>m+step*i,wy=x=>66+16*Math.sin(x/40);
+  const svg=$('svg',{viewBox:`0 0 ${W} ${Hh}`,class:'p04'},hero);
+  const path=(x0,x1)=>{let d='';for(let k=0;k<=8;k++){const x=x0+(x1-x0)*k/8;d+=(k?'L':'M')+x.toFixed(1)+' '+wy(x).toFixed(1)}return d};
+  $('path',{d:path(cx(0),cx(N-1)),class:'guide'},svg);
+  const roads=[];
+  for(let j=0;j<N-1;j++){const r=$('path',{d:path(cx(j),cx(j+1)),class:'road'},svg);const len=r.getTotalLength();r.style.strokeDasharray=len;r.style.strokeDashoffset=len;roads.push({r,len,on:false})}
+  const ring=$('rect',{x:cx(T)-10,y:wy(cx(T))-19,width:20,height:38,rx:10,class:'now'},svg);
+  const dm=[],df=[];
+  for(let i=0;i<N;i++){const y=wy(cx(i));dm.push($('circle',{cx:cx(i),cy:y-8,r:4.6,class:'dm'},svg));df.push($('circle',{cx:cx(i),cy:y+8,r:4.6,class:'df'},svg))}
+  for(let i=0;i<N;i++){const t=$('text',{x:cx(i),y:Hh-8,class:i===T?'now':'','text-anchor':'middle'},svg);t.textContent=WDI[wdOf(i)]}
+  hero.appendChild(H('<div class="legend"><span><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px;margin-right:5px"><circle cx="6" cy="6" r="4.6" fill="var(--ink)"/></svg>Вы</span><span><svg width="12" height="12" viewBox="0 0 12 12" style="vertical-align:-1px;margin-right:5px"><circle cx="6" cy="6" r="4.6" fill="var(--muted)"/></svg>Алекс</span><span><i style="height:5px;background:var(--ink)"></i>Дорога: оба отметили подряд</span></div>'));
+  const both=i=>i>=0&&i<N&&st.me[i]&&st.fr[i];
+  function dot(el,on,animate,delay){
+    el.classList.toggle('on',!!on);
+    el.getAnimations().forEach(x=>x.cancel());
+    if(animate&&D(1)&&on)el.animate([{transform:'scale(.2)'},{transform:'scale(1.35)',offset:.6},{transform:'scale(1)'}],{duration:D(380),delay:D(delay||0),easing:EASE,fill:'backwards'});
+  }
+  function road(j,animate,delay){
+    if(j<0||j>=N-1)return;const o=roads[j],on=!!(both(j)&&both(j+1));
+    if(on===o.on&&delay==null)return;o.on=on;drawLine(o.r,o.len,on,animate,delay);
+  }
+  function now(){const b=!!both(T);ring.classList.toggle('on',b)}
+  return{
+    setDay(who,i,animate){dot((who==='me'?dm:df)[i],st[who][i],animate);road(i-1,animate);road(i,animate);now()},
+    intro(){for(let i=0;i<N;i++){dot(dm[i],st.me[i],true,i*30);dot(df[i],st.fr[i],true,i*30+15)}roads.forEach(o=>o.on=false);for(let j=0;j<N-1;j++)road(j,true,260+j*30);now()},
+    bond(){ripple(svg,cx(T),wy(cx(T)),8,44,820)},
+    arrive(){ripple(svg,cx(T),wy(cx(T))+8,5,22,640,'var(--muted)')},
+  };
+}
+
+/* ---------- 05 «Пересечение» ---------- */
+let uid=0;
+function v05(hero,api){
+  const st=api.st,W=312,Hh=196,R=70,cm={x:114,y:98},cf={x:198,y:98},id='v'+(++uid);
+  const box=H('<div class="v05"></div>');hero.appendChild(box);
+  const svg=$('svg',{viewBox:`0 0 ${W} ${Hh}`,width:W,height:Hh},box);
+  const defs=$('defs',{},svg);
+  const cpF=$('clipPath',{id:id+'f'},defs);$('circle',{cx:cf.x,cy:cf.y,r:R},cpF);
+  const lensG=$('g',{'clip-path':`url(#${id}f)`},svg);
+  const lens=$('circle',{cx:cm.x,cy:cm.y,r:R,class:'lens'},lensG);
+  const C=2*Math.PI*R,gap=11,seg=(C-7*gap)/7;
+  function ring(c,col){
+    const arcs=[];
+    for(let i=0;i<7;i++){
+      const off=-i*(seg+gap);
+      const tr=$('circle',{cx:c.x,cy:c.y,r:R,class:'tr',transform:`rotate(-90 ${c.x} ${c.y})`},svg);
+      tr.style.strokeDasharray=`${seg} ${C}`;tr.style.strokeDashoffset=off;
+      const fl=$('circle',{cx:c.x,cy:c.y,r:R,class:'fl',transform:`rotate(-90 ${c.x} ${c.y})`},svg);
+      fl.style.stroke=col;fl.style.strokeDasharray=`0 ${C}`;fl.style.strokeDashoffset=off;fl.style.opacity=0;
+      arcs.push({fl,on:false});
+    }
+    return arcs;
+  }
+  const arcM=ring(cm,'var(--ink)'),arcF=ring(cf,'var(--muted)');
+  const mkLbl=(x,cls,small)=>{const l=H(`<div class="lbl ${cls}" style="left:${x}px;top:${cm.y}px"><small>${small}</small><div class="n"></div></div>`);box.appendChild(l);return l};
+  const lM=mkLbl(86,'','Вы'),lF=mkLbl(226,'','Алекс'),lC=mkLbl(156,'c','вместе');
+  const oM=odo(0),oF=odo(0),oC=odo(0);
+  lM.querySelector('.n').append(oM,H('<i>/7</i>'));lF.querySelector('.n').append(oF,H('<i>/7</i>'));lC.querySelector('.n').append(oC);
+  const week=a=>a.slice(N-7);
+  function setArc(a,on,animate,delay){
+    if(a.on===on&&delay==null)return;a.on=on;const el=a.fl;el.getAnimations().forEach(x=>x.cancel());
+    if(on){el.style.opacity=1;el.style.strokeDasharray=`${seg} ${C}`;if(animate&&D(1))el.animate([{strokeDasharray:`0.01 ${C}`},{strokeDasharray:`${seg} ${C}`}],{duration:D(520),delay:D(delay||0),easing:EASE,fill:'backwards'})}
+    else{if(animate&&D(1)){const an=el.animate([{strokeDasharray:`${seg} ${C}`},{strokeDasharray:`0.01 ${C}`}],{duration:D(200),easing:EASE_IN});an.onfinish=()=>{if(!a.on)el.style.opacity=0}}else el.style.opacity=0;el.style.strokeDasharray=`0.01 ${C}`}
+  }
+  function counts(animate){
+    const wm=week(st.me),wf=week(st.fr),t=wm.filter((v,i)=>v&&wf[i]).length;
+    setOdo(oM,wm.filter(Boolean).length,animate);setOdo(oF,wf.filter(Boolean).length,animate);setOdo(oC,t,animate);
+    lens.style.opacity=.05+.26*(t/7);
+  }
+  return{
+    setDay(who,i,animate){if(i<N-7)return;const a=(who==='me'?arcM:arcF)[i-(N-7)];setArc(a,!!st[who][i],animate);counts(animate)},
+    intro(){arcM.forEach(a=>a.on=false);arcF.forEach(a=>a.on=false);for(let k=0;k<7;k++){setArc(arcM[k],!!st.me[N-7+k],true,k*50);setArc(arcF[k],!!st.fr[N-7+k],true,k*50+25)}
+      [oM,oF,oC].forEach(o=>o.querySelector('.cur').textContent='0');counts(true)},
+    bond(){lensG.style.transformOrigin='156px 98px';ripple(svg,156,cm.y,12,90,900);if(D(1))lensG.animate([{transform:'scale(1)'},{transform:'scale(1.07)'},{transform:'scale(1)'}],{duration:D(620),easing:EASE})},
+    arrive(){const a=arcF[6];if(D(1))a.fl.animate([{strokeWidth:7},{strokeWidth:10},{strokeWidth:7}],{duration:D(500),easing:EASE})},
+  };
+}
+
+/* ---------- 06 «Нить» ---------- */
+function v06(hero,api){
+  const st=api.st;
+  const head=H('<div class="h06"><div class="sub" style="margin:0">Последние 7 дней</div><button class="nudge"></button></div>');
+  const cols=H('<div class="cols06"><span></span><span>Вы</span><span></span><span>Алекс</span></div>');
+  hero.append(head,cols);
+  const rows=[];
+  for(let k=0;k<7;k++){
+    const i=T-k,lab=k===0?'Сегодня':k===1?'Вчера':`${WDN[wdOf(i)]}, ${dateOf(i)} нояб.`;
+    const r=H(`<div class="r06 ${k===0?'today hl':''}"><span class="d">${lab}</span><div class="cell"></div><div class="thr"><i class="l"></i><i class="r"></i><i class="full"></i></div><div class="cell"></div></div>`);
+    const cells=r.querySelectorAll('.cell');const xm=xMark(),xf=xMark('f');cells[0].appendChild(xm);cells[1].appendChild(xf);
+    hero.appendChild(r);rows.push({r,i,xm,xf,l:r.querySelector('.l'),rr:r.querySelector('.r'),full:r.querySelector('.full'),cells});
+  }
+  const nudge=head.querySelector('.nudge');
+  function paint(row,animate){
+    const m=!!st.me[row.i],f=!!st.fr[row.i],both=m&&f;
+    setX(row.xm,m,animate);setX(row.xf,f,animate);
+    row.r.classList.toggle('both',both);
+    row.full.classList.toggle('on',both);
+    row.l.classList.toggle('on',m&&!f);row.rr.classList.toggle('on',f&&!m);
+  }
+  let sent=false;
+  function nudgeState(){
+    const f=!!st.fr[T];
+    nudge.disabled=f||sent;
+    nudge.textContent=f?'Алекс отметил':sent?'Отправлено':'Подбодрить Алекса';
+  }
+  nudge.onclick=()=>{if(nudge.disabled)return;sent=true;nudgeState();const row=rows[0];
+    if(!D(1))return;
+    const thr=row.r.querySelector('.thr');const dot=H('<span class="dotfly"></span>');thr.appendChild(dot);
+    const w=thr.getBoundingClientRect().width;
+    dot.animate([{transform:'translateX(0)',opacity:0},{opacity:1,offset:.15},{transform:`translateX(${w-8}px)`,opacity:1,offset:.85},{transform:`translateX(${w-8}px)`,opacity:0}],{duration:D(900),easing:EASE}).onfinish=()=>{dot.remove()};
+    setTimeout(()=>{const c=row.cells[1];if(!c)return;c.animate([{boxShadow:'0 0 0 0 color-mix(in srgb,var(--ink) 40%,transparent)'},{boxShadow:'0 0 0 10px color-mix(in srgb,var(--ink) 0%,transparent)'}],{duration:D(700),easing:EASE})},D(760));
+    setTimeout(()=>{sent=false;nudgeState()},D(4000));
+  };
+  nudgeState();
+  return{
+    setDay(who,i,animate){const row=rows.find(x=>x.i===i);if(row)paint(row,animate);nudgeState()},
+    intro(){rows.forEach((row,k)=>{row.r.getAnimations().forEach(a=>a.cancel());paint(row,false);if(D(1))row.r.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:D(420),delay:D(k*50),easing:EASE,fill:'backwards'});
+      if(D(1)){[row.xm,row.xf].forEach(x=>{const on=x.classList.contains('f')?!!st.fr[row.i]:!!st.me[row.i];if(on)setX(x,true,true)})}})},
+    bond(){const row=rows[0];if(D(1))row.cells.forEach(c=>c.animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:D(560),easing:EASE}))},
+    arrive(){const c=rows[0].cells[1];if(D(1))c.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:D(420),easing:EASE})},
+    noPeople:true,
+  };
+}
+
+/* ---------- общий каркас телефона ---------- */
+const phones=[];
+function phone(title,desc,mk){
+  const col=H(`<div class="col"><h2>${title}</h2><p>${desc}</p><div class="device"><div class="screen"></div></div></div>`);
+  document.getElementById('layout').appendChild(col);
+  const sc=col.querySelector('.screen');
+  const st={me:BASE.me.slice(),fr:BASE.fr.slice()};
+  sc.innerHTML=`<div class="status"><span>9:41</span><span></span></div><div class="punch"></div><div class="gesture"></div>
+  <div class="view"><div class="back"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Привычки</div><h1>Прогулка 20 минут</h1><div class="sub">Вы и Алекс · каждый день</div>
+  <div class="hero"></div>
+  <div class="tog"><div class="cap">Вместе подряд</div><div class="big"><span class="bn"></span><small></small></div></div>
+  <div class="ppl"></div>
+  <div class="foot"><button class="btn"></button><button class="btn2">Позвать ещё друга</button></div></div>`;
+  const hero=sc.querySelector('.hero'),bn=sc.querySelector('.bn'),sm=sc.querySelector('.big small'),btn=sc.querySelector('.btn'),ppl=sc.querySelector('.ppl');
+  const o=odo(0);bn.appendChild(o);
+  const api={st};const ui=mk(hero,api);
+  if(ui.noPeople)ppl.remove();
+  function text(animate){
+    const n=streak(st.me,st.fr);setOdo(o,n,animate);sm.textContent=`${unit(n)} · лучшая серия 9`;
+    const d=!!st.me[T];btn.textContent=d?'Сегодня отмечено':'Отметить сегодня';btn.classList.toggle('done',d);
+    if(!ui.noPeople){const t=i=>i?'сегодня отмечено':'сегодня ещё нет';ppl.innerHTML=`<div class="cap" style="margin-top:0">Кто в привычке</div><div class="row"><div class="av me">Вы</div><div class="t"><b>Вы</b><span>${t(st.me[T])}</span></div></div><div class="row"><div class="av">А</div><div class="t"><b>Алекс</b><span>${t(st.fr[T])}</span></div></div>`}
+  }
+  function mark(who,val,animate=true){
+    const was=st.me[T]&&st.fr[T];st[who][T]=val?1:0;ui.setDay(who,T,animate);text(animate);
+    const now=st.me[T]&&st.fr[T];
+    if(animate){if(who==='fr'&&val&&!now)ui.arrive&&ui.arrive();if(now&&!was)setTimeout(()=>ui.bond&&ui.bond(),D(260))}
+  }
+  btn.onclick=()=>mark('me',!st.me[T]);
+  function reset(){st.me=BASE.me.slice();st.fr=BASE.fr.slice();setOdo(o,0,false);text(false);ui.intro();text(true)}
+  text(false);ui.intro();
+  const p={st,mark,reset};phones.push(p);return p;
+}
+phone('04 «Дорога вдвоём»','Путь — волнистая линия по дням. Над ней ваша точка, под ней точка друга. Когда оба отметили несколько дней подряд, между днями прокладывается толстая дорога: она и есть «вместе подряд». Рамка сегодня «дышит», пока ждёт.',v04);
+phone('05 «Пересечение»','Два кольца недели, как два круга: ваш и друга. Где они пересекаются — дни вместе, чем их больше, тем темнее. Отметки рисуются дугами, число вместе перекатывается.',v05);
+phone('06 «Нить»','Список последних дней: у каждого дня ваш и друга квадрат и нить между ними. Один отметил — нить тянется навстречу точками, оба — натягивается целиком. Можно тихо «подбодрить»: точка бежит по нити к другу.',v06);
+document.getElementById('friend').onclick=()=>{const on=!phones[0].st.fr[T];phones.forEach(p=>p.mark('fr',on))};
+document.getElementById('replay').onclick=()=>phones.forEach(p=>p.reset());
+calmBox.checked=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const syncCalm=()=>document.body.classList.toggle('calm',calm());calmBox.onchange=syncCalm;syncCalm();
+const th=document.getElementById('theme');let tm=0;
+th.onclick=()=>{tm=(tm+1)%3;const r=document.documentElement;if(tm===0)r.removeAttribute('data-theme');else r.setAttribute('data-theme',tm===1?'light':'dark');th.textContent='Тема: '+['по телефону','светлая','тёмная'][tm]};
+</script>
+</body>
+</html>

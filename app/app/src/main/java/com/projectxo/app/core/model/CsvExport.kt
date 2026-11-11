@@ -11,7 +11,7 @@ object CsvExport {
     const val BOM = "\uFEFF"
     val HEADER = listOf(
         "date", "water_ml", "food_kcal", "steps", "sleep_min", "fasting_min", "breathing_sec",
-        "habits_done", "habits_planned", "feel_0_to_4", "weight_kg", "tags", "note",
+        "habits_done", "habits_planned", "workouts_done", "feel_0_to_4", "weight_kg", "tags", "note",
     )
 
     fun build(from: LocalDate, to: LocalDate, totals: Map<LocalDate, DayTotals>, logs: Map<LocalDate, DayLog>): String {
@@ -23,7 +23,7 @@ object CsvExport {
             val log = logs[d]
             val row = listOf(
                 d.toString(), t.waterMl.toString(), t.kcal.toString(), t.steps.toString(), t.sleepMin.toString(),
-                t.fastingMin.toString(), t.breathSec.toString(), t.habitsDone.toString(), t.habitsTotal.toString(),
+                t.fastingMin.toString(), t.breathSec.toString(), t.habitsDone.toString(), t.habitsTotal.toString(), t.workoutsDone.toString(),
                 log?.feel?.toString().orEmpty(), log?.weightKg?.let { "%.1f".format(java.util.Locale.ROOT, it) }.orEmpty(),
                 log?.tags?.sorted()?.joinToString(";").orEmpty(), log?.note.orEmpty(),
             )

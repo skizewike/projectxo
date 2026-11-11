@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -48,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
@@ -60,12 +63,16 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.projectxo.app.R
 import com.projectxo.app.core.model.Exercise
+import com.projectxo.app.core.model.ExerciseGroup
+import com.projectxo.app.core.ui.figure.ExerciseFigure
+import com.projectxo.app.core.ui.figure.FigureMode
 import com.projectxo.app.core.model.PushupVariant
 import com.projectxo.app.core.model.WorkoutCounting
 import com.projectxo.app.core.model.WorkoutMath
@@ -73,6 +80,7 @@ import com.projectxo.app.core.model.WorkoutRating
 import com.projectxo.app.core.ui.components.RollingNumber
 import com.projectxo.app.core.ui.components.XoHairline
 import com.projectxo.app.core.ui.components.XoPrimaryButton
+import com.projectxo.app.core.ui.components.XoSegmented
 import com.projectxo.app.core.ui.components.XoTextButton
 import com.projectxo.app.core.ui.format.formatCount
 import com.projectxo.app.core.ui.format.rememberFormatLocale
@@ -101,17 +109,18 @@ class WorkoutActions(
     val onUntap: () -> Unit = {},
     val onStartHold: () -> Unit = {},
     val onStopHold: () -> Unit = {},
+    val onCounting: (WorkoutCounting) -> Unit = {},
+    val onTimer: (com.projectxo.app.core.model.WorkoutTimerStyle) -> Unit = {},
+    val onDays: (Int) -> Unit = {},
 )
 
 @Composable
-private fun exerciseName(e: Exercise): String = stringResource(
-    when (e) {
-        Exercise.Pushups -> R.string.ex_pushups
-        Exercise.Squats -> R.string.ex_squats
-        Exercise.Plank -> R.string.ex_plank
-        Exercise.Crunches -> R.string.ex_crunches
-    },
-)
+private fun exerciseName(e: Exercise): String = stringResource(ExerciseText.nameRes(e))
+
+/** Уровень в плитке: «20 раз» или «40 с». */
+@Composable
+private fun unitShort(e: Exercise, n: Int): String =
+    if (e.seconds) stringResource(R.string.ex_unit_sec, formatCount(n.toLong())) else stringResource(R.string.workout_tile_reps, formatCount(n.toLong()))
 
 @Composable
 private fun unitText(e: Exercise, n: Int): String =
@@ -152,38 +161,45 @@ fun WorkoutScreen(state: WorkoutUiState, actions: WorkoutActions, modifier: Modi
         else -> false
     }
 
+    // Новый шаг открывается сверху, а не с места, где остановилась прокрутка списка.
+    val scroll = rememberScrollState()
+    LaunchedEffect(state.step::class) { scroll.scrollTo(0) }
     Column(
         modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom))
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scroll)
             .padding(horizontal = XoSpacing.screenGutter),
     ) {
-        Row(Modifier.padding(top = XoSpacing.s2), verticalAlignment = Alignment.CenterVertically) {
-            Row(
-                Modifier.heightIn(min = XoSize.touchMin).clickable(role = Role.Button) {
-                    when {
-                        state.step is WorkoutStep.Overview || state.step is WorkoutStep.Done -> actions.onBack()
-                        started -> confirmAbort = true
-                        else -> actions.onAbort()
-                    }
-                },
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(XoIcons.Back, null, tint = colors.muted, modifier = Modifier.size(16.dp))
-                Text(
-                    stringResource(
-                        when (state.step) {
-                            is WorkoutStep.Overview, is WorkoutStep.Done -> R.string.module_habits
-                            is WorkoutStep.CheckLevel -> R.string.back
-                            else -> R.string.workout_stop
-                        },
-                    ),
-                    style = type.caption, color = colors.muted,
-                )
+        if (state.step is WorkoutStep.Overview) {
+            Spacer(Modifier.height(XoSpacing.s5))
+        } else {
+            Row(Modifier.padding(top = XoSpacing.s2), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    Modifier.heightIn(min = XoSize.touchMin).clickable(role = Role.Button) {
+                        when {
+                            state.step is WorkoutStep.Overview || state.step is WorkoutStep.Done -> actions.onBack()
+                            started -> confirmAbort = true
+                            else -> actions.onAbort()
+                        }
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(XoIcons.Back, null, tint = colors.muted, modifier = Modifier.size(16.dp))
+                    Text(
+                        stringResource(
+                            when (state.step) {
+                                is WorkoutStep.Overview, is WorkoutStep.Done -> R.string.module_workouts
+                                is WorkoutStep.CheckLevel -> R.string.back
+                                else -> R.string.workout_stop
+                            },
+                        ),
+                        style = type.caption, color = colors.muted,
+                    )
+                }
             }
         }
-        Spacer(Modifier.height(XoSpacing.s2))
+        if (state.step !is WorkoutStep.Overview) Spacer(Modifier.height(XoSpacing.s2))
         // Смена шагов: короткое появление с лёгким подъёмом; при «меньше анимаций» шаги сменяются сразу.
         val rise = with(androidx.compose.ui.platform.LocalDensity.current) { 12.dp.roundToPx() }
         androidx.compose.runtime.CompositionLocalProvider(LocalTimerStyle provides state.timer) {
@@ -249,33 +265,15 @@ private fun Overview(state: WorkoutUiState, actions: WorkoutActions) {
     Spacer(Modifier.height(XoSpacing.s4))
     XoHairline()
     val suggested = state.suggested
-    Exercise.entries.forEach { e ->
-        val level = state.level(e)
-        val sessions = state.sessionsOf(e).size
-        val sub = when {
-            level == null -> stringResource(R.string.workout_ex_new)
-            e == Exercise.Pushups -> stringResource(R.string.workout_ex_level_variant, unitText(e, level), pushupVariant(WorkoutMath.pushupVariant(level)), sessions.toString())
-            else -> stringResource(R.string.workout_ex_level, unitText(e, level), sessions.toString())
-        }
-        Row(
-            Modifier.fillMaxWidth().heightIn(min = XoSize.rowHeight).clickable(role = Role.Button) { actions.onOpen(e) },
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(exerciseName(e), style = type.bodyStrong, color = colors.ink)
-                    if (e == suggested) {
-                        Text(
-                            stringResource(R.string.workout_next_tag), style = type.caption, color = colors.muted,
-                            modifier = Modifier.padding(start = XoSpacing.s2).border(XoSize.hairline, colors.line, CircleShape).padding(horizontal = XoSpacing.s2),
-                        )
-                    }
-                }
-                Text(sub, style = type.caption, color = colors.muted)
-            }
-            Icon(XoIcons.Chevron, null, tint = colors.muted, modifier = Modifier.size(16.dp))
-        }
-        XoHairline()
+    val mine = Exercise.entries.filter { state.level(it) != null }
+    if (mine.isNotEmpty()) {
+        GroupHeader(stringResource(R.string.workout_my_program), mine.size, topGap = XoSpacing.s5)
+        TileGrid(mine, state, suggested, mine = true, actions)
+    }
+    ExerciseGroup.entries.forEach { g ->
+        val items = Exercise.of(g)
+        GroupHeader(stringResource(ExerciseText.groupRes(g)), items.size, topGap = XoSpacing.s6)
+        TileGrid(items, state, if (mine.isEmpty()) suggested else null, mine = false, actions)
     }
     val recent = state.sessions.take(RECENT_SHOWN)
     if (recent.isNotEmpty()) {
@@ -293,11 +291,139 @@ private fun Overview(state: WorkoutUiState, actions: WorkoutActions) {
             }
         }
     }
+    Spacer(Modifier.height(XoSpacing.s5))
+    WorkoutSettings(state, actions)
     Spacer(Modifier.height(XoSpacing.s4))
     Text(stringResource(R.string.workout_safety), style = type.caption, color = colors.muted)
 }
 
+/** Дни плана, способ счёта подходов и вид таймера (раньше жили в настройках «Привычек»). */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun WorkoutSettings(state: WorkoutUiState, actions: WorkoutActions) {
+    val colors = XoTheme.colors
+    val type = XoTheme.type
+    val locale = rememberFormatLocale()
+    Text(stringResource(R.string.workout_settings), style = type.caption, color = colors.muted, modifier = Modifier.semantics { heading() })
+    Spacer(Modifier.height(XoSpacing.s2))
+    XoHairline()
+    Spacer(Modifier.height(XoSpacing.s3))
+    Text(stringResource(R.string.workout_days), style = type.bodyStrong, color = colors.ink)
+    Spacer(Modifier.height(XoSpacing.s2))
+    androidx.compose.foundation.layout.FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(XoSpacing.s1), verticalArrangement = Arrangement.spacedBy(XoSpacing.s1),
+    ) {
+        java.time.DayOfWeek.entries.forEach { d ->
+            val bit = com.projectxo.app.core.model.HabitMath.dayBit(d)
+            val on = state.days and bit != 0
+            Box(
+                Modifier
+                    .size(44.dp)
+                    .border(if (on) 2.dp else XoSize.hairline, if (on) colors.ink else colors.line, CircleShape)
+                    .clickable(role = Role.Checkbox) { actions.onDays(state.days xor bit) }
+                    .semantics { selected = on },
+                contentAlignment = Alignment.Center,
+            ) { Text(d.getDisplayName(java.time.format.TextStyle.SHORT, locale), style = type.scale, color = colors.ink) }
+        }
+    }
+    Spacer(Modifier.height(XoSpacing.s4))
+    Text(stringResource(R.string.habits_counting), style = type.bodyStrong, color = colors.ink)
+    Spacer(Modifier.height(XoSpacing.s2))
+    XoSegmented(
+        listOf(WorkoutCounting.Ladder to stringResource(R.string.habits_counting_ladder), WorkoutCounting.Tap to stringResource(R.string.habits_counting_tap)),
+        state.counting, actions.onCounting,
+    )
+    Spacer(Modifier.height(XoSpacing.s4))
+    Text(stringResource(R.string.habits_timer), style = type.bodyStrong, color = colors.ink)
+    Spacer(Modifier.height(XoSpacing.s2))
+    XoSegmented(
+        listOf(
+            com.projectxo.app.core.model.WorkoutTimerStyle.Ring to stringResource(R.string.habits_timer_ring),
+            com.projectxo.app.core.model.WorkoutTimerStyle.Bar to stringResource(R.string.habits_timer_bar),
+            com.projectxo.app.core.model.WorkoutTimerStyle.Ticks to stringResource(R.string.habits_timer_ticks),
+        ),
+        state.timer, actions.onTimer,
+    )
+}
+
+
+/** Заголовок группы: название слева, число упражнений справа. */
+@Composable
+private fun GroupHeader(title: String, count: Int, topGap: androidx.compose.ui.unit.Dp) {
+    val colors = XoTheme.colors
+    val type = XoTheme.type
+    Spacer(Modifier.height(topGap))
+    Row(Modifier.fillMaxWidth().semantics(mergeDescendants = true) { heading() }, verticalAlignment = Alignment.Bottom) {
+        Text(title, style = type.caption, color = colors.muted, modifier = Modifier.weight(1f))
+        Text(formatCount(count.toLong()), style = type.caption, color = colors.muted)
+    }
+    Spacer(Modifier.height(XoSpacing.s2))
+}
+
+/** Плитки по две в ряд; в каждом ряду плитки одной высоты. */
+@Composable
+private fun TileGrid(items: List<Exercise>, state: WorkoutUiState, suggested: Exercise?, mine: Boolean, actions: WorkoutActions) {
+    // Крупный системный текст: по одной плитке в ряд, иначе названия рвутся посреди слова.
+    val perRow = if (androidx.compose.ui.platform.LocalDensity.current.fontScale > LARGE_TEXT_SCALE) 1 else TILES_PER_ROW
+    Column(verticalArrangement = Arrangement.spacedBy(XoSpacing.s2)) {
+        items.chunked(perRow).forEach { pair ->
+            Row(Modifier.fillMaxWidth().height(androidx.compose.foundation.layout.IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(XoSpacing.s2)) {
+                pair.forEach { e ->
+                    ExerciseTile(e, state, e == suggested, mine, actions, Modifier.weight(1f).fillMaxHeight())
+                }
+                if (pair.size < perRow) Spacer(Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+/**
+ * Плитка упражнения: фигура, название (до двух строк) и одна строка пояснения.
+ * Начатое упражнение: уровень («20 раз», «40 с»), у отжиманий ещё вариант. Новое: «новое · повторы».
+ */
+@Composable
+private fun ExerciseTile(e: Exercise, state: WorkoutUiState, suggested: Boolean, mine: Boolean, actions: WorkoutActions, modifier: Modifier = Modifier) {
+    val colors = XoTheme.colors
+    val type = XoTheme.type
+    val level = state.level(e)
+    val name = exerciseName(e)
+    val meta = when {
+        level == null -> stringResource(if (e.seconds) R.string.workout_ex_new_seconds else R.string.workout_ex_new_reps)
+        e == Exercise.Pushups -> unitShort(e, level) + " · " + pushupVariant(WorkoutMath.pushupVariant(level))
+        else -> unitShort(e, level)
+    }
+    val tag = stringResource(R.string.workout_next_tag)
+    val shape = RoundedCornerShape(16.dp)
+    Column(
+        modifier
+            .border(if (mine) 1.5.dp else XoSize.hairline, if (mine) colors.ink else colors.line, shape)
+            .clip(shape)
+            .clickable(role = Role.Button) { actions.onOpen(e) }
+            .semantics(mergeDescendants = true) { contentDescription = name + ", " + meta + if (suggested) ", $tag" else "" }
+            .padding(start = XoSpacing.s3, end = XoSpacing.s3, top = XoSpacing.s2, bottom = XoSpacing.s3),
+    ) {
+        Box(Modifier.fillMaxWidth()) {
+            ExerciseFigure(e.figure(level), Modifier.fillMaxWidth(), mode = FigureMode.Start)
+            if (suggested) {
+                Text(
+                    tag, style = type.scale, color = colors.ink,
+                    modifier = Modifier.align(Alignment.TopEnd).border(XoSize.hairline, colors.line, CircleShape).padding(horizontal = XoSpacing.s2),
+                )
+            }
+        }
+        // Текст прижат к низу плитки: пояснения в ряду стоят на одной линии, а пустое место остаётся над названием.
+        Spacer(Modifier.weight(1f).heightIn(min = XoSpacing.s1))
+        Text(name, style = type.bodyStrong, color = colors.ink, maxLines = 2, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+        Spacer(Modifier.height(XoSpacing.textGap))
+        Text(meta, style = type.caption, color = colors.muted, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+    }
+}
+
+private const val TILES_PER_ROW = 2
+private const val LARGE_TEXT_SCALE = 1.25f
+
 private const val RECENT_SHOWN = 5
+private val FIGURE_MAX_HEIGHT = 190.dp
 
 @Composable
 private fun pushupVariant(v: PushupVariant) = stringResource(
@@ -314,6 +440,10 @@ private fun CheckLevel(st: WorkoutStep.CheckLevel, actions: WorkoutActions) {
         Text(stringResource(R.string.workout_check_again), style = type.caption, color = colors.muted)
         Spacer(Modifier.height(XoSpacing.headGap))
     }
+    ExerciseFigure(st.exercise.figure(st.value), Modifier.fillMaxWidth().heightIn(max = FIGURE_MAX_HEIGHT), description = exerciseName(st.exercise))
+    Spacer(Modifier.height(XoSpacing.s2))
+    Text(stringResource(ExerciseText.hintRes(st.exercise)), style = type.caption, color = colors.muted)
+    Spacer(Modifier.height(XoSpacing.s3))
     Text(
         stringResource(if (st.exercise.seconds) R.string.workout_check_seconds else R.string.workout_check_reps),
         style = type.body, color = colors.muted,
@@ -373,6 +503,8 @@ private fun Sets(st: WorkoutStep.Sets, counting: WorkoutCounting, actions: Worko
         stringResource(R.string.workout_set_of, (minOf(st.index + 1, st.plan.size)).toString(), st.plan.size.toString()),
         style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() },
     )
+    Spacer(Modifier.height(XoSpacing.s3))
+    ExerciseFigure(st.exercise.figure(st.level), Modifier.fillMaxWidth().heightIn(max = FIGURE_MAX_HEIGHT), description = exerciseName(st.exercise))
     Spacer(Modifier.height(XoSpacing.s3))
     Ladder(st)
     Spacer(Modifier.height(XoSpacing.s5))
@@ -674,8 +806,6 @@ private fun DoneStep(st: WorkoutStep.Done, actions: WorkoutActions) {
         else stringResource(R.string.workout_done_same, exerciseName(st.exercise), unitText(st.exercise, st.newLevel)),
         style = type.body, color = colors.ink, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(),
     )
-    Spacer(Modifier.height(XoSpacing.headGap))
-    Text(stringResource(R.string.workout_done_habit), style = type.caption, color = colors.muted, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
     Spacer(Modifier.height(XoSpacing.s5))
     XoPrimaryButton(stringResource(R.string.got_it), actions.onBack)
 }

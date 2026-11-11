@@ -1,15 +1,54 @@
 package com.projectxo.app.core.model
 
-/** Упражнения домашней тренировки v1 (docs/SPORT.md). [seconds] — планка считается секундами. */
-enum class Exercise(val id: String, val seconds: Boolean) {
-    Pushups("pushups", false),
-    Squats("squats", false),
-    Plank("plank", true),
-    Crunches("crunches", false),
+/** Группы каталога упражнений (Р75). */
+enum class ExerciseGroup { ChestArms, Back, Legs, Core, FullBody }
+
+/**
+ * Каталог домашних упражнений (docs/SPORT.md, Р47, Р75). [seconds] — упражнение считается секундами (планка, стульчик).
+ * [defaultCheck] — с чего начинается проверка уровня, пока нет своего результата.
+ * Старые идентификаторы (pushups, squats, plank, crunches) не меняются: по ним лежат записи в базе.
+ */
+enum class Exercise(val id: String, val group: ExerciseGroup, val seconds: Boolean, val defaultCheck: Int) {
+    Pushups("pushups", ExerciseGroup.ChestArms, false, 10),
+    Dips("dips", ExerciseGroup.ChestArms, false, 8),
+    Pullups("pullups", ExerciseGroup.Back, false, 3),
+    Superman("superman", ExerciseGroup.Back, false, 12),
+    Hinge("hinge", ExerciseGroup.Back, false, 15),
+    Squats("squats", ExerciseGroup.Legs, false, 20),
+    JumpSquat("jump_squat", ExerciseGroup.Legs, false, 12),
+    Lunges("lunges", ExerciseGroup.Legs, false, 12),
+    StepUp("step_up", ExerciseGroup.Legs, false, 12),
+    Bridge("bridge", ExerciseGroup.Legs, false, 15),
+    CalfRaise("calf_raise", ExerciseGroup.Legs, false, 20),
+    WallSit("wall_sit", ExerciseGroup.Legs, true, 30),
+    DonkeyKick("donkey_kick", ExerciseGroup.Legs, false, 12),
+    Crunches("crunches", ExerciseGroup.Core, false, 15),
+    Bicycle("bicycle", ExerciseGroup.Core, false, 16),
+    LegRaise("leg_raise", ExerciseGroup.Core, false, 10),
+    Flutter("flutter", ExerciseGroup.Core, false, 20),
+    Plank("plank", ExerciseGroup.Core, true, 30),
+    SidePlank("side_plank", ExerciseGroup.Core, true, 20),
+    BirdDog("bird_dog", ExerciseGroup.Core, false, 10),
+    Burpee("burpee", ExerciseGroup.FullBody, false, 6),
+    Jacks("jacks", ExerciseGroup.FullBody, false, 25),
+    Mountain("mountain", ExerciseGroup.FullBody, false, 20),
+    HighKnees("high_knees", ExerciseGroup.FullBody, false, 30),
     ;
+
+    /** Фигура для показа: у отжиманий она зависит от варианта по уровню [level]. */
+    fun figure(level: Int? = null): FigureSpec {
+        val key = if (this == Pushups) "Pushups/" + WorkoutMath.pushupVariant(level ?: defaultCheck).name else name
+        return ExerciseFigureData.specs.getValue(key)
+    }
 
     companion object {
         fun fromId(id: String): Exercise? = entries.firstOrNull { it.id == id }
+
+        /** Базовая четвёрка из первой версии: с неё начинаются подсказки «дальше». */
+        val STARTER: Set<Exercise> = setOf(Pushups, Squats, Plank, Crunches)
+
+        /** Упражнения группы в порядке каталога. */
+        fun of(group: ExerciseGroup): List<Exercise> = entries.filter { it.group == group }
     }
 }
 

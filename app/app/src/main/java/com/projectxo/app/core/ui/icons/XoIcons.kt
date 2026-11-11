@@ -82,6 +82,7 @@ object XoIcons {
     val Fasting = icon("fasting", "M4.5 13a7.5 7.5 0 1 0 15 0a7.5 7.5 0 1 0 -15 0" to W, "M12 9v4l2.5 2M10 2.5h4" to W)
     val Sleep = icon("sleep", "M19 14.8A7.8 7.8 0 1 1 9.2 5a6.2 6.2 0 0 0 9.8 9.8z" to W, "M16 3.5h3l-3 3h3" to W)
     val Habits = icon("habits", "M5 5h14v14H5z" to W, "M9 9l6 6M15 9l-6 6" to W)
+    val Mood = icon("mood", "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z" to W, "M9 9.8v.4M15 9.8v.4" to W, "M8.5 14.5c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8" to W)
     val Breathing = icon("breathing", "M3 12c2.5-5 4.5-5 6 0s3.5 5 6 0 3.5-5 6 0" to W)
     val More = icon("more", "M5.1 12a.9.9 0 1 0 1.8 0a.9.9 0 1 0 -1.8 0M11.1 12a.9.9 0 1 0 1.8 0a.9.9 0 1 0 -1.8 0M17.1 12a.9.9 0 1 0 1.8 0a.9.9 0 1 0 -1.8 0" to 2f)
     val Alarm = icon("alarm", "M5 13a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" to W, "M12 9.5V13l2.2 1.6M4.5 5.5l3-2M19.5 5.5l-3-2" to W)

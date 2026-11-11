@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 /** Шаги первого запуска (Р51: план считается в самом конце). */
-enum class OnbStep { Privacy, Comfort, Modules, About, Activity, Goal, Workout, Reminders, Calc, Plan }
+enum class OnbStep { Privacy, Comfort, Modules, About, Activity, Goal, Reminders, Calc, Plan }
 
 data class OnbState(
     val step: OnbStep = OnbStep.Privacy,
@@ -39,8 +39,6 @@ data class OnbState(
     /** null — пользователь не выбирал: берётся подсказка по ИМТ. */
     val goal: WeightGoal? = null,
     val reminders: Reminders = Reminders(),
-    /** Домашние тренировки: шаг виден только при включённых «Привычках». */
-    val workout: Boolean = false,
     val policyOpen: Boolean = false,
 ) {
     val profile: Profile get() = Profile(sex, age, heightCm, weightKg, activity, goal)
@@ -63,7 +61,6 @@ class OnboardingViewModel(
 
     fun next() = _state.update {
         var i = it.step.ordinal + 1
-        if (i <= OnbStep.entries.lastIndex && OnbStep.entries[i] == OnbStep.Workout && Module.Habits !in it.modules) i++
         if (i > OnbStep.entries.lastIndex) it else it.copy(step = OnbStep.entries[i], forward = true)
     }
 
@@ -71,7 +68,6 @@ class OnboardingViewModel(
     fun back() = _state.update {
         var i = it.step.ordinal - 1
         if (i >= 0 && OnbStep.entries[i] == OnbStep.Calc) i--
-        if (i >= 0 && OnbStep.entries[i] == OnbStep.Workout && Module.Habits !in it.modules) i--
         if (i < 0) it else it.copy(step = OnbStep.entries[i], forward = false)
     }
 
@@ -94,11 +90,6 @@ class OnboardingViewModel(
     fun setGoal(g: WeightGoal) = _state.update { it.copy(goal = g) }
     fun setReminders(r: Reminders) = _state.update { it.copy(reminders = r) }
 
-    /** Ответ на «Тренироваться дома?» и переход дальше. */
-    fun answerWorkout(on: Boolean) {
-        _state.update { it.copy(workout = on) }
-        next()
-    }
     fun setPolicyOpen(open: Boolean) = _state.update { it.copy(policyOpen = open) }
 
     /** Принять план: сохранить профиль, единицы, модули, цели и отметить первый запуск пройденным. */
@@ -119,7 +110,6 @@ class OnboardingViewModel(
                     units = s.units,
                     modules = s.modules.ifEmpty { Module.BASE },
                     reminders = s.reminders,
-                    wave2 = it.wave2.copy(workoutEnabled = s.workout && Module.Habits in s.modules),
                     startEpochDay = it.startEpochDay ?: clock.today().toEpochDay(),
                 )
             }

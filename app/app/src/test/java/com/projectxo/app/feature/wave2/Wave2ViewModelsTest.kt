@@ -1,5 +1,6 @@
 package com.projectxo.app.feature.wave2
 
+import com.projectxo.app.core.data.WorkoutMigration
 import com.projectxo.app.core.data.WorkoutProgram
 import com.projectxo.app.core.data.prefs.InMemorySettingsRepository
 import com.projectxo.app.core.model.AppSettings
@@ -309,28 +310,37 @@ class Wave2ViewModelsTest {
     }
 
     @Test
-    fun habits_enableWorkout_createsHabitOnce() = runTest {
-        val e = HabitEnv(this)
-        e.vm.setWorkoutEnabled(true, "Тренировка")
-        e.vm.setWorkoutEnabled(true, "Тренировка")
+    fun workoutMigration_turnsLegacyHabitIntoModuleDays() = runTest {
+        val habits = FakeHabitRepository()
+        val settings = InMemorySettingsRepository(AppSettings(onboarded = true))
+        habits.add(Habit(0, "Тренировка", HabitFreq.Days(0b0001010), kind = HabitKind.Workout))
+        habits.add(Habit(0, "Йога", HabitFreq.Daily))
+        WorkoutMigration.run(habits, settings)
+        assertEquals(listOf("Йога"), habits.habitsState.value.map { it.name })
+        assertTrue(com.projectxo.app.core.model.Module.Workouts in settings.settings.value.modules)
+        assertEquals(0b0001010, settings.settings.value.wave2.workoutDays)
+        // Второй запуск ничего не меняет.
+        WorkoutMigration.run(habits, settings)
+        assertEquals(1, habits.habitsState.value.size)
+    }
+
+    @Test
+    fun workout_days_changeAndKeepAtLeastOne() = runTest {
+        val e = WorkEnv(this)
+        e.vm.setDays(0b0000011)
         runCurrent()
-        val w = e.repo.habitsState.value.filter { it.kind == HabitKind.Workout }
-        assertEquals(1, w.size)
-        assertEquals(HabitFreq.Days(HabitMath.WORKOUT_DAYS), w.single().freq)
-        assertTrue(e.settings.settings.value.wave2.workoutEnabled)
-        e.vm.setWorkoutEnabled(false, "Тренировка")
+        assertEquals(0b0000011, e.vm.state.value.days)
+        e.vm.setDays(0)
         runCurrent()
-        assertFalse(e.settings.settings.value.wave2.workoutEnabled)
-        assertEquals(1, e.repo.habitsState.value.size)
+        assertEquals(0b0000011, e.vm.state.value.days)
     }
 
     // ——— Тренировка ———
 
     private class WorkEnv(scope: TestScope) {
         val repo = FakeWorkoutRepository()
-        val habits = FakeHabitRepository()
         val clock = FakeClock(nowMs = NOW)
-        val vm = WorkoutViewModel(repo, habits, InMemorySettingsRepository(AppSettings(onboarded = true)), clock, scope.backgroundScope)
+        val vm = WorkoutViewModel(repo, InMemorySettingsRepository(AppSettings(onboarded = true)), clock, scope.backgroundScope)
 
         init {
             scope.backgroundScope.launch { vm.state.collect {} }
@@ -386,9 +396,8 @@ class Wave2ViewModelsTest {
     }
 
     @Test
-    fun workout_fullSession_raisesLevel_andChecksHabit() = runTest {
+    fun workout_fullSession_raisesLevel_andWritesSession() = runTest {
         val e = WorkEnv(this)
-        e.habits.add(Habit(0, "Тренировка", HabitFreq.Days(HabitMath.WORKOUT_DAYS), kind = HabitKind.Workout))
         e.repo.saveProgram(WorkoutProgram(Exercise.Pushups.id, 20, HabitMath.WORKOUT_DAYS))
         runCurrent()
         e.vm.open(Exercise.Pushups)
@@ -407,7 +416,6 @@ class Wave2ViewModelsTest {
         assertEquals(21, done.newLevel)
         assertEquals(21, e.repo.programsState.value.single().level)
         assertEquals(1, e.repo.sessionsState.value.size)
-        assertEquals(1, e.habits.checksState.value.size)
     }
 
     @Test
@@ -528,12 +536,11 @@ class Wave2ViewModelsTest {
     }
 
     @Test
-    fun habits_timerStyle_defaultsToRing_andIsSaved() = runTest {
-        val e = HabitEnv(this)
+    fun workout_timerStyle_defaultsToRing_andIsSaved() = runTest {
+        val e = WorkEnv(this)
         assertEquals(com.projectxo.app.core.model.WorkoutTimerStyle.Ring, e.vm.state.value.timer)
         e.vm.setTimer(com.projectxo.app.core.model.WorkoutTimerStyle.Ticks)
         runCurrent()
         assertEquals(com.projectxo.app.core.model.WorkoutTimerStyle.Ticks, e.vm.state.value.timer)
-        assertEquals(com.projectxo.app.core.model.WorkoutTimerStyle.Ticks, e.settings.settings.value.wave2.workoutTimer)
     }
 }

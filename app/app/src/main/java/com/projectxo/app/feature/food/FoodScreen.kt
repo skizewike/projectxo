@@ -236,8 +236,11 @@ private fun Total(state: FoodUiState, celebrationMs: () -> Float, modifier: Modi
     val dp = LocalDensity.current.density
     val goal = formatCount(state.goals.kcal)
     val done = state.leftKcal == 0L
-    val firstLine = if (done) stringResource(R.string.food_done_title)
-    else stringResource(R.string.food_left, formatCount(state.leftKcal), goal)
+    val firstLine = when {
+        done -> stringResource(R.string.food_done_title)
+        state.leftKcal == state.goals.kcal -> stringResource(R.string.goal_today_only, goal)
+        else -> stringResource(R.string.food_left, formatCount(state.leftKcal), goal)
+    }
     val secondLine = when {
         !done -> null
         state.overKcal > 0 -> stringResource(R.string.food_over, formatCount(state.overKcal))

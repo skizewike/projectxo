@@ -22,8 +22,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         HabitCheckEntity::class,
         WorkoutProgramEntity::class,
         WorkoutSessionEntity::class,
+        MoodEntryEntity::class,
+        SharedRoomEntity::class,
+        SharedMemberEntity::class,
+        SharedMarkEntity::class,
     ],
-    version = 6,
+    version = 8,
     exportSchema = true,
 )
 abstract class XoDatabase : RoomDatabase() {
@@ -37,8 +41,27 @@ abstract class XoDatabase : RoomDatabase() {
     abstract fun breathingDao(): BreathingDao
     abstract fun habitDao(): HabitDao
     abstract fun workoutDao(): WorkoutDao
+    abstract fun moodDao(): MoodDao
+    abstract fun sharedDao(): SharedDao
 
     companion object {
+        /** Привычки вместе (Р79): комнаты, участники и отметки. Старые таблицы не трогаем. */
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS `shared_room` (`roomId` TEXT NOT NULL, `habitId` INTEGER NOT NULL, `memberId` TEXT NOT NULL, `secret` TEXT NOT NULL, `title` TEXT NOT NULL, `freqMask` INTEGER NOT NULL, `myNick` TEXT NOT NULL, `code` TEXT, `codeExpires` INTEGER NOT NULL, `lastSync` INTEGER NOT NULL, PRIMARY KEY(`roomId`))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `shared_member` (`roomId` TEXT NOT NULL, `memberId` TEXT NOT NULL, `nick` TEXT NOT NULL, PRIMARY KEY(`roomId`, `memberId`))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS `shared_mark` (`roomId` TEXT NOT NULL, `memberId` TEXT NOT NULL, `localDate` TEXT NOT NULL, PRIMARY KEY(`roomId`, `memberId`, `localDate`))")
+            }
+        }
+
+        /** Модуль «Самочувствие» (Р74): отметки настроения и энергии. Старые таблицы не трогаем. */
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS `mood_entry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ts` INTEGER NOT NULL, `localDate` TEXT NOT NULL, `mood` INTEGER NOT NULL, `energy` INTEGER NOT NULL, `tags` TEXT NOT NULL)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_mood_entry_localDate` ON `mood_entry` (`localDate`)")
+            }
+        }
+
         /** Еда по фото (Р71): имя файла снимка и оценка пользы у записи еды. Старые записи остаются без фото. */
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -104,7 +127,7 @@ abstract class XoDatabase : RoomDatabase() {
 
         fun build(context: Context): XoDatabase =
             Room.databaseBuilder(context, XoDatabase::class.java, "xo.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                 .build()
     }
 }

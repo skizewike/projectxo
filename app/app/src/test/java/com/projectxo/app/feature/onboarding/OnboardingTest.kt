@@ -82,35 +82,19 @@ class OnboardingTest {
         assertEquals(vm.state.value.plan.kcal.toLong(), goals.goal(GoalType.FoodKcal).first())
     }
 
-    @Test fun workoutStepSkippedWithoutHabits() {
+    @Test fun workoutsModuleIsChosenInModulesStep() {
+        vm.toggleModule(com.projectxo.app.core.model.Module.Workouts)
+        while (vm.state.value.step != OnbStep.Plan) vm.next()
+        vm.finish()
+        assertTrue(com.projectxo.app.core.model.Module.Workouts in settings.settings.value.modules)
+    }
+
+    @Test fun noWorkoutStepAnyMore() {
+        assertTrue(OnbStep.entries.none { it.name == "Workout" })
         while (vm.state.value.step != OnbStep.Goal) vm.next()
         vm.next()
         assertEquals(OnbStep.Reminders, vm.state.value.step)
         vm.back()
         assertEquals(OnbStep.Goal, vm.state.value.step)
-    }
-
-    @Test fun workoutAnswerIsSavedWhenHabitsOn() {
-        vm.toggleModule(com.projectxo.app.core.model.Module.Habits)
-        while (vm.state.value.step != OnbStep.Goal) vm.next()
-        vm.next()
-        assertEquals(OnbStep.Workout, vm.state.value.step)
-        vm.answerWorkout(true)
-        assertEquals(OnbStep.Reminders, vm.state.value.step)
-        vm.back()
-        assertEquals(OnbStep.Workout, vm.state.value.step)
-        vm.answerWorkout(true)
-        while (vm.state.value.step != OnbStep.Plan) vm.next()
-        vm.finish()
-        assertTrue(settings.settings.value.wave2.workoutEnabled)
-    }
-
-    @Test fun workoutOffWhenHabitsWereTurnedOffAfterAnswer() {
-        vm.toggleModule(com.projectxo.app.core.model.Module.Habits)
-        while (vm.state.value.step != OnbStep.Workout) vm.next()
-        vm.answerWorkout(true)
-        vm.toggleModule(com.projectxo.app.core.model.Module.Habits)
-        vm.finish()
-        assertTrue(!settings.settings.value.wave2.workoutEnabled)
     }
 }

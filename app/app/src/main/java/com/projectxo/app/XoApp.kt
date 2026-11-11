@@ -133,7 +133,7 @@ fun XoApp(
     ) {
         Box(Modifier.fillMaxSize().background(XoTheme.colors.background)) {
             if (settings.onboarded) {
-                XoNavHost(container = container, today = today, todayVm = todayVm, modules = settings.modules, order = settings.moduleOrder, date = currentDate)
+                XoNavHost(container = container, today = today, todayVm = todayVm, modules = settings.modules, order = settings.moduleOrder, pins = settings.tabPins, date = currentDate)
             } else {
                 // Первый запуск: онбординг под заставкой; после «Принять план» — «Сегодня» с нулевым днём (Р41).
                 val onb: OnboardingViewModel = viewModel(

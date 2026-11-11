@@ -125,21 +125,21 @@
     <!-- Первый запуск: приватность -->
     <string name="onb_privacy_title">Ваши данные остаются у вас</string>
     <string name="onb_privacy_lead">XO — дневник воды, еды и движения. Вот как он обращается с тем, что вы вводите.</string>
-    <string name="onb_privacy_1_t">Только на телефоне</string>
-    <string name="onb_privacy_1_s">Нет серверов и аккаунтов. Приложению даже не нужен интернет.</string>
+    <string name="onb_privacy_1_t">Хранится на телефоне</string>
+    <string name="onb_privacy_1_s">Записи лежат только в памяти телефона, без аккаунтов. В сеть уходит лишь то, что вы сами отправили: фото для «Еды по фото» или отметки общей привычки с другом.</string>
     <string name="onb_privacy_2_t">Без рекламы и слежки</string>
-    <string name="onb_privacy_2_s">Нет аналитики, рекламных меток и передачи третьим лицам.</string>
+    <string name="onb_privacy_2_s">Нет аналитики, рекламных меток и скрытой передачи данных.</string>
     <string name="onb_privacy_3_t">Удалить можно в любой момент</string>
     <string name="onb_privacy_3_s">«Удалить все данные» в настройках стирает всё сразу.</string>
     <string name="onb_privacy_full">Полная политика конфиденциальности</string>
     <string name="onb_privacy_accept">Принять и продолжить</string>
     <string name="policy_title">Политика конфиденциальности</string>
     <string name="policy_h1">Коротко</string>
-    <string name="policy_p1">Всё, что вы вводите в XO, хранится только на вашем телефоне. У нас нет серверов, аккаунтов, рекламы и аналитики. Мы не видим ваши данные и никому их не передаём. Единственное исключение: фото блюда уходит на распознавание, если вы сами нажали «Еда по фото».</string>
+    <string name="policy_p1">Всё, что вы вводите в XO, хранится только на вашем телефоне. У нас нет серверов, аккаунтов, рекламы и аналитики. Мы не видим ваши данные и никому их не передаём. Два исключения, оба только если вы сами их включили: фото блюда для «Еды по фото» и отметки общей привычки с другом.</string>
     <string name="policy_h2">Какие данные</string>
     <string name="policy_p2">Профиль, который вы указали сами: пол (по желанию), возраст, рост, вес, тренировки, цель. Записи воды, еды и шагов. Снимки блюд, если вы записали еду по фото. Настройки.</string>
     <string name="policy_h3">Где хранятся</string>
-    <string name="policy_p3">В закрытой папке приложения на телефоне. Другие приложения доступа к ним не имеют. Интернет нужен только для «Еды по фото»: фото уходит на распознавание в Google Gemini через наш сервер, который его не сохраняет. Снимок после записи остаётся только на телефоне и удаляется вместе с записью.</string>
+    <string name="policy_p3">В закрытой папке приложения на телефоне. Другие приложения доступа к ним не имеют. Интернет нужен только для «Еды по фото» и «Привычек вместе». «Еда по фото»: фото уходит на распознавание в Google Gemini через наш сервер, который его не сохраняет; снимок после записи остаётся только на телефоне и удаляется вместе с записью. «Привычки вместе»: на наш сервер уходят название общей привычки, ваш псевдоним и дни, когда вы её отметили; видны они только другу с вашим кодом. Выйти можно в любой момент, тогда ваши отметки с сервера стираются. Остальные данные (вес, еда, шаги) туда не попадают никогда.</string>
     <string name="policy_h4">Разрешения</string>
     <string name="policy_p4">Физическая активность — чтобы считать шаги, можно не давать. Уведомления — для напоминаний, если вы их включили.</string>
     <string name="policy_h5">Удаление</string>
@@ -158,7 +158,7 @@
     <string name="text_size_small">Мелкий</string>
     <string name="text_size_normal">Обычный</string>
     <string name="text_size_large">Крупный</string>
-    <string name="text_size_huge">Очень крупный</string>
+    <string name="text_size_huge">Огромный</string>
     <string name="onb_theme">Тема</string>
     <string name="theme_warm">Тёплая</string>
     <string name="theme_acid">Кислотная</string>
@@ -518,7 +518,7 @@
     <string name="module_breathing">Дыхание</string>
     <string name="module_fasting_sub">интервальное голодание по таймеру</string>
     <string name="module_sleep_sub">сколько спали и как спалось</string>
-    <string name="module_habits_sub">отметки, серии, тренировки дома</string>
+    <string name="module_habits_sub">отметки и серии</string>
     <string name="module_breathing_sub">ровное дыхание 1–5 минут</string>
     <string name="tab_more">Ещё</string>
     <string name="dur_h_min">%1$s ч %2$s мин</string>
@@ -722,7 +722,7 @@
     <string name="pushup_wall">от стены</string>
     <string name="pushup_knees">с колен</string>
     <string name="pushup_classic">классические</string>
-    <string name="workout_title">Тренировка дома</string>
+    <string name="workout_title">Тренировки</string>
     <string name="workout_lead">Выберите упражнение. Нагрузка растёт, когда вам становится легче.</string>
     <string name="workout_ex_new">проверим уровень перед первой тренировкой</string>
     <string name="workout_ex_level">сейчас %1$s · тренировок: %2$s</string>

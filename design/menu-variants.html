@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Меню с тренировками: варианты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--bezel:#1B1A18;--scrim:rgba(23,22,20,.32);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--scrim:rgba(0,0,0,.5);}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120;--scrim:rgba(0,0,0,.5);}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:inherit}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+.brand b{font-weight:600}.brand span{color:var(--muted);margin-left:10px}
+.ghost{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.layout{display:flex;justify-content:center;align-items:flex-start;gap:40px;padding:8px 28px 48px;flex-wrap:wrap}
+.col{width:380px}
+.col h2{font-size:16px;font-weight:600;margin:0 0 2px}
+.col p{margin:0 0 14px;color:var(--muted);font-size:13px;min-height:58px}
+.device{width:380px;height:800px;padding:10px;border-radius:50px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:360px;height:780px;border-radius:40px;overflow:hidden;background:var(--bg);user-select:none}
+.status{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px 0 28px;font-size:13px;font-weight:500;z-index:5}
+.punch{position:absolute;top:11px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#050505;z-index:60}
+.gesture{position:absolute;bottom:9px;left:50%;width:108px;margin-left:-54px;height:4px;border-radius:2px;background:var(--ink);opacity:.28;z-index:60}
+.view{position:absolute;left:0;right:0;top:0;bottom:0;padding:58px 24px 0}
+.view.hasbar{bottom:78px;overflow-y:auto;scrollbar-width:none;padding-bottom:16px}
+.view::-webkit-scrollbar{display:none}
+h1{font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.15;margin:0}
+.sub{font-size:13px;color:var(--muted);margin-top:3px}
+.bar{position:absolute;left:0;right:0;bottom:0;height:78px;border-top:1px solid var(--line);background:var(--bg);display:flex;padding-bottom:22px;z-index:20}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:11.5px;position:relative}
+.tab svg.i{width:22px;height:22px}
+.tab.on{color:var(--ink);font-weight:500}
+.tab.on::before{content:"";position:absolute;top:-1px;width:22px;height:2px;background:var(--ink);border-radius:2px}
+/* строки */
+.row{display:flex;align-items:center;gap:14px;min-height:62px;border-top:1px solid var(--line);width:100%}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .t{flex:1;min-width:0}.row .t b{display:block;font-weight:500;font-size:15px}.row .t span{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.row .v{font-size:14px;color:var(--muted)}
+.ring{position:relative;width:150px;height:150px;margin:20px auto 18px}
+.ring svg{width:150px;height:150px;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:500;letter-spacing:-.03em}
+.cap{font-size:12px;color:var(--muted);margin:16px 0 8px}
+.hero{font-size:56px;font-weight:500;letter-spacing:-.04em;line-height:1;margin-top:26px}
+.hero small{font-size:18px;color:var(--muted);letter-spacing:0;margin-left:4px;font-weight:400}
+.meter{height:3px;border-radius:2px;background:var(--track);margin:18px 0 6px;overflow:hidden}.meter i{display:block;height:100%;background:var(--ink)}
+.btn{height:52px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:15px;width:100%;margin-top:22px;text-align:center}
+.btnO{height:44px;border-radius:999px;border:1px solid var(--line);font-size:13px;width:100%;margin-top:10px;text-align:center}
+.plan{display:flex;gap:6px;margin-top:18px}
+.plan span{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;padding:8px 0 6px;font-size:15px}
+.plan span small{display:block;font-size:10px;color:var(--muted)}
+.faces{display:flex;justify-content:space-between;margin-top:24px}
+.faces button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted);width:56px}
+.faces svg.i{width:36px;height:36px}
+/* варианты */
+.seg{display:flex;gap:4px;margin:14px 0 4px;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{flex:1;height:34px;border-radius:999px;text-align:center;font-size:12.5px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px}
+.seg button svg.i{width:16px;height:16px}
+.seg button.on{background:var(--ink);color:var(--bg);font-weight:500}
+.rail{display:flex;gap:2px;margin:12px -8px 0;overflow-x:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail button{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.rail button.on{color:var(--bg);background:var(--ink)}
+.rail button.on svg.i{stroke:var(--bg)}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:18px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.grid button{aspect-ratio:1/1.05;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;padding:12px}
+.grid button b{font-size:13px;font-weight:500}
+.grid button span{font-size:11.5px;color:var(--muted);display:block}
+.grid button svg.i{width:26px;height:26px}
+.back{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:13px;height:28px;margin-bottom:6px}
+.back svg.i{width:16px;height:16px}
+.hint{position:absolute;left:24px;right:24px;bottom:96px;font-size:12px;color:var(--muted);text-align:center}
+.sheet-scrim{position:absolute;inset:0;background:var(--scrim);z-index:30}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:24px 24px 0 0;padding:10px 24px 100px;z-index:31}
+.sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+.notes{max-width:1240px;margin:0 auto;padding:0 28px 48px;color:var(--muted);font-size:13px;line-height:1.6}
+.notes b{color:var(--ink);font-weight:500}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><b>XO</b><span>Меню с тренировками · 3 варианта (Р20)</span></div>
+  <button class="ghost" id="theme">Тема: по телефону</button>
+</div>
+<div class="layout" id="layout"></div>
+<div class="notes">
+  <p><b>Зачем.</b> Тренировки уходят из «Привычек» в свой модуль, вместе с будущим модулем «Самочувствие» модулей станет девять, а нижняя панель держит не больше 5 вкладок (Р38). Нужно меню, где девять модулей не прячутся за «Ещё» вслепую.</p>
+  <p><b>Нажимайте</b> на вкладки, строки и значки: в каждом телефоне работает своё меню. Содержимое модулей условное, важна навигация.</p>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const P={ // иконки «Предметы», сетка 24, линия 1,5
+ today:'<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>',
+ water:'<path d="M12 3.5C9 8 6.5 10.6 6.5 14a5.5 5.5 0 0 0 11 0c0-3.4-2.5-6-5.5-10.5z"/>',
+ food:'<path d="M8 3v8M5.5 3v5a2.5 2.5 0 0 0 5 0V3M8 11v10M17 3c-2 1.5-3 4-3 7h3v11"/>',
+ steps:'<path d="M8.5 4c1.7 0 2.5 1.5 2.5 3.5S10 11 8.5 11 6 9.500 6 7.500 6.800 4 8.500 4zM7 14h3.500v2.500a2 2 0 0 1-3.500 0zM15.500 8c1.700 0 2.500 1.500 2.500 3.500S17 15 15.500 15 13 13.500 13 11.500 13.800 8 15.500 8zM14 18h3.500v1.500a1.800 1.800 0 0 1-3.500 0z"/>',
+ fasting:'<circle cx="12" cy="13" r="7"/><path d="M12 9v4l2.500 1.500M9.500 3h5"/>',
+ sleep:'<path d="M19 14.500A7.500 7.500 0 0 1 9.500 5a7.500 7.500 0 1 0 9.500 9.500z"/>',
+ habits:'<path d="M5 12.500l4.500 4.500L19 7.500"/>',
+ breathing:'<path d="M3 12c2.500-5 5.500-5 9 0s6.500 5 9 0"/>',
+ workout:'<path d="M3.500 9.500v5M6.500 7v10M17.500 7v10M20.500 9.500v5M6.500 12h11"/>',
+ mood:'<circle cx="12" cy="12" r="8.500"/><path d="M8.500 14.500c1 1.200 2.200 1.800 3.500 1.800s2.500-.6 3.500-1.800M9 9.800v.4M15 9.800v.4"/>',
+ more:'<circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/>',
+ grid:'<rect x="4" y="4" width="6.500" height="6.500" rx="1"/><rect x="13.500" y="4" width="6.500" height="6.500" rx="1"/><rect x="4" y="13.500" width="6.500" height="6.500" rx="1"/><rect x="13.500" y="13.500" width="6.500" height="6.500" rx="1"/>',
+ profile:'<circle cx="12" cy="8.500" r="3.500"/><path d="M5 20c.8-3.600 3.500-5.500 7-5.500s6.200 1.900 7 5.500"/>',
+ food2:'<path d="M5 4h14M7 4v6a5 5 0 0 0 10 0V4M12 15v5"/>',
+ move:'<circle cx="14" cy="5" r="1.800"/><path d="M8 20l3-6-2-3 3-2 2.500 3 3 .5M11 14l3 2 .5 4"/>',
+ rest:'<path d="M19 14.500A7.500 7.500 0 0 1 9.500 5a7.500 7.500 0 1 0 9.500 9.500z"/>',
+ back:'<path d="M15 5l-7 7 7 7"/>',
+};
+const ic=(k,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24">${P[k]}</svg>`;
+const M={
+ water:{n:'Вода',s:'1,2 из 2,4 л',g:'food',v:50,big:'1,2',u:'л'},
+ food:{n:'Еда',s:'1 240 из 2 000 ккал',g:'food',v:62,big:'1 240',u:'ккал'},
+ fasting:{n:'Голодание',s:'14 из 16 ч',g:'food',v:87,big:'14',u:'ч из 16'},
+ steps:{n:'Ходьба',s:'5 100 из 8 000',g:'move',v:64,big:'5 100',u:'шагов'},
+ workout:{n:'Тренировки',s:'Пн, ср, пт · следующая ср',g:'move',v:0,big:'Ср',u:'следующая'},
+ breathing:{n:'Дыхание',s:'3 мин из 3',g:'move',v:100,big:'3',u:'мин'},
+ sleep:{n:'Сон',s:'7 ч 20 мин из 8 ч',g:'rest',v:92,big:'7:20',u:'из 8 ч'},
+ habits:{n:'Привычки',s:'3 из 4',g:'rest',v:75,big:'3',u:'из 4'},
+ mood:{n:'Самочувствие',s:'Энергия, настроение',g:'rest',v:0,big:'Хорошо',u:''},
+};
+const ORDER=['water','food','steps','workout','fasting','sleep','habits','breathing','mood'];
+const GROUPS={food:{n:'Питание',i:'food2',m:['water','food','fasting']},move:{n:'Движение',i:'move',m:['steps','workout','breathing']},rest:{n:'Режим',i:'rest',m:['sleep','habits','mood']}};
+
+function body(id){
+  const m=M[id];
+  if(id==='workout') return `<div class="cap">Следующая тренировка</div><div class="hero">Ср<small>отжимания, приседания</small></div>
+   <div class="plan"><span>12<small>1</small></span><span>11<small>2</small></span><span>10<small>3</small></span><span>9<small>4</small></span><span>9+<small>5</small></span></div>
+   <button class="btn">Начать тренировку</button><button class="btnO">Проверить уровень</button>
+   <div class="row" style="margin-top:22px"><div class="t"><b>Эта неделя</b><span>1 из 3 тренировок</span></div></div>`;
+  if(id==='mood') return `<div class="cap">Как вы сейчас?</div><div class="faces">${['Плохо','Так себе','Норм','Хорошо','Отлично'].map(x=>`<button>${ic('mood')}${x}</button>`).join('')}</div>
+   <div class="cap" style="margin-top:28px">Энергия</div><div class="meter" style="height:6px"><i style="width:60%"></i></div>`;
+  return `<div class="cap">Сегодня</div><div class="hero">${m.big}<small>${m.u}</small></div><div class="meter"><i style="width:${m.v}%"></i></div><div class="sub">${m.s}</div>`;
+}
+function todayView(){
+  const rows=ORDER.slice(0,9).filter(x=>x!=='mood'||0).map(id=>`<div class="row">${ic(id)}<div class="t"><b>${M[id].n}</b><span>${M[id].s}</span></div></div>`).join('');
+  return `<h1>Сегодня</h1><div class="sub">среда, 11 ноября</div>
+  <div class="ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="66" fill="none" stroke="var(--track)" stroke-width="7"/><circle cx="75" cy="75" r="66" fill="none" stroke="var(--ink)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${2*Math.PI*66}" stroke-dashoffset="${2*Math.PI*66*0.31}"/></svg><b>69%</b></div>${rows}`;
+}
+function status(){return `<div class="status"><span>9:41</span><span></span></div><div class="punch"></div><div class="gesture"></div>`}
+function mk(root,render){const el=document.createElement('div');el.className='device';el.innerHTML='<div class="screen"></div>';root.appendChild(el);const sc=el.firstChild;return ()=>{sc.innerHTML=status()+render();sc.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>window.act(b));};}
+
+/* ---------- 01 закреплённые + Ещё ---------- */
+function v1(root){
+  const pinned=['water','food','workout'];let tab='today',open=null,sheet=false;
+  const draw=mk(root,()=>{
+    let view;
+    if(tab==='today') view=todayView();
+    else if(open) view=`<h1>${M[open].n}</h1><div class="sub">${M[open].s}</div>${body(open)}`;
+    else if(tab==='more') view=`<h1>Ещё</h1><div class="sub">Остальные модули</div><div class="cap">Модули</div>`+ORDER.filter(x=>!pinned.includes(x)).map(id=>`<button class="row" data-a="open:${id}">${ic(id)}<div class="t"><b>${M[id].n}</b><span>${M[id].s}</span></div></button>`).join('')+`<div class="cap">Приложение</div><button class="row" data-a="x">${ic('profile')}<div class="t"><b>Профиль и настройки</b><span>Закреплённые вкладки меняются здесь</span></div></button>`;
+    else view=`<h1>${M[tab].n}</h1><div class="sub">${M[tab].s}</div>${body(tab)}`;
+    const tabs=[['today','Сегодня','today'],...pinned.map(id=>[id,M[id].n,id]),['more','Ещё','more']];
+    const cur=tab;
+    return `<div class="view hasbar">${view}</div><div class="bar">${tabs.map(t=>`<button class="tab ${cur===t[0]?'on':''}" data-a="tab:${t[0]}">${ic(t[2])}${t[1]}</button>`).join('')}</div>`;
+  });
+  window._a1=(a)=>{const [k,v]=a.split(':');if(k==='tab'){tab=v;open=null}if(k==='open'){open=v}draw()};
+  draw();root._act=window._a1;
+}
+/* ---------- 02 группы ---------- */
+function v2(root){
+  let tab='today',seg={food:'water',move:'steps',rest:'sleep'};
+  const draw=mk(root,()=>{
+    let view;
+    if(tab==='today') view=todayView();
+    else{const g=GROUPS[tab],id=seg[tab];
+      view=`<h1>${g.n}</h1><div class="sub">${M[id].n}</div><div class="seg">${g.m.map(x=>`<button class="${x===id?'on':''}" data-a="seg:${x}">${ic(x)}${M[x].n.length>9?M[x].n.slice(0,8)+'.':M[x].n}</button>`).join('')}</div>${body(id)}`;}
+    const tabs=[['today','Сегодня','today'],['food','Питание','food2'],['move','Движение','move'],['rest','Режим','rest']];
+    return `<div class="view hasbar">${view}</div><div class="bar">${tabs.map(t=>`<button class="tab ${tab===t[0]?'on':''}" data-a="tab:${t[0]}">${ic(t[2])}${t[1]}</button>`).join('')}</div>`;
+  });
+  root._act=a=>{const [k,v]=a.split(':');if(k==='tab')tab=v;if(k==='seg')seg[tab]=v;draw()};
+  draw();
+}
+/* ---------- 03 сетка + лента ---------- */
+function v3(root){
+  let tab='today',open=null;
+  const draw=mk(root,()=>{
+    let view;
+    if(tab==='today') view=todayView();
+    else if(tab==='profile') view=`<h1>Профиль</h1><div class="sub">Графики, календарь, настройки</div><div class="cap">Раздел</div>`+['Календарь','Графики','Итог недели','Настройки'].map(x=>`<div class="row"><div class="t"><b>${x}</b></div></div>`).join('');
+    else if(open){
+      view=`<button class="back" data-a="close">${ic('back')}Модули</button><h1>${M[open].n}</h1><div class="sub">${M[open].s}</div>
+      <div class="rail">${ORDER.map(x=>`<button class="${x===open?'on':''}" data-a="open:${x}" aria-label="${M[x].n}">${ic(x)}</button>`).join('')}</div>${body(open)}`;
+    } else view=`<h1>Модули</h1><div class="sub">Девять, все на виду</div><div class="grid">${ORDER.map(id=>`<button data-a="open:${id}">${ic(id)}<div><b>${M[id].n}</b><span>${M[id].v?M[id].v+' %':id==='workout'?'ср':'—'}</span></div></button>`).join('')}</div>`;
+    const tabs=[['today','Сегодня','today'],['modules','Модули','grid'],['profile','Профиль','profile']];
+    const cur=tab;
+    return `<div class="view hasbar">${view}</div><div class="bar">${tabs.map(t=>`<button class="tab ${cur===t[0]?'on':''}" data-a="tab:${t[0]}">${ic(t[2])}${t[1]}</button>`).join('')}</div>`;
+  });
+  root._act=a=>{const [k,v]=a.split(':');if(k==='tab'){tab=v;open=null}if(k==='open'){tab='modules';open=v}if(k==='close')open=null;draw()};
+  draw();
+}
+const defs=[
+ ['01 «Закреплённые + Ещё»','Как сейчас: «Сегодня», три закреплённых модуля и «Ещё». Тренировки закреплены по умолчанию. Меньше всего переделки, но шесть модулей из девяти за «Ещё».',v1],
+ ['02 «Группы»','Четыре вкладки: «Сегодня», «Питание», «Движение», «Режим». Внутри группы переключатель модулей. Любой модуль в два касания, панель не меняется никогда.',v2],
+ ['03 «Сетка и лента»','Три вкладки: «Сегодня», «Модули», «Профиль». «Модули» — сетка девяти плиток. Внутри модуля лента значков сверху для быстрого перехода.',v3],
+];
+const L=document.getElementById('layout');
+defs.forEach(([t,d,f])=>{const c=document.createElement('div');c.className='col';c.innerHTML=`<h2>${t}</h2><p>${d}</p>`;const h=document.createElement('div');c.appendChild(h);L.appendChild(c);f(h);});
+window.act=b=>{const col=b.closest('.device').parentNode;col._act(b.dataset.a)};
+const th=document.getElementById('theme');let m=0;
+th.onclick=()=>{m=(m+1)%3;const r=document.documentElement;if(m===0)r.removeAttribute('data-theme');else r.setAttribute('data-theme',m===1?'light':'dark');th.textContent='Тема: '+['по телефону','светлая','тёмная'][m]};
+</script>
+</body>
+</html>
