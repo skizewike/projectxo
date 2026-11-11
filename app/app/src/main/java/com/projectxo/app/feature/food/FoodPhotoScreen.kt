@@ -207,6 +207,8 @@ private fun PickStep(state: FoodPhotoState, actions: FoodPhotoActions, onCamera:
     ScreenTitle(R.string.fp_title)
     Spacer(Modifier.height(XoSpacing.headGap))
     Text(stringResource(R.string.fp_lead), style = type.caption, color = colors.muted)
+    Spacer(Modifier.height(XoSpacing.s2))
+    Text(stringResource(R.string.fp_vpn_note), style = type.bodyStrong, color = colors.ink)
     Spacer(Modifier.height(XoSpacing.s5))
     if (!state.hasKey) {
         FoodAiKeyPanel(state.keyError, onSave = actions.onSaveKey, onRemove = null)

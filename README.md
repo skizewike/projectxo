@@ -69,7 +69,7 @@ cd app
 
 APK: `app/app/build/outputs/apk/debug/app-debug.apk`.
 
-«Еда по фото» ходит на посредника, адрес которого задаётся строкой `foodAiProxyUrl` в `app/gradle.properties`. Пока она пуста, нужен свой бесплатный ключ Google AI Studio (вставляется в приложении). Как развернуть посредника: [server/food-proxy/README.md](server/food-proxy/README.md). Адрес сервера общих привычек задаётся строкой `sharedRoomsUrl` там же, как его развернуть: [server/habit-rooms/README.md](server/habit-rooms/README.md); пока он не отвечает, раздел «Вместе» скрыт.
+**«Еда по фото» работает только с включённым VPN** (Gemini недоступен из России, обходной путь через Яндекс Облако у части сетей не открывается). «Еда по фото» ходит на посредника, адрес которого задаётся строкой `foodAiProxyUrl` в `app/gradle.properties`. Пока она пуста, нужен свой бесплатный ключ Google AI Studio (вставляется в приложении). Как развернуть посредника: [server/food-proxy/README.md](server/food-proxy/README.md). Адрес сервера общих привычек задаётся строкой `sharedRoomsUrl` там же, как его развернуть: [server/habit-rooms/README.md](server/habit-rooms/README.md); пока он не отвечает, раздел «Вместе» скрыт.
 
 Релиз для Google Play подписывается ключом из `app/keystore.properties` (в репозиторий не попадает):
 

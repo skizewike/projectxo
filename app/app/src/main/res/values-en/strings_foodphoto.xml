@@ -59,7 +59,7 @@
     <string name="fp_item_kcal">%1$s kcal</string>
     <string name="fp_grams">%1$s g</string>
 
-    <string name="fp_err_net">No connection. Check the internet and try again.</string>
+    <string name="fp_err_net">No connection. Check the internet and try again. Photo recognition works only with a VPN on.</string>
     <string name="fp_err_quota">Today’s recognition limit is used up. Try tomorrow, add the dish by hand, or paste your own key in settings.</string>
     <string name="fp_err_key">The key was not accepted. Paste it again.</string>
     <string name="fp_err_photo">Could not open the photo. Choose another or take a new one.</string>
@@ -77,19 +77,20 @@
 
     <!-- R81: VPN question at first launch and in settings -->
     <string name="onb_net_title">Do you use a VPN?</string>
-    <string name="onb_net_lead">Only matters for Food by photo. Your answer decides the route your meal photo takes.</string>
+    <string name="onb_net_lead">Needed for Food by photo: it works only with a VPN on. The rest of the app works without one.</string>
     <string name="onb_net_no">No VPN</string>
-    <string name="onb_net_no_sub">The photo goes through a Russian address, then to our server. Fits most people.</string>
+    <string name="onb_net_no_sub">Everything works except photo recognition: the photo may fail to send.</string>
     <string name="onb_net_yes">With a VPN</string>
-    <string name="onb_net_yes_sub">The photo goes straight to our server, skipping the Russian address.</string>
+    <string name="onb_net_yes_sub">Photo recognition works. The photo goes straight to our server.</string>
     <string name="onb_net_why_t">Why we ask</string>
-    <string name="onb_net_why">Google\'s recognition service is not available from Russia, and some foreign addresses do not open with some providers. So without a VPN the photo first goes through a Russian address (Yandex Cloud), then to our server and on to Google. With a VPN that extra step is not needed: the direct route is faster and the photo passes through fewer servers. You can change this in Settings → Food by photo key. If you do not use Food by photo, nothing is sent anywhere.</string>
+    <string name="onb_net_why">Google\'s recognition service is not available from Russia, and some foreign addresses do not open with some providers. So Food by photo works only with a VPN on. Without a VPN we try a workaround through a Russian address (Yandex Cloud), but on some networks it does not open and the photo will not send. The rest of the app works offline. You can change this in Settings → Food by photo key. If you do not use Food by photo, nothing is sent anywhere.</string>
     <string name="set_net_title">How you connect to the internet</string>
-    <string name="set_net_note">Only affects the route of the photo in Food by photo. No VPN: through a Russian address. VPN: straight to our server.</string>
+    <string name="set_net_note">Food by photo works only with a VPN on. Without one the photo may fail to send: we try a workaround through a Russian address. With a VPN the photo goes straight to our server.</string>
     <string name="set_net_no">No VPN</string>
     <string name="set_net_yes">VPN</string>
 
     <!-- R82: Sending screen -->
     <string name="fp_upload">Sending the photo</string>
     <string name="fp_upload_sub">The photo is on its way to our server.</string>
+    <string name="fp_vpn_note">Photo recognition works only with a VPN on.</string>
 </resources>
