@@ -99,11 +99,6 @@ class SleepViewModel(
         ratingFor.value = state.value.last?.id
     }
 
-    fun deleteLast() {
-        val n = state.value.last ?: return
-        appScope.launch { repo.delete(n.id) }
-    }
-
     /** Плановые отбой и подъём; цель не меньше 7 часов (Р36). */
     fun setSchedule(bedMin: Int, wakeMin: Int) {
         val b = ((bedMin % SleepMath.DAY_MIN) + SleepMath.DAY_MIN) % SleepMath.DAY_MIN

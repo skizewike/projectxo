@@ -34,8 +34,8 @@ android {
         applicationId = "com.projectxo.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "0.5.0"
+        versionCode = 6
+        versionName = "0.6.0"
         // Адрес общего посредника «Еды по фото» (server/food-proxy, Р70). Пусто: работает только свой ключ пользователя.
         val proxy = (project.findProperty("foodAiProxyUrl") as String?).orEmpty().trim()
         buildConfigField("String", "FOOD_AI_PROXY_URL", "\"$proxy\"")
@@ -62,6 +62,25 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
+    }
+
+    // Оптимизация размера (Р80): в APK только русский и английский (строки библиотек на 80+ языках не нужны,
+    // интерфейс всё равно на двух), без служебных файлов лицензий и отладки корутин.
+    androidResources {
+        localeFilters += listOf("ru", "en")
+    }
+    packaging {
+        resources.excludes += listOf(
+            "/META-INF/{AL2.0,LGPL2.1}",
+            "/META-INF/*.version",
+            "/META-INF/*.kotlin_module",
+            "DebugProbesKt.bin",
+            "kotlin-tooling-metadata.json",
+        )
+    }
+    // Сведения о зависимостях нужны только Google Play; в APK для тестировщиков их не кладём.
+    dependenciesInfo {
+        includeInApk = false
     }
 
     compileOptions {

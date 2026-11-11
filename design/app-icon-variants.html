@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Иконка приложения</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--accent:#2D64D2;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--accent:#6E9BEB;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--accent:#6E9BEB;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px;max-width:640px}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:24px;align-items:center}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{padding:6px 12px;border-radius:999px;font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.lbl{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;background:var(--bg)}
+.card h2{font-size:15px;font-weight:600;margin:0}
+.card p{color:var(--muted);margin:4px 0 16px;font-size:13px;min-height:58px}
+.big{display:flex;justify-content:center;padding:8px 0 20px}
+.big svg{width:168px;height:168px}
+.home{border-radius:16px;padding:18px 12px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;justify-items:center}
+.home.light{background:#D9D4C8}.home.dark{background:#1D1C1A}
+.app{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px}
+.home.light .app{color:#2B2A27}.home.dark .app{color:#D9D6CF}
+.app svg{width:52px;height:52px}
+.ghost{width:52px;height:52px;opacity:.35}
+.sizes{display:flex;gap:14px;align-items:flex-end;justify-content:center;margin-top:16px}
+.sizes svg{display:block}
+.pick{margin-top:16px;width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;font-weight:500}
+.pick[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Иконка приложения: 3 варианта</h1>
+<p class="sub">Адаптивная иконка Android: форму маски задаёт телефон. Проверьте каждую в круге, скруглённом квадрате и капле, на светлых и тёмных обоях, и в одноцветном режиме Android 13 (иконка в цвет темы телефона).</p>
+<div class="ctrls">
+  <span class="lbl">Маска</span>
+  <div class="seg" id="mask"><button data-v="circle" aria-pressed="true">Круг</button><button data-v="squircle">Квадрат</button><button data-v="drop">Капля</button></div>
+  <span class="lbl">Режим</span>
+  <div class="seg" id="mode"><button data-v="color" aria-pressed="true">Цветной</button><button data-v="mono">Одноцветный</button></div>
+  <span class="lbl">Страница</span>
+  <div class="seg" id="theme"><button data-v="auto" aria-pressed="true">Как в системе</button><button data-v="light">Светлая</button><button data-v="dark">Тёмная</button></div>
+</div>
+<div class="grid" id="grid"></div>
+</div>
+<script>
+// Слой 108×108, безопасная зона — круг 66 в центре (как у Android).
+const V = [
+  {id:'01', name:'01 «XO как сейчас, точнее»', note:'Тот же знак, что в заставке: X чернилами, O акцентом на тёплом фоне. Штрихи чуть толще, чтобы иконка не «таяла» в 48 dp.',
+   bg:'#F6F3EC', fg:'#171614', ac:'#2D64D2',
+   art:(c)=>`<path d="M30 42L50 66M50 42L30 66" stroke="${c.fg}" stroke-width="5" stroke-linecap="round"/>
+             <circle cx="68" cy="54" r="12" fill="none" stroke="${c.ac}" stroke-width="5"/>`},
+  {id:'02', name:'02 «Кольцо дня»', note:'Только O как индикатор: дуга на 82 %, на конце точка. Тот же жест, что и главное кольцо «Баланса дня». X маленьким знаком внутри.',
+   bg:'#141413', fg:'#ECE9E2', ac:'#6E9BEB',
+   art:(c)=>{const r=22,a=0.82*2*Math.PI,s=-Math.PI/2,x=54+r*Math.cos(s+a),y=54+r*Math.sin(s+a);
+     return `<circle cx="54" cy="54" r="${r}" fill="none" stroke="${c.track}" stroke-width="6"/>
+     <path d="M54 ${54-r}A${r} ${r} 0 1 1 ${x.toFixed(2)} ${y.toFixed(2)}" fill="none" stroke="${c.ac}" stroke-width="6" stroke-linecap="round"/>
+     <path d="M49 49L59 59M59 49L49 59" stroke="${c.fg}" stroke-width="3" stroke-linecap="round"/>`}},
+  {id:'03', name:'03 «Монограмма на акценте»', note:'Акцентный фон, знак светлый. O проходит сквозь правую ногу X: буквы сцеплены. Самая заметная на рабочем столе.',
+   bg:'#2D64D2', fg:'#F6F3EC', ac:'#F6F3EC',
+   art:(c)=>`<path d="M30 40L54 68M54 40L30 68" stroke="${c.fg}" stroke-width="6" stroke-linecap="square"/>
+             <circle cx="66" cy="54" r="13" fill="none" stroke="${c.bg}" stroke-width="10"/>
+             <circle cx="66" cy="54" r="13" fill="none" stroke="${c.ac}" stroke-width="6"/>`},
+];
+const MASKS={circle:'<circle cx="54" cy="54" r="54"/>',
+  squircle:'<path d="M54 0C94 0 108 14 108 54S94 108 54 108 0 94 0 54 14 0 54 0Z"/>',
+  drop:'<path d="M54 0H94Q108 0 108 14V54A54 54 0 0 1 0 54A54 54 0 0 1 54 0Z"/>'};
+let state={mask:'circle',mode:'color',pick:null};
+try{state.pick=localStorage.getItem('xo-icon-pick')}catch(e){}
+let uid=0;
+function icon(v,size){
+  const mono=state.mode==='mono';
+  const c=mono?{bg:'#3B3A36',fg:'#E6E1D6',ac:'#E6E1D6',track:'#55534D'}
+              :{bg:v.bg,fg:v.fg,ac:v.ac,track:v.bg==='#141413'?'#252422':'#E3DED3'};
+  const id='m'+(uid++);
+  return `<svg viewBox="0 0 108 108" width="${size}" height="${size}" role="img" aria-label="Иконка ${v.name}">
+   <defs><clipPath id="${id}">${MASKS[state.mask]}</clipPath></defs>
+   <g clip-path="url(#${id})"><rect width="108" height="108" fill="${c.bg}"/>${v.art(c)}</g></svg>`;
+}
+const OTHERS=['Часы','Камера','Почта','Карты','Фото','Музыка','Заметки'];
+function ghost(){return `<svg class="ghost" viewBox="0 0 108 108"><g>${MASKS[state.mask].replace('/>',' fill="currentColor"/>')}</g></svg>`}
+function home(v,cls){
+  let cells=[];for(let i=0;i<8;i++){cells.push(i===5?`<div class="app">${icon(v,52)}<span>XO</span></div>`:`<div class="app">${ghost()}<span>${OTHERS[i%7]}</span></div>`)}
+  return `<div class="home ${cls}">${cells.join('')}</div>`;
+}
+function render(){
+  document.getElementById('grid').innerHTML=V.map(v=>`<div class="card">
+    <h2>${v.name}</h2><p>${v.note}</p>
+    <div class="big">${icon(v,168)}</div>
+    ${home(v,'light')}<div style="height:8px"></div>${home(v,'dark')}
+    <div class="sizes">${icon(v,24)}${icon(v,36)}${icon(v,48)}${icon(v,72)}</div>
+    <button class="pick" data-id="${v.id}" aria-pressed="${state.pick===v.id}">${state.pick===v.id?'Выбрано':'Выбрать '+v.id}</button>
+  </div>`).join('');
+  document.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{state.pick=b.dataset.id;try{localStorage.setItem('xo-icon-pick',state.pick)}catch(e){};render()});
+}
+function seg(id,key,fn){const el=document.getElementById(id);el.onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)}}
+seg('mask','mask',v=>{state.mask=v;render()});
+seg('mode','mode',v=>{state.mode=v;render()});
+seg('theme','theme',v=>{if(v==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=v});
+render();
+</script>
+</body>
+</html>

@@ -6,7 +6,13 @@ import com.projectxo.app.core.model.Module
 import com.projectxo.app.core.model.ModuleProgress
 
 /** Состояние экрана «Сегодня». Пока без базы: пустой день с целями по умолчанию. */
-data class TodayState(val modules: List<ModuleProgress>) {
+data class TodayState(
+    val modules: List<ModuleProgress>,
+    /** Дни подряд с кольцом на 100 % (Р80). */
+    val streak: Int = 0,
+    /** Сегодня кольцо ещё не закрыто: огонёк серии приглушён. */
+    val streakWaiting: Boolean = true,
+) {
     val balance: Float get() = DayBalance.of(modules)
     val balancePercent: Int get() = DayBalance.percent(modules)
 

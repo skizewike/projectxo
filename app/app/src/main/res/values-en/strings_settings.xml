@@ -249,8 +249,6 @@
     <string name="habits_mark_a11y">Mark “%1$s” today</string>
     <string name="habits_day_a11y">%1$s, %2$s</string>
     <string name="habits_today_short">Tod</string>
-    <string name="habits_workout_sub">home workout · Mon, Wed, Fri</string>
-    <string name="habits_workout_start">Start</string>
     <string name="habits_week_progress">%1$s of %2$s this week</string>
     <string name="habits_streak">streak %1$s</string>
     <string name="habits_percent"> · %1$s %% over the month</string>
@@ -278,8 +276,6 @@
     <string name="habits_view_ring">Ring</string>
     <string name="habits_view_list">List</string>
     <string name="habits_view_cards">Cards</string>
-    <string name="habits_workout_toggle">Home workouts</string>
-    <string name="habits_workout_toggle_sub">a “Workout” habit on set days</string>
     <string name="habits_edit_list">Edit list</string>
     <string name="habits_seed_1">Morning exercise</string>
     <string name="habits_seed_2">Read for 20 minutes</string>

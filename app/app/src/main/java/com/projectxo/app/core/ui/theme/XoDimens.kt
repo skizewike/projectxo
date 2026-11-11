@@ -47,8 +47,6 @@ object XoSize {
     val dialTickSeal = 9.dp
     val dialTickWidth = 1.dp
 
-    val marker = 10.dp
-    val markerStroke = 1.3.dp
     val bar = 2.dp
 
     val addButton = 40.dp
@@ -82,6 +80,8 @@ object XoSize {
     val tileGap = 10.dp
     val tileRadius = 16.dp
     val icon = 28.dp
+    /** Огонёк серии у привычки и у кольца (Р80). */
+    val streakFlame = 18.dp
 
     /** «Еда»: квадрат дня (DESIGN.md, «Еда», вариант «Под подписью»). */
     val foodSquare = 164.dp

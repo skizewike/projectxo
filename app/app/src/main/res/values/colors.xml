@@ -2,9 +2,10 @@
 <!-- Только цвета окна и иконки. Цвета интерфейса живут в core/ui/theme/XoColors.kt (docs/DESIGN.md, раздел 1). -->
 <resources>
     <color name="xo_background">#F6F3EC</color>
-    <color name="xo_icon_background">#F6F3EC</color>
-    <color name="xo_icon_ink">#171614</color>
-    <color name="xo_icon_accent">#2D64D2</color>
+    <color name="xo_icon_background">#141413</color>
+    <color name="xo_icon_ink">#ECE9E2</color>
+    <color name="xo_icon_track">#252422</color>
+    <color name="xo_icon_accent">#6E9BEB</color>
     <!-- Виджет на рабочем столе: тема «Тёплая» (светлая и тёмная по телефону). -->
     <color name="xo_widget_ink">#171614</color>
     <color name="xo_widget_muted">#6E6A62</color>

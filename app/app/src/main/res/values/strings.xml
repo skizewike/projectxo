@@ -23,6 +23,12 @@
         <item quantity="other">Баланс дня, %d процента</item>
     </plurals>
     <string name="quick_add">Добавить %1$s воды</string>
+    <plurals name="balance_streak">
+        <item quantity="one">%d день подряд с кольцом</item>
+        <item quantity="few">%d дня подряд с кольцом</item>
+        <item quantity="many">%d дней подряд с кольцом</item>
+        <item quantity="other">%d дня подряд с кольцом</item>
+    </plurals>
 
     <!-- Модули -->
     <string name="module_water">Вода</string>
@@ -301,7 +307,6 @@
     <string name="food_unnamed">Без названия</string>
     <string name="food_custom_chip">Своё…</string>
     <string name="food_template_a11y">Добавить: %1$s, %2$s ккал</string>
-    <string name="food_more">и ещё %1$s</string>
     <string name="food_dialog_title">Приём пищи</string>
     <string name="food_name_label">Название</string>
     <string name="food_kcal_label">Калории, ккал</string>
@@ -327,7 +332,6 @@
     <string name="calendar_day_a11y">%1$s, баланс %2$s %%</string>
     <string name="calendar_day_logged_a11y">%1$s, баланс %2$s %%, есть заметка</string>
     <string name="calendar_day_off_a11y">%1$s, недоступно</string>
-    <string name="calendar_month_a11y">%1$s: открыть месяц</string>
     <string name="calendar_sheet_expand">Развернуть день</string>
     <string name="calendar_sheet_collapse">Свернуть день</string>
     <string name="day_title_today">%1$s · сегодня</string>
@@ -641,8 +645,6 @@
     <string name="habits_mark_a11y">Отметить «%1$s» сегодня</string>
     <string name="habits_day_a11y">%1$s, %2$s</string>
     <string name="habits_today_short">Сег</string>
-    <string name="habits_workout_sub">тренировка дома · пн, ср, пт</string>
-    <string name="habits_workout_start">Начать</string>
     <string name="habits_week_progress">%1$s из %2$s на неделе</string>
     <string name="habits_streak">серия %1$s</string>
     <string name="habits_percent"> · %1$s %% за месяц</string>
@@ -670,8 +672,6 @@
     <string name="habits_view_ring">Кольцо дня</string>
     <string name="habits_view_list">Список</string>
     <string name="habits_view_cards">Карточки</string>
-    <string name="habits_workout_toggle">Тренировки дома</string>
-    <string name="habits_workout_toggle_sub">привычка «Тренировка» по дням</string>
     <string name="habits_edit_list">Изменить список</string>
     <string name="habits_seed_1">Утренняя зарядка</string>
     <string name="habits_seed_2">Читать 20 минут</string>
@@ -724,9 +724,6 @@
     <string name="pushup_classic">классические</string>
     <string name="workout_title">Тренировки</string>
     <string name="workout_lead">Выберите упражнение. Нагрузка растёт, когда вам становится легче.</string>
-    <string name="workout_ex_new">проверим уровень перед первой тренировкой</string>
-    <string name="workout_ex_level">сейчас %1$s · тренировок: %2$s</string>
-    <string name="workout_ex_level_variant">сейчас %1$s, %2$s · тренировок: %3$s</string>
     <string name="workout_safety">Если появилась боль, остановитесь.</string>
     <string name="workout_stop">Остановить</string>
     <string name="workout_check_reps">Сколько получается подряд без ошибки в технике?</string>
@@ -753,11 +750,9 @@
     <string name="workout_done_title">Тренировка записана</string>
     <string name="workout_done_up">%1$s: следующая цель выше, было %2$s, станет %3$s.</string>
     <string name="workout_done_same">%1$s: уровень остаётся %2$s.</string>
-    <string name="workout_done_habit">Привычка «Тренировка» на сегодня отмечена.</string>
     <string name="habits_counting">Как считать подходы</string>
     <string name="habits_counting_ladder">Лесенка</string>
     <string name="habits_counting_tap">Счёт касанием</string>
-    <string name="habits_open_workout">Открыть тренировку</string>
 
     <!-- Тренировки: проверка, планка, отдых, итог -->
     <string name="workout_check_again">Прошло несколько тренировок, сверим уровень ещё раз.</string>
@@ -779,17 +774,6 @@
     <string name="workout_history">Последние тренировки</string>
     <string name="workout_rest_a11y">Отдых, осталось %1$s секунд</string>
     <string name="workout_done_total">Всего за тренировку: %1$s</string>
-
-    <!-- Первый запуск: тренировки дома -->
-    <string name="onb_workout_title">Тренироваться дома?</string>
-    <string name="onb_workout_lead">Короткие тренировки без инвентаря. План растёт, когда становится легче.</string>
-    <string name="onb_workout_days">По умолчанию в пн, ср и пт. Дни можно поменять в привычках.</string>
-    <string name="onb_workout_yes">Включить тренировки</string>
-    <string name="onb_workout_no">Не сейчас</string>
-    <string name="ex_pushups_sub">от стены, с колен или классические</string>
-    <string name="ex_squats_sub">без веса</string>
-    <string name="ex_plank_sub">на локтях, с таймером</string>
-    <string name="ex_crunches_sub">скручивания</string>
 
     <!-- Язык -->
     <string name="set_language">Язык</string>

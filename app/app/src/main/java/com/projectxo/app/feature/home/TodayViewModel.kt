@@ -7,6 +7,8 @@ import com.projectxo.app.core.data.SettingsRepository
 import com.projectxo.app.core.data.WaterRepository
 import com.projectxo.app.core.model.BalanceHistory
 import com.projectxo.app.core.model.BalanceMath
+import com.projectxo.app.core.model.BalanceStreak
+import com.projectxo.app.core.model.DayBalance
 import com.projectxo.app.core.model.UndoPolicy
 import com.projectxo.app.core.model.WaterPortions
 import kotlinx.coroutines.CoroutineScope
@@ -40,11 +42,21 @@ class TodayViewModel(
 
     val date: LocalDate = clock.today()
 
+    // Год назад: хватает и на серию кольца (Р80), и на сегодняшний день одним запросом.
     val state: StateFlow<TodayState?> = combine(
-        history.totalsBetween(date, date), history.goals(), settings.settings,
+        history.totalsBetween(date.minusDays(STREAK_DAYS), date), history.goals(), settings.settings,
     ) { totals, goals, s ->
-        TodayState(BalanceMath.progress(totals[date], goals, s.modules, s.moduleOrder))
+        val percents = totals.mapValues { (_, t) -> DayBalance.percent(BalanceMath.progress(t, goals, s.modules, s.moduleOrder)) }
+        TodayState(
+            BalanceMath.progress(totals[date], goals, s.modules, s.moduleOrder),
+            streak = BalanceStreak.count(percents, date),
+            streakWaiting = BalanceStreak.waiting(percents, date),
+        )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    private companion object {
+        const val STREAK_DAYS = 365L
+    }
 
     private val _undo = MutableStateFlow<QuickAdd?>(null)
     val undo: StateFlow<QuickAdd?> = _undo.asStateFlow()

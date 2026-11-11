@@ -6,7 +6,6 @@ import com.projectxo.app.core.ui.format.moduleValueText
 import com.projectxo.app.core.ui.icons.ModuleUi
 import com.projectxo.app.core.ui.format.formatVolumeNumber
 import com.projectxo.app.core.ui.format.formatVolume
-import androidx.compose.foundation.Canvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,15 +21,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import com.projectxo.app.core.ui.motion.animatedValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import com.projectxo.app.core.ui.format.pluralText
 import androidx.compose.ui.res.stringResource
@@ -100,33 +96,5 @@ fun ModuleRow(progress: ModuleProgress, entranceIndex: Int, isLast: Boolean, mod
                     if (fill > 0f) drawRect(colors.ink, size = Size(size.width * fill, size.height))
                 },
         )
-    }
-}
-
-/** Метка модуля: круг — вода, квадрат — еда, треугольник — ходьба. Обводка без заливки. */
-@Composable
-fun ShapeMarker(module: Module, modifier: Modifier = Modifier) {
-    val colors = XoTheme.colors
-    val strokePx = with(LocalDensity.current) { XoSize.markerStroke.toPx() }
-    val stroke = remember(strokePx) { Stroke(width = strokePx) }
-    val triangle = remember { Path() }
-    Canvas(modifier.size(XoSize.marker)) {
-        val inset = strokePx / 2f
-        when (module) {
-            Module.Water -> drawCircle(colors.ink, radius = size.minDimension / 2f - inset, style = stroke)
-            Module.Food -> drawRect(
-                colors.ink, topLeft = Offset(inset + size.width * 0.07f, inset + size.height * 0.07f),
-                size = Size(size.width * 0.86f - strokePx, size.height * 0.86f - strokePx), style = stroke,
-            )
-            Module.Steps -> {
-                triangle.reset()
-                triangle.moveTo(size.width / 2f, inset + size.height * 0.07f)
-                triangle.lineTo(size.width - inset, size.height - inset - size.height * 0.07f)
-                triangle.lineTo(inset, size.height - inset - size.height * 0.07f)
-                triangle.close()
-                drawPath(triangle, colors.ink, style = stroke)
-            }
-            else -> drawCircle(colors.ink, radius = size.minDimension / 2f - inset, style = stroke)
-        }
     }
 }

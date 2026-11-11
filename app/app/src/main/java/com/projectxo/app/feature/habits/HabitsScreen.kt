@@ -74,6 +74,8 @@ import com.projectxo.app.core.ui.components.UndoBar
 import com.projectxo.app.core.ui.components.XoHairline
 import com.projectxo.app.core.ui.components.XoSegmented
 import com.projectxo.app.core.ui.components.XoSwitchRow
+import com.projectxo.app.core.model.StreakFlame
+import com.projectxo.app.core.ui.components.StreakFlame as StreakFlameIcon
 import com.projectxo.app.core.ui.format.formatCount
 import com.projectxo.app.core.ui.format.formatToday
 import com.projectxo.app.core.ui.format.rememberFormatLocale
@@ -352,7 +354,7 @@ private fun HabitRow(item: HabitItem, state: HabitsUiState, actions: HabitsActio
         Column(Modifier.weight(1f)) {
             Text(habitName(item.habit), style = type.bodyStrong, color = colors.ink)
             Spacer(Modifier.height(XoSpacing.textGap))
-            Text(subtitle(item), style = type.caption, color = colors.muted)
+            StreakCaption(item, subtitle(item))
         }
         if (item.habit.target > 1 && !state.editMode) {
             Counter(item, actions)
@@ -394,7 +396,7 @@ private fun ListView(state: HabitsUiState, actions: HabitsActions, onEdit: (Habi
                 Column(Modifier.weight(1f)) {
                     Text(habitName(item.habit), style = type.bodyStrong, color = colors.ink)
                     Spacer(Modifier.height(XoSpacing.textGap))
-                    Text(subtitle(item), style = type.caption, color = colors.muted)
+                    StreakCaption(item, subtitle(item))
                 }
                 RowActions(item, state, actions, onEdit)
             }
@@ -451,13 +453,26 @@ private fun CardsView(state: HabitsUiState, actions: HabitsActions, onEdit: (Hab
             Spacer(Modifier.height(XoSpacing.s2))
             Heat(item, state)
             Spacer(Modifier.height(XoSpacing.s2))
-            Text(
+            StreakCaption(
+                item,
                 if (item.best > 0) stringResource(R.string.habits_card_streak, item.streak.toString(), item.best.toString()) +
                     (if (item.best >= 7) stringResource(R.string.habits_percent, item.percent30.toString()) else "")
                 else stringResource(R.string.habits_card_empty),
-                style = type.caption, color = colors.muted,
             )
         }
+    }
+}
+
+/** Подпись привычки с огоньком серии слева (Р80): огонь с 3 дней, приглушённый, пока сегодня не отмечено. */
+@Composable
+private fun StreakCaption(item: HabitItem, text: String) {
+    val level = StreakFlame.level(item.streak)
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (level > 0) {
+            StreakFlameIcon(level, XoSize.streakFlame, waiting = !item.doneToday)
+            Spacer(Modifier.width(XoSpacing.s1))
+        }
+        Text(text, style = XoTheme.type.caption, color = XoTheme.colors.muted)
     }
 }
 

@@ -19,6 +19,10 @@
         <item quantity="other">Day balance, %d percent</item>
     </plurals>
     <string name="quick_add">Add %1$s of water</string>
+    <plurals name="balance_streak">
+        <item quantity="one">%d day in a row with a full ring</item>
+        <item quantity="other">%d days in a row with a full ring</item>
+    </plurals>
 
     <!-- Modules -->
     <string name="module_water">Water</string>
@@ -287,7 +291,6 @@
     <string name="food_unnamed">Untitled</string>
     <string name="food_custom_chip">Custom…</string>
     <string name="food_template_a11y">Add: %1$s, %2$s kcal</string>
-    <string name="food_more">and %1$s more</string>
     <string name="food_dialog_title">Meal</string>
     <string name="food_name_label">Name</string>
     <string name="food_kcal_label">Calories, kcal</string>
@@ -311,7 +314,6 @@
     <string name="calendar_day_a11y">%1$s, balance %2$s %%</string>
     <string name="calendar_day_logged_a11y">%1$s, balance %2$s %%, has a note</string>
     <string name="calendar_day_off_a11y">%1$s, unavailable</string>
-    <string name="calendar_month_a11y">%1$s: open month</string>
     <string name="calendar_sheet_expand">Expand day</string>
     <string name="calendar_sheet_collapse">Collapse day</string>
     <string name="day_title_today">%1$s · today</string>

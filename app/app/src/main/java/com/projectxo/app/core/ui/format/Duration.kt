@@ -17,12 +17,6 @@ fun formatMinutes(totalMin: Long): String {
     }
 }
 
-/** Часы:минуты, «09:40». Для таймеров. */
-fun clockHm(totalSec: Long): String {
-    val s = totalSec.coerceAtLeast(0)
-    return "%02d:%02d".format(s / 3600, s % 3600 / 60)
-}
-
 /** Часы:минуты:секунды. */
 fun clockHms(totalSec: Long): String {
     val s = totalSec.coerceAtLeast(0)

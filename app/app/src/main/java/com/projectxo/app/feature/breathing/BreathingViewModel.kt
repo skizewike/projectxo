@@ -7,7 +7,6 @@ import com.projectxo.app.core.data.BreathingRepository
 import com.projectxo.app.core.data.SettingsRepository
 import com.projectxo.app.core.model.BreathRhythm
 import com.projectxo.app.core.model.BreathingMath
-import com.projectxo.app.core.model.Wave2Goals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,7 +29,6 @@ data class BreathingUiState(
     val summary: BreathSummary? = null,
     val todaySeconds: Int = 0,
     val todaySessions: Int = 0,
-    val goalSeconds: Int = Wave2Goals.BREATHING_SEC,
 ) {
     val running: Boolean get() = startedAtMs != null
 }
@@ -81,8 +79,6 @@ class BreathingViewModel(
         if (l.startedAtMs == null) return
         record(state.value.minutes * 60, showSummary = true)
     }
-
-    fun dismissSummary() = local.update { it.copy(summary = null) }
 
     private fun record(seconds: Int, showSummary: Boolean = false) {
         val s = state.value

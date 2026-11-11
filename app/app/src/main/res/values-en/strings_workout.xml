@@ -11,9 +11,6 @@
     <string name="pushup_classic">classic</string>
     <string name="workout_title">Workouts</string>
     <string name="workout_lead">Pick an exercise. The load grows when it gets easier for you.</string>
-    <string name="workout_ex_new">we will check your level before the first workout</string>
-    <string name="workout_ex_level">now %1$s · workouts: %2$s</string>
-    <string name="workout_ex_level_variant">now %1$s, %2$s · workouts: %3$s</string>
     <string name="workout_safety">If you feel pain, stop.</string>
     <string name="workout_stop">Stop</string>
     <string name="workout_check_reps">How many can you do in a row with good form?</string>
@@ -40,11 +37,9 @@
     <string name="workout_done_title">Workout logged</string>
     <string name="workout_done_up">%1$s: the next goal is higher, from %2$s to %3$s.</string>
     <string name="workout_done_same">%1$s: the level stays at %2$s.</string>
-    <string name="workout_done_habit">The “Workout” habit is checked for today.</string>
     <string name="habits_counting">How to count sets</string>
     <string name="habits_counting_ladder">Ladder</string>
     <string name="habits_counting_tap">Tap count</string>
-    <string name="habits_open_workout">Open workout</string>
     <string name="workout_check_again">Several workouts have passed, so let’s check your level again.</string>
     <string name="workout_plan_line">Plan: %1$s</string>
     <string name="workout_plan_sec">sec</string>
@@ -64,17 +59,6 @@
     <string name="workout_history">Recent workouts</string>
     <string name="workout_rest_a11y">Rest, %1$s seconds left</string>
     <string name="workout_done_total">Total this workout: %1$s</string>
-
-    <!-- First run: home workouts -->
-    <string name="onb_workout_title">Work out at home?</string>
-    <string name="onb_workout_lead">Short workouts with no equipment. The plan grows when it gets easier.</string>
-    <string name="onb_workout_days">Mon, Wed and Fri by default. You can change the days in habits.</string>
-    <string name="onb_workout_yes">Turn on workouts</string>
-    <string name="onb_workout_no">Not now</string>
-    <string name="ex_pushups_sub">wall, on knees or classic</string>
-    <string name="ex_squats_sub">bodyweight</string>
-    <string name="ex_plank_sub">on elbows, with a timer</string>
-    <string name="ex_crunches_sub">crunches</string>
 
     <!-- Language -->
     <string name="set_language">Language</string>

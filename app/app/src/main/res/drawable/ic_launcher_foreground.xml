@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Логотип XO в масштабе 0,364 от заставки, в безопасной зоне 66 dp. Пропорции из docs/DESIGN.md, 6.2. -->
+<!-- Иконка 02 «Кольцо дня» (Р80, design/app-icon-variants.html): дуга на 82 % как у кольца «Баланса дня», внутри X. Безопасная зона 66 dp. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:pathData="M27.3,42.9L49.5,65.1M49.5,42.9L27.3,65.1"
-        android:strokeWidth="3.64"
-        android:strokeColor="@color/xo_icon_ink"
-        android:strokeLineCap="butt" />
-    <path
-        android:pathData="M68.9,42.82A11.18,11.18 0,1 1,68.9 65.18A11.18,11.18 0,1 1,68.9 42.82"
-        android:strokeWidth="3.82"
-        android:strokeColor="@color/xo_icon_accent"
+        android:pathData="M54,32A22,22 0,1 1,54 76A22,22 0,1 1,54 32"
+        android:strokeWidth="6"
+        android:strokeColor="@color/xo_icon_track"
         android:fillColor="#00000000" />
+    <path
+        android:pathData="M54,32A22,22 0,1 1,34.09 44.63"
+        android:strokeWidth="6"
+        android:strokeColor="@color/xo_icon_accent"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M49,49L59,59M59,49L49,59"
+        android:strokeWidth="3"
+        android:strokeColor="@color/xo_icon_ink"
+        android:strokeLineCap="round" />
 </vector>

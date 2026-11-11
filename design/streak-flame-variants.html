@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Огоньки серии</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--page:#ECE8DF;--bg:#F6F3EC;--ink:#171614;--muted:#6E6A62;--line:#DCD7CC;--track:#E3DED3;--accent:#2D64D2;--warm:#D9480F;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--warm:#FF7A33;}}
+:root[data-theme="dark"]{--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--warm:#FF7A33;}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px;max-width:700px}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px 16px;margin-bottom:24px;align-items:center}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{padding:6px 12px;border-radius:999px;font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.lbl{font-size:12px;color:var(--muted)}
+.play{background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 16px;font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;background:var(--bg)}
+.card h2{font-size:15px;font-weight:600;margin:0}
+.card p{color:var(--muted);margin:4px 0 12px;font-size:13px;min-height:58px}
+.stage{position:relative;height:220px;border-radius:14px;background:var(--page);display:flex;justify-content:center}
+.stage canvas{width:100%;height:220px}
+.stage .cap{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:15px;font-weight:600;transition:opacity .3s}
+.stage .cap small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);margin:14px 0 6px;text-align:center}
+.levels canvas{width:84px;height:84px;display:block;margin:0 auto}
+.levels span{font-size:12px;color:var(--muted)}
+.sec{font-size:12px;color:var(--muted);margin:16px 0 6px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.row .chk{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);flex:0 0 auto}
+.row .chk.on{background:var(--ink);border-color:var(--ink)}
+.row .nm{flex:1}
+.row canvas{width:24px;height:24px}
+.row b{font-weight:600;min-width:22px;text-align:right}
+.ringbox{display:flex;align-items:center;gap:16px}
+.ringbox canvas{width:120px;height:120px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 6px;font-weight:600}
+.chip canvas{width:22px;height:22px}
+.pick{margin-top:16px;width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;font-weight:500}
+.pick[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.note{margin-top:28px;color:var(--muted);font-size:13px;max-width:760px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Огоньки серии: 3 варианта</h1>
+<p class="sub">Серия считается и у каждой привычки, и у кольца «Баланс дня» (дни подряд, когда кольцо дошло до цели). Огонь растёт на 3, 10 и 30 днях. «Показать момент» проигрывает, как огонь загорается в день достижения. Если сегодня ещё не отмечено, огонёк серый и не двигается: серия ждёт, но не ругает.</p>
+<div class="ctrls">
+  <button class="play" id="play">Показать момент</button>
+  <span class="lbl">Достижение</span>
+  <div class="seg" id="ms"><button data-v="3" aria-pressed="true">3 дня</button><button data-v="10">10 дней</button><button data-v="30">30 дней</button></div>
+  <span class="lbl">Цвет огня</span>
+  <div class="seg" id="col"><button data-v="accent" aria-pressed="true">Акцент</button><button data-v="warm">Тёплый</button></div>
+  <span class="lbl">Анимации</span>
+  <div class="seg" id="rm"><button data-v="0" aria-pressed="true">Полные</button><button data-v="1">Меньше</button></div>
+  <span class="lbl">Страница</span>
+  <div class="seg" id="theme"><button data-v="auto" aria-pressed="true">Система</button><button data-v="light">Светлая</button><button data-v="dark">Тёмная</button></div>
+</div>
+<div class="grid" id="grid"></div>
+<p class="note">«Тёплый» цвет показан только для сравнения: по правилам стиля в приложении один акцентный цвет, второй цвет потребует отдельного решения владельца. Свечения и размытия нет ни в одном варианте: огонь держится только на форме и движении. В Compose это один Canvas с Path, без картинок и без Lottie.</p>
+</div>
+<script>
+const VARS=[
+ {id:'01',name:'01 «Пламя»',note:'Заливка одним цветом. На 10 днях внутри появляется светлая сердцевина, на 30 — боковые языки и искры. Ближе всего к привычным огонькам.'},
+ {id:'02',name:'02 «Контур»',note:'Линия 1,5 как в наборе «Предметы». Каждый уровень добавляет ещё один контур внутри: 1, 2, 3. Самый тихий и строгий.'},
+ {id:'03',name:'03 «Корона кольца»',note:'Огонь растёт из маленького кольца: 3, 5 и 9 языков. Связывает серию с кольцом «Баланса дня».'},
+];
+const DPR=Math.min(2,window.devicePixelRatio||1);
+const st={ms:3,col:'accent',rm:matchMedia('(prefers-reduced-motion: reduce)').matches,pick:null};
+try{st.pick=localStorage.getItem('xo-streak-pick')}catch(e){}
+let C={};
+function readColors(){const s=getComputedStyle(document.documentElement);const g=n=>s.getPropertyValue(n).trim();
+ C={bg:g('--bg'),page:g('--page'),ink:g('--ink'),muted:g('--muted'),track:g('--track'),line:g('--line'),accent:g('--accent'),fire:st.col==='warm'?g('--warm'):g('--accent')};}
+const lvlOf=n=>n>=30?3:n>=10?2:n>=3?1:0;
+
+// Форма пламени: низ скруглён (четверть эллипса), верх сужается в язык. Колебание только у верха.
+function flamePts(cx,by,w,h,t,amp,sp,ph,lean=0){
+ const N=20,R=[],L=[];
+ const hh=h*(1+0.05*Math.sin(t*sp*1.3+ph));
+ for(let i=0;i<=N;i++){const s=i/N;
+  let hw=s<0.3?Math.sqrt(1-Math.pow(1-s/0.3,2)):Math.pow(Math.cos((s-0.3)/0.7*Math.PI/2),1.25);
+  hw*=w/2*(1+0.07*Math.sin(t*sp*2.1+s*6+ph));
+  const sx=amp*Math.pow(s,1.7)*Math.sin(t*sp+s*3.2+ph)+lean*w*s*s;
+  const y=by-s*hh;R.push([cx+sx+hw,y]);L.push([cx+sx-hw,y]);}
+ return R.concat(L.reverse().slice(1,-1));
+}
+// Знак огня: основной язык с наклоном вправо и малый боковой слева. Так он не похож на каплю воды.
+function fireParts(cx,by,w,h,t,amp,sp,ph){
+ return [flamePts(cx+w*0.06,by,w*0.9,h,t,amp,sp,ph,0.22),
+         flamePts(cx-w*0.24,by-h*0.1,w*0.44,h*0.6,t,amp*0.8,sp+0.9,ph+2.1,-0.35)];
+}
+function fillFire(ctx,parts){for(const p of parts){path(ctx,p);ctx.fill()}}
+function strokeFire(ctx,parts,w,h){path(ctx,parts[0]);ctx.stroke();
+ ctx.save();ctx.beginPath();ctx.rect(-1e4,-1e4,2e4,2e4);
+ const p=parts[0],n=p.length;ctx.moveTo((p[n-1][0]+p[0][0])/2,(p[n-1][1]+p[0][1])/2);
+ for(let i=0;i<n;i++){const a=p[i],b=p[(i+1)%n];ctx.quadraticCurveTo(a[0],a[1],(a[0]+b[0])/2,(a[1]+b[1])/2)}
+ ctx.clip('evenodd');path(ctx,parts[1]);ctx.stroke();ctx.restore();}
+function path(ctx,p){const n=p.length;ctx.beginPath();
+ ctx.moveTo((p[n-1][0]+p[0][0])/2,(p[n-1][1]+p[0][1])/2);
+ for(let i=0;i<n;i++){const a=p[i],b=p[(i+1)%n];ctx.quadraticCurveTo(a[0],a[1],(a[0]+b[0])/2,(a[1]+b[1])/2)}
+ ctx.closePath();}
+const backOut=x=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const frac=x=>x-Math.floor(x);
+
+// Огонь серии. lvl 1..3, S — размер, ign 0..1 — разгорание, risk — серый и неподвижный.
+function drawStreak(ctx,v,lvl,cx,by,S,t,ign,risk){
+ if(lvl<1)lvl=1;
+ const col=risk?C.muted:C.fire, m=risk||st.rm?0:1, tt=m?t:0;
+ const g=clamp(backOut(clamp(ign)),0,1.25);
+ const amp=S*0.05*lvl*m, sp=3.5+lvl*1.2;
+ const W=S*[0.5,0.62,0.72][lvl-1], H=S*[0.7,0.86,1.0][lvl-1]*g;
+ if(H<=0.5)return;
+ ctx.save();
+ if(v==='01'){
+  ctx.fillStyle=col;
+  if(lvl>=3){path(ctx,flamePts(cx+W*0.42,by,W*0.42,H*0.5,tt,amp*0.7,sp+0.7,1.7,0.4));ctx.fill()}
+  fillFire(ctx,fireParts(cx,by,W,H,tt,amp,sp,0));
+  if(lvl>=2){ctx.globalCompositeOperation='destination-out';path(ctx,flamePts(cx+W*0.04,by-S*0.05,W*0.36,H*0.46,tt,amp*0.5,sp+1,0.8,0.15));ctx.fill();ctx.globalCompositeOperation='source-over'}
+  if(lvl>=3&&!risk&&m){ctx.fillStyle=col;for(let i=0;i<4;i++){const f=frac(t*0.55+i/4);
+   ctx.globalAlpha=(1-f)*g;ctx.beginPath();ctx.arc(cx+Math.sin(t*2+i*2.3)*W*0.45,by-H*(0.75+0.55*f),S*0.03*(1-f*0.6),0,7);ctx.fill()}}
+ }else if(v==='02'){
+  ctx.strokeStyle=col;ctx.lineWidth=Math.max(1,S*0.0625);ctx.lineJoin='round';
+  strokeFire(ctx,fireParts(cx,by,W,H,tt,amp,sp,0));
+  for(let k=1;k<lvl;k++){const sc=1-k*0.3;
+   path(ctx,flamePts(cx+W*0.05,by-k*S*0.045,W*0.9*sc,H*sc,tt,amp*sc,sp+k*0.8,k*1.1,0.22));ctx.stroke()}
+ }else{
+  const rr=S*0.24, cy=by-rr-S*0.05, n=[3,5,9][lvl-1], spread=[70,120,210][lvl-1]*Math.PI/180;
+  ctx.fillStyle=col;
+  for(let i=0;i<n;i++){const a=-Math.PI/2+(n===1?0:(i/(n-1)-0.5)*spread);
+   const mid=1-Math.abs(i/(n-1)-0.5)*1.1;
+   ctx.save();ctx.translate(cx+Math.cos(a)*rr*0.9,cy+Math.sin(a)*rr*0.9);ctx.rotate(a+Math.PI/2);
+   path(ctx,flamePts(0,0,S*0.17,S*(0.2+0.13*lvl)*mid*g,tt,S*0.03*m,sp+i*0.3,i*1.9));ctx.fill();ctx.restore()}
+  ctx.lineWidth=S*0.08;ctx.strokeStyle=col;ctx.beginPath();ctx.arc(cx,cy,rr,0,7);ctx.stroke();
+  ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(cx,cy,rr-S*0.04,0,7);ctx.fill();
+ }
+ ctx.restore();
+}
+
+const draws=[];
+function canvas(el,fn){const r=el.getBoundingClientRect();el.width=Math.round(r.width*DPR);el.height=Math.round(r.height*DPR);
+ const ctx=el.getContext('2d');draws.push({el,ctx,fn,w:r.width,h:r.height});}
+let play0=-1e9;
+const days=n=>n+' '+(n%10===1&&n%100!==11?'день':(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?'дня':'дней');
+function render(){
+ draws.length=0;
+ const grid=document.getElementById('grid');
+ grid.innerHTML=VARS.map(v=>`<div class="card"><h2>${v.name}</h2><p>${v.note}</p>
+  <div class="stage"><canvas data-k="stage" data-v="${v.id}"></canvas><div class="cap" data-cap="${v.id}">${days(st.ms)} подряд<small>Серия «Вода» продолжается</small></div></div>
+  <div class="levels">${[3,10,30].map(n=>`<div><canvas data-k="lvl" data-v="${v.id}" data-n="${n}"></canvas><span>${n}</span></div>`).join('')}</div>
+  <div class="sec">Привычки</div>
+  ${[['Вода до обеда',4,1],['Растяжка',12,1],['Без сахара',31,0]].map(([nm,n,on])=>`<div class="row"><span class="chk ${on?'on':''}"></span><span class="nm">${nm}</span>
+    <canvas data-k="row" data-v="${v.id}" data-n="${n}" data-r="${on?0:1}"></canvas><b>${n}</b></div>`).join('')}
+  <div class="sec">Баланс дня</div>
+  <div class="ringbox"><canvas data-k="ring" data-v="${v.id}"></canvas><div><span class="chip"><canvas data-k="chip" data-v="${v.id}"></canvas>10</span>
+   <div class="lbl" style="margin-top:6px">дней подряд с кольцом</div></div></div>
+  <button class="pick" data-id="${v.id}" aria-pressed="${st.pick===v.id}">${st.pick===v.id?'Выбрано':'Выбрать '+v.id}</button></div>`).join('');
+ grid.querySelectorAll('canvas').forEach(el=>{const v=el.dataset.v,k=el.dataset.k,n=+el.dataset.n||0;
+  if(k==='stage')canvas(el,(c,w,h,t)=>{const p=(t-play0)/1000,lvl=lvlOf(st.ms);
+    const ign=p<0?1:clamp(p/0.7);drawStreak(c,v,lvl,w/2,h*0.68,120,t,ign,false);
+    if(p>=0&&p<1.6&&lvl>=2&&!st.rm){c.fillStyle=C.fire;const N=lvl*10;for(let i=0;i<N;i++){const a=i/N*Math.PI*2+i,q=clamp(p/1.2),d=40+q*70*(0.6+0.4*Math.sin(i*7));
+      c.globalAlpha=1-q;c.beginPath();c.arc(w/2+Math.cos(a)*d,h*0.68-50+Math.sin(a)*d*0.7-q*30,2.2*(1-q*0.5),0,7);c.fill()}c.globalAlpha=1}});
+  if(k==='lvl')canvas(el,(c,w,h,t)=>drawStreak(c,v,lvlOf(n),w/2,h*0.92,62,t,1,false));
+  if(k==='row')canvas(el,(c,w,h,t)=>drawStreak(c,v,lvlOf(n),w/2,h*0.98,22,t,1,el.dataset.r==='1'));
+  if(k==='chip')canvas(el,(c,w,h,t)=>drawStreak(c,v,2,w/2,h*0.98,21,t,1,false));
+  if(k==='ring')canvas(el,(c,w,h,t)=>{const cx=w/2,cy=h/2,r=48;c.lineWidth=9;c.lineCap='round';
+    c.strokeStyle=C.track;c.beginPath();c.arc(cx,cy,r,0,7);c.stroke();
+    c.strokeStyle=C.accent;c.beginPath();c.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*0.86);c.stroke();
+    c.fillStyle=C.ink;c.font='600 22px Inter,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('86%',cx,cy)});
+ });
+ grid.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{st.pick=b.dataset.id;try{localStorage.setItem('xo-streak-pick',st.pick)}catch(e){};render()});
+}
+function loop(now){
+ for(const d of draws){const{ctx,w,h}=d;ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,w,h);d.fn(ctx,w,h,now/1000)}
+ const p=(now-play0)/1000;document.querySelectorAll('[data-cap]').forEach(e=>e.style.opacity=p<0?1:clamp((p-0.45)/0.3));
+ requestAnimationFrame(loop);
+}
+function seg(id,fn){const el=document.getElementById(id);el.onclick=e=>{const b=e.target.closest('button');if(!b)return;
+ el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)}}
+seg('ms',v=>{st.ms=+v;render();play0=performance.now()});
+seg('col',v=>{st.col=v;readColors()});
+seg('rm',v=>{st.rm=v==='1'});
+if(st.rm)document.querySelector('#rm [data-v="1"]').click();
+seg('theme',v=>{if(v==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=v;readColors()});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',readColors);
+document.getElementById('play').onclick=()=>{play0=performance.now()};
+addEventListener('resize',()=>render());
+readColors();render();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

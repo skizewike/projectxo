@@ -40,7 +40,6 @@ sealed interface WorkoutStep {
         val holdStartMs: Long? = null,
     ) : WorkoutStep {
         val index: Int get() = actual.size
-        val finished: Boolean get() = actual.size >= plan.size
     }
     data class Rate(val exercise: Exercise, val level: Int, val plan: List<Int>, val actual: List<Int>) : WorkoutStep {
         val allDone: Boolean get() = WorkoutMath.allDone(plan, actual)

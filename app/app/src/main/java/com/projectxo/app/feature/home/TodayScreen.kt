@@ -58,6 +58,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.projectxo.app.R
+import androidx.compose.foundation.layout.width
+import com.projectxo.app.core.ui.format.pluralText
+import com.projectxo.app.core.model.BalanceFirework
+import com.projectxo.app.core.model.StreakFlame
+import com.projectxo.app.core.ui.components.StreakFlame as StreakFlameIcon
 import com.projectxo.app.core.ui.format.formatToday
 import com.projectxo.app.core.ui.splash.EntranceSlot
 import com.projectxo.app.core.ui.splash.entrance
@@ -113,12 +118,20 @@ private fun TodayContent(
     var seal by remember { mutableIntStateOf(0) }
     var celebrate by remember { mutableIntStateOf(0) }
     var prevPercent by remember { mutableStateOf<Int?>(null) }
+    var firework by remember { mutableIntStateOf(0) }
+    var fireworkTier by remember { mutableIntStateOf(0) }
     val haptic = LocalHapticFeedback.current
     LaunchedEffect(completed, state.balancePercent, splash.done) {
         if (!splash.done) return@LaunchedEffect
         val p = prevCompleted
         val pp = prevPercent
         val full = pp != null && pp < 100 && state.balancePercent >= 100
+        // Салют на 50, 80 и 100 % (Р80): самый высокий пройденный порог.
+        val tier = if (pp == null) 0 else BalanceFirework.crossed(pp, state.balancePercent)
+        if (tier > 0) {
+            fireworkTier = tier
+            firework++
+        }
         // «Баланс дня» 100 %: полная анимация; один модуль: только волна по делениям (DESIGN.md 5c.1).
         if (full) {
             celebrate++
@@ -148,8 +161,23 @@ private fun TodayContent(
             percent = state.balancePercent,
             sealTrigger = seal,
             celebrateTrigger = celebrate,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier.align(Alignment.CenterHorizontally).balanceFireworks(firework, fireworkTier),
         )
+        val flame = StreakFlame.level(state.streak)
+        if (flame > 0) {
+            Spacer(Modifier.height(XoSpacing.s3))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.align(Alignment.CenterHorizontally).entrance(EntranceSlot.RING_LABEL),
+            ) {
+                StreakFlameIcon(flame, XoSize.streakFlame, waiting = state.streakWaiting)
+                Spacer(Modifier.width(XoSpacing.s1))
+                Text(
+                    pluralText(R.plurals.balance_streak, state.streak, state.streak),
+                    style = XoTheme.type.caption, color = XoTheme.colors.muted,
+                )
+            }
+        }
         Spacer(Modifier.height(XoSpacing.s7))
         state.modules.forEachIndexed { i, m ->
             ModuleRow(m, entranceIndex = EntranceSlot.ROW_FIRST + minOf(i, EntranceSlot.ROW_LAST - EntranceSlot.ROW_FIRST), isLast = i == state.modules.lastIndex, onClick = { onOpenModule(m.module) })
