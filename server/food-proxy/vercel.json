@@ -1,0 +1,7 @@
+{
+  "regions": ["iad1"],
+  "rewrites": [
+    { "source": "/health", "destination": "/api/proxy" },
+    { "source": "/v1beta/:path*", "destination": "/api/proxy" }
+  ]
+}
