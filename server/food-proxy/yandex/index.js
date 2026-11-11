@@ -1,8 +1,9 @@
-// Ретранслятор «Еда по фото» для Яндекс Облака (Cloud Functions, Node.js 18+, точка входа index.handler).
-// Адрес *.yandexcloud.net открывается из России. Посредник (Cloudflare) держит ключ Gemini и счётчики; из Яндекс Облака до Vercel запрос не доходит (тайм-аут), до Cloudflare доходит.
-// Здесь ничего не хранится и ключа нет: функция только пересылает запрос и ответ.
+// Ретранслятор «Еда по фото» для Яндекс Облака (Cloud Functions, Node.js 22, точка входа index.handler).
+// Адрес *.yandexcloud.net открывается из России. Посредник держит ключ Gemini и счётчики, здесь их нет:
+// функция только пересылает запрос и ответ. Основной посредник на Vercel, запасной на Cloudflare
+// (с Cloudflare из России большие запросы, то есть фото, часто обрываются).
 
-const TARGET = process.env.TARGET_URL || "https://xo-food-proxy.projectxo.workers.dev";
+const TARGETS = (process.env.TARGET_URLS || "https://xo-food-proxy.vercel.app,https://xo-food-proxy.projectxo.workers.dev").split(",");
 const PATH = /^\/v1beta\/models\/[a-z0-9.\-]+:generateContent$/;
 
 const reply = (statusCode, body) => ({
@@ -24,15 +25,19 @@ module.exports.handler = async (event) => {
   if (event.httpMethod !== "POST" || !PATH.test(path)) return reply(404, { error: "not found" });
 
   const body = event.isBase64Encoded ? Buffer.from(event.body || "", "base64") : event.body || "";
-  try {
-    const r = await fetch(`${TARGET}${path}`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-install-id": header(event.headers, "x-install-id") },
-      body,
-    });
-    return reply(r.status, await r.text());
-  } catch (e) {
-    const why = String((e && e.cause && (e.cause.code || e.cause.message)) || (e && e.message) || e);
-    return reply(502, { error: "upstream unreachable", why });
+  const why = [];
+  for (const target of TARGETS) {
+    try {
+      const r = await fetch(`${target}${path}`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-install-id": header(event.headers, "x-install-id") },
+        body,
+        signal: AbortSignal.timeout(25000),
+      });
+      return reply(r.status, await r.text());
+    } catch (e) {
+      why.push(String((e && e.cause && (e.cause.code || e.cause.message)) || (e && e.name) || e));
+    }
   }
+  return reply(502, { error: "upstream unreachable", why });
 };
