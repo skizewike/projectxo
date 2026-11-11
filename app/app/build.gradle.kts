@@ -34,8 +34,8 @@ android {
         applicationId = "com.projectxo.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.6.2"
+        versionCode = 9
+        versionName = "0.6.3"
         // Адрес общего посредника «Еды по фото» (server/food-proxy, Р70). Пусто: работает только свой ключ пользователя.
         val proxy = (project.findProperty("foodAiProxyUrl") as String?).orEmpty().trim()
         buildConfigField("String", "FOOD_AI_PROXY_URL", "\"$proxy\"")
