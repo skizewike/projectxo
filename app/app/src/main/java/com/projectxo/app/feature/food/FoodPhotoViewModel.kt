@@ -44,6 +44,8 @@ data class FoodPhotoState(
     val notFood: Boolean = false,
     /** Снимок, по которому идёт распознавание: виден на экране ожидания и результата (Р71). */
     val photo: ByteArray? = null,
+    /** Снимок ушёл на сервер, идёт распознавание (Р82): до этого экран показывает «Отправляем». */
+    val uploaded: Boolean = false,
 ) {
     val totals: PhotoTotals get() = FoodPhotoMath.totals(items)
     val range: Pair<Int, Int> get() = FoodPhotoMath.range(totals.kcal, dish?.confidence ?: Confidence.Medium)
@@ -100,7 +102,7 @@ class FoodPhotoViewModel(
     fun analyze(language: String, jpeg: suspend () -> ByteArray?) {
         if (_state.value.step == PhotoStep.Working) return
         job?.cancel()
-        _state.update { it.copy(step = PhotoStep.Working, error = null, notFood = false) }
+        _state.update { it.copy(step = PhotoStep.Working, error = null, notFood = false, uploaded = false) }
         job = viewModelScope.launch {
             val bytes = jpeg()
             lastJpeg = bytes
@@ -109,7 +111,7 @@ class FoodPhotoViewModel(
                 fail(PhotoError.BadPhoto)
                 return@launch
             }
-            when (val r = analyzer.analyze(bytes, _state.value.hint, language)) {
+            when (val r = analyzer.analyze(bytes, _state.value.hint, language) { _state.update { it.copy(uploaded = true) } }) {
                 is PhotoResult.Ok -> {
                     original = r.dish.items
                     _state.update {

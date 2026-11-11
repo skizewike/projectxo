@@ -23,4 +23,11 @@ interface FoodPhotoAnalyzer {
      * @param language язык ответа словами, например «Russian»
      */
     suspend fun analyze(jpeg: ByteArray, hint: String, language: String): PhotoResult
+
+    /**
+     * То же, но [onUploaded] вызывается, когда снимок целиком ушёл на сервер и остаётся ждать ответ (Р82:
+     * до этого момента экран показывает «Отправляем», после него «Считаем»). Заглушки без сети сигнала не дают.
+     */
+    suspend fun analyze(jpeg: ByteArray, hint: String, language: String, onUploaded: () -> Unit): PhotoResult =
+        analyze(jpeg, hint, language)
 }

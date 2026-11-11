@@ -26,7 +26,10 @@ class GeminiFoodAnalyzer(
     private val installId: () -> String = { "" },
 ) : FoodPhotoAnalyzer {
 
-    override suspend fun analyze(jpeg: ByteArray, hint: String, language: String): PhotoResult = withContext(io) {
+    override suspend fun analyze(jpeg: ByteArray, hint: String, language: String): PhotoResult =
+        analyze(jpeg, hint, language) {}
+
+    override suspend fun analyze(jpeg: ByteArray, hint: String, language: String, onUploaded: () -> Unit): PhotoResult = withContext(io) {
         val key = apiKey().trim()
         val viaProxy = key.isEmpty() && proxyUrl.isNotBlank()
         if (key.isEmpty() && !viaProxy) return@withContext PhotoResult.Fail(PhotoError.NoKey)
@@ -34,7 +37,7 @@ class GeminiFoodAnalyzer(
         val body = buildBody(jpeg, hint, language)
         var last = PhotoError.Busy
         for (model in models) {
-            when (val r = call("$base/$model:generateContent", if (viaProxy) null else key, body)) {
+            when (val r = call("$base/$model:generateContent", if (viaProxy) null else key, body, onUploaded)) {
                 is Call.Text -> {
                     val parsed = PhotoParser.parse(r.text)
                     // Битый ответ одной модели не повод сдаваться: пробуем следующую.
@@ -56,7 +59,7 @@ class GeminiFoodAnalyzer(
     }
 
     /** [key] null — запрос к посреднику: вместо ключа идёт случайный номер установки для счётчика лимитов. */
-    private fun call(address: String, key: String?, body: String): Call {
+    private fun call(address: String, key: String?, body: String, onUploaded: () -> Unit = {}): Call {
         val conn = (URL(address).openConnection() as HttpURLConnection)
         return try {
             conn.requestMethod = "POST"
@@ -65,7 +68,11 @@ class GeminiFoodAnalyzer(
             conn.doOutput = true
             conn.setRequestProperty("Content-Type", "application/json")
             if (key != null) conn.setRequestProperty("x-goog-api-key", key) else conn.setRequestProperty("x-install-id", installId())
-            conn.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+            val bytes = body.toByteArray(Charsets.UTF_8)
+            // Без потоковой отправки HttpURLConnection копит тело в памяти и шлёт его при чтении ответа: сигнал был бы ложным.
+            conn.setFixedLengthStreamingMode(bytes.size)
+            conn.outputStream.use { it.write(bytes) }
+            onUploaded()
             val code = conn.responseCode
             when {
                 code == 200 -> Call.Text(extractText(conn.inputStream.bufferedReader().use { it.readText() }))

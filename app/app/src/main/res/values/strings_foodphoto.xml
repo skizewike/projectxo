@@ -88,4 +88,8 @@
     <string name="set_net_note">Влияет только на путь снимка в «Еде по фото». Без VPN: через российский адрес. С VPN: сразу на наш сервер.</string>
     <string name="set_net_no">Без VPN</string>
     <string name="set_net_yes">С VPN</string>
+
+    <!-- Р82: экран «Отправляем» -->
+    <string name="fp_upload">Отправляем снимок</string>
+    <string name="fp_upload_sub">Снимок идёт на наш сервер.</string>
 </resources>

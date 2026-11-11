@@ -100,6 +100,9 @@ class AppContainer(context: Context) {
     val foodPhoto: com.projectxo.app.core.data.foodai.FoodPhotoAnalyzer = object : com.projectxo.app.core.data.foodai.FoodPhotoAnalyzer {
         override suspend fun analyze(jpeg: ByteArray, hint: String, language: String) =
             (if (settings.settings.value.usesVpn) foodDirect else foodViaRu).analyze(jpeg, hint, language)
+
+        override suspend fun analyze(jpeg: ByteArray, hint: String, language: String, onUploaded: () -> Unit) =
+            (if (settings.settings.value.usesVpn) foodDirect else foodViaRu).analyze(jpeg, hint, language, onUploaded)
     }
     val history by lazy {
         BalanceHistory(water, food, steps, goals, HistoryExtras(sleep, fasting, breathing, habits, workouts, settings) { clock.nowMs() })

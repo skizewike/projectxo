@@ -105,6 +105,15 @@ class FoodPhotoAiTest {
     }
 
     @Test
+    fun analyze_signalsWhenPhotoIsUploaded() = runBlocking {
+        answers = mapOf("m1" to reply(good))
+        var uploaded = 0
+        val r = analyzer(models = listOf("m1")).analyze(byteArrayOf(1, 2, 3), "", "Russian") { uploaded++ }
+        assertTrue(r is PhotoResult.Ok)
+        assertEquals(1, uploaded)
+    }
+
+    @Test
     fun analyze_quotaOnFirstModel_fallsBackToNext() = runBlocking {
         answers = mapOf("m1" to (429 to "{}"), "m2" to (404 to "{}"), "m3" to reply(good))
         val r = analyzer(models = listOf("m1", "m2", "m3")).analyze(byteArrayOf(1, 2, 3), "гречка", "Russian")

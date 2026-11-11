@@ -122,6 +122,35 @@ class FoodPhotoScreenTest {
         assertEquals("AIza" + "x".repeat(34), settings.settings.value.foodAiKey)
     }
 
+    /** «Отправляем» (Р82) до сигнала «снимок ушёл», потом «Считаем». Часы теста ведём вручную: анимации бесконечные. */
+    @Test
+    fun working_showsUploadFirstThenCounting() {
+        val sent = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val release = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val slow = object : FoodPhotoAnalyzer {
+            override suspend fun analyze(jpeg: ByteArray, hint: String, language: String) = result
+            override suspend fun analyze(jpeg: ByteArray, hint: String, language: String, onUploaded: () -> Unit): PhotoResult {
+                sent.await()
+                onUploaded()
+                release.await()
+                return result
+            }
+        }
+        vm = FoodPhotoViewModel(slow, settings, food, clock, CoroutineScope(UnconfinedTestDispatcher()))
+        compose.mainClock.autoAdvance = false
+        show()
+        analyzeNow()
+        compose.mainClock.advanceTimeBy(1000)
+        compose.onNodeWithText("Отправляем снимок").assertExists()
+        val bmp = compose.onRoot().captureToImage().asAndroidBitmap()
+        val file = File(File("build/outputs/screens").apply { mkdirs() }, "foodphoto_6_upload.png")
+        FileOutputStream(file).use { bmp.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+        sent.complete(Unit)
+        compose.mainClock.advanceTimeBy(500)
+        compose.onNodeWithText("Считаем").assertExists()
+        release.complete(Unit)
+    }
+
     @Test
     fun pickStep_showsPhotoButtons() {
         show()

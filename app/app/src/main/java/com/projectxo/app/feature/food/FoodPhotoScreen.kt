@@ -175,7 +175,7 @@ fun FoodPhotoScreen(state: FoodPhotoState, actions: FoodPhotoActions, onBack: ()
                 onCamera = ::launchCamera,
                 onGallery = { gallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
             )
-            PhotoStep.Working -> WorkingStep(state.photo)
+            PhotoStep.Working -> if (state.uploaded) WorkingStep(state.photo) else UploadStep()
             PhotoStep.Result -> ResultStep(state, actions, onSave = {
                 if (actions.onSave(unnamed)) {
                     haptic.performHapticFeedback(HapticFeedbackType.Confirm)
@@ -268,6 +268,78 @@ fun FoodAiKeyPanel(keyError: Boolean, onSave: (String) -> Unit, onRemove: (() ->
 }
 
 // ——— ожидание ———
+
+/**
+ * «Отправляем»: вариант 02 «Лента» (design/food-photo-upload.html, Р82). Карточка снимка едет по пунктирному рельсу
+ * от телефона к серверу, цикл [UPLOAD_MS] мс. Идёт, пока снимок уходит; как только он ушёл, экран переходит на «Считаем».
+ * При «меньше анимаций» стоит один кадр: карточка посередине.
+ */
+@Composable
+private fun UploadStep() {
+    val colors = XoTheme.colors
+    val type = XoTheme.type
+    val reduced = LocalReducedMotion.current
+    val infinite = rememberInfiniteTransition(label = "fpUpload")
+    val run by infinite.animateFloat(
+        initialValue = 0f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(UPLOAD_MS, easing = XoMotion.Upload), RepeatMode.Restart), label = "fpUploadCar",
+    )
+    val p = if (reduced) 0.5f else run
+    val carAlpha = if (reduced) 1f else when {
+        p < UPLOAD_FADE_IN -> p / UPLOAD_FADE_IN
+        p > UPLOAD_FADE_OUT_FROM -> ((1f - p) / (1f - UPLOAD_FADE_OUT_FROM)).coerceIn(0f, 1f)
+        else -> 1f
+    }
+    val serverAlpha = if (reduced) 0.35f else when {
+        p < UPLOAD_SERVER_FROM -> 0.35f
+        p < UPLOAD_SERVER_FULL -> 0.35f + 0.65f * (p - UPLOAD_SERVER_FROM) / (UPLOAD_SERVER_FULL - UPLOAD_SERVER_FROM)
+        else -> 1f
+    }
+
+    Column(Modifier.fillMaxWidth().padding(top = XoSpacing.s6), horizontalAlignment = Alignment.CenterHorizontally) {
+        Canvas(Modifier.fillMaxWidth().aspectRatio(UPLOAD_W / UPLOAD_H).clearAndSetSemantics { }) {
+            val k = size.width / UPLOAD_W
+            val sw = 1.5.dp.toPx()
+            fun o(x: Float, y: Float) = Offset(x * k, y * k)
+            fun sz(w: Float, h: Float) = Size(w * k, h * k)
+            // телефон
+            drawRoundRect(colors.ink, o(6f, 38f), sz(26f, 46f), androidx.compose.ui.geometry.CornerRadius(6f * k), style = Stroke(sw))
+            drawLine(colors.ink, o(15f, 77f), o(23f, 77f), strokeWidth = sw, cap = androidx.compose.ui.graphics.StrokeCap.Round)
+            // сервер
+            val server = colors.ink.copy(alpha = serverAlpha)
+            drawRoundRect(server, o(268f, 36f), sz(28f, 48f), androidx.compose.ui.geometry.CornerRadius(4f * k), style = Stroke(sw))
+            drawLine(server, o(273f, 50f), o(291f, 50f), strokeWidth = sw, cap = androidx.compose.ui.graphics.StrokeCap.Round)
+            drawLine(server, o(273f, 62f), o(291f, 62f), strokeWidth = sw, cap = androidx.compose.ui.graphics.StrokeCap.Round)
+            drawCircle(server, 1.6f * k, o(278f, 74f))
+            // рельс
+            drawLine(
+                colors.line, o(44f, 60f), o(256f, 60f), strokeWidth = sw,
+                pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(3f * k, 6f * k)),
+            )
+            // карточка снимка
+            val dx = p * UPLOAD_TRAVEL
+            drawRoundRect(colors.background.copy(alpha = carAlpha), o(46f + dx, 48f), sz(22f, 22f), androidx.compose.ui.geometry.CornerRadius(5f * k))
+            drawRoundRect(colors.accent.copy(alpha = carAlpha), o(46f + dx, 48f), sz(22f, 22f), androidx.compose.ui.geometry.CornerRadius(5f * k), style = Stroke(sw))
+            drawCircle(colors.accent.copy(alpha = carAlpha), 5f * k, o(57f + dx, 59f), style = Stroke(sw))
+        }
+        Spacer(Modifier.height(XoSpacing.s5))
+        Text(stringResource(R.string.fp_upload), style = type.title, color = colors.ink, modifier = Modifier.semantics { heading() })
+        Spacer(Modifier.height(XoSpacing.headGap))
+        Text(
+            stringResource(R.string.fp_upload_sub), style = type.caption, color = colors.muted,
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+        )
+    }
+}
+
+private const val UPLOAD_MS = 2400
+private const val UPLOAD_W = 300f
+private const val UPLOAD_H = 120f
+private const val UPLOAD_TRAVEL = 200f
+private const val UPLOAD_FADE_IN = 0.08f
+private const val UPLOAD_FADE_OUT_FROM = 0.85f
+private const val UPLOAD_SERVER_FROM = 0.8f
+private const val UPLOAD_SERVER_FULL = 0.92f
 
 /**
  * «Считаем»: вариант 03 «Скан» (design/food-photo-loading.html, Р72). Снимок остаётся на экране, по нему ходит

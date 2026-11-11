@@ -88,4 +88,8 @@
     <string name="set_net_note">Only affects the route of the photo in Food by photo. No VPN: through a Russian address. VPN: straight to our server.</string>
     <string name="set_net_no">No VPN</string>
     <string name="set_net_yes">VPN</string>
+
+    <!-- R82: Sending screen -->
+    <string name="fp_upload">Sending the photo</string>
+    <string name="fp_upload_sub">The photo is on its way to our server.</string>
 </resources>
