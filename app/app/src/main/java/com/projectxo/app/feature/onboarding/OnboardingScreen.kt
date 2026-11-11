@@ -217,7 +217,7 @@ private fun PrivacyStep(onFull: () -> Unit, onNext: () -> Unit) {
     }
 }
 
-/** Р80: «Вы пользуетесь VPN?»: от ответа зависит, каким путём уйдёт снимок в «Еде по фото». */
+/** Р81: «Вы пользуетесь VPN?»: от ответа зависит, каким путём уйдёт снимок в «Еде по фото». */
 @Composable
 private fun NetworkStep(usesVpn: Boolean?, onSelect: (Boolean) -> Unit, onNext: () -> Unit) {
     val c = XoTheme.colors

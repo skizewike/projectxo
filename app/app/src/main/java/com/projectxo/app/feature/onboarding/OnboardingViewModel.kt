@@ -40,7 +40,7 @@ data class OnbState(
     val goal: WeightGoal? = null,
     val reminders: Reminders = Reminders(),
     val policyOpen: Boolean = false,
-    /** null — ещё не отвечал (Р80). */
+    /** null — ещё не отвечал (Р81). */
     val usesVpn: Boolean? = null,
 ) {
     val profile: Profile get() = Profile(sex, age, heightCm, weightKg, activity, goal)

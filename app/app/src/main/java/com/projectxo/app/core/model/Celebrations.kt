@@ -2,7 +2,7 @@ package com.projectxo.app.core.model
 
 import java.time.LocalDate
 
-/** Огонёк серии (Р80): растёт на 3, 10 и 30 днях подряд. Ниже 3 огонька нет. */
+/** Огонёк серии (Р81): растёт на 3, 10 и 30 днях подряд. Ниже 3 огонька нет. */
 object StreakFlame {
     val THRESHOLDS = intArrayOf(3, 10, 30)
 
@@ -12,7 +12,7 @@ object StreakFlame {
 
 /**
  * Серия кольца «Баланс дня»: дни подряд, когда кольцо дошло до 100 %.
- * Сегодня ещё не закрыто — серия считается до вчера и не обрывается (серия ждёт, Р80).
+ * Сегодня ещё не закрыто — серия считается до вчера и не обрывается (серия ждёт, Р81).
  */
 object BalanceStreak {
     fun count(percentByDay: Map<LocalDate, Int>, today: LocalDate): Int {
@@ -29,7 +29,7 @@ object BalanceStreak {
     fun waiting(percentByDay: Map<LocalDate, Int>, today: LocalDate): Boolean = (percentByDay[today] ?: 0) < 100
 }
 
-/** Салют «Баланса дня» (Р80): пороги 50, 80, 100 %. Чем выше порог, тем больше вспышек. */
+/** Салют «Баланса дня» (Р81): пороги 50, 80, 100 %. Чем выше порог, тем больше вспышек. */
 object BalanceFirework {
     val THRESHOLDS = intArrayOf(50, 80, 100)
 

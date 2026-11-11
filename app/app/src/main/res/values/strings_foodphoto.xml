@@ -75,7 +75,7 @@
     <string name="set_foodai_shared">работает и без ключа</string>
     <string name="fp_key_optional">Ключ не обязателен: «Еда по фото» работает и без него. Свой ключ снимает общий дневной лимит.</string>
 
-    <!-- Р80: вопрос про VPN в первом запуске и в настройках -->
+    <!-- Р81: вопрос про VPN в первом запуске и в настройках -->
     <string name="onb_net_title">Вы пользуетесь VPN?</string>
     <string name="onb_net_lead">Нужно только для «Еды по фото». От ответа зависит, каким путём уйдёт снимок блюда.</string>
     <string name="onb_net_no">Без VPN</string>

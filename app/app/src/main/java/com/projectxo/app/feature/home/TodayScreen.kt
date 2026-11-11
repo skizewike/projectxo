@@ -126,7 +126,7 @@ private fun TodayContent(
         val p = prevCompleted
         val pp = prevPercent
         val full = pp != null && pp < 100 && state.balancePercent >= 100
-        // Салют на 50, 80 и 100 % (Р80): самый высокий пройденный порог.
+        // Салют на 50, 80 и 100 % (Р81): самый высокий пройденный порог.
         val tier = if (pp == null) 0 else BalanceFirework.crossed(pp, state.balancePercent)
         if (tier > 0) {
             fireworkTier = tier
