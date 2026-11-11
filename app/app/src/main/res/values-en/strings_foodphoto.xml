@@ -74,4 +74,18 @@
     <string name="set_foodai_off">no key</string>
     <string name="set_foodai_shared">works without a key</string>
     <string name="fp_key_optional">A key is optional: Food from photo works without one. Your own key removes the shared daily limit.</string>
+
+    <!-- R80: VPN question at first launch and in settings -->
+    <string name="onb_net_title">Do you use a VPN?</string>
+    <string name="onb_net_lead">Only matters for Food by photo. Your answer decides the route your meal photo takes.</string>
+    <string name="onb_net_no">No VPN</string>
+    <string name="onb_net_no_sub">The photo goes through a Russian address, then to our server. Fits most people.</string>
+    <string name="onb_net_yes">With a VPN</string>
+    <string name="onb_net_yes_sub">The photo goes straight to our server, skipping the Russian address.</string>
+    <string name="onb_net_why_t">Why we ask</string>
+    <string name="onb_net_why">Google\'s recognition service is not available from Russia, and some foreign addresses do not open with some providers. So without a VPN the photo first goes through a Russian address (Yandex Cloud), then to our server and on to Google. With a VPN that extra step is not needed: the direct route is faster and the photo passes through fewer servers. You can change this in Settings → Food by photo key. If you do not use Food by photo, nothing is sent anywhere.</string>
+    <string name="set_net_title">How you connect to the internet</string>
+    <string name="set_net_note">Only affects the route of the photo in Food by photo. No VPN: through a Russian address. VPN: straight to our server.</string>
+    <string name="set_net_no">No VPN</string>
+    <string name="set_net_yes">VPN</string>
 </resources>

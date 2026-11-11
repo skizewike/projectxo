@@ -74,4 +74,18 @@
     <string name="set_foodai_off">ключа нет</string>
     <string name="set_foodai_shared">работает и без ключа</string>
     <string name="fp_key_optional">Ключ не обязателен: «Еда по фото» работает и без него. Свой ключ снимает общий дневной лимит.</string>
+
+    <!-- Р80: вопрос про VPN в первом запуске и в настройках -->
+    <string name="onb_net_title">Вы пользуетесь VPN?</string>
+    <string name="onb_net_lead">Нужно только для «Еды по фото». От ответа зависит, каким путём уйдёт снимок блюда.</string>
+    <string name="onb_net_no">Без VPN</string>
+    <string name="onb_net_no_sub">Снимок идёт через российский адрес, затем на наш сервер. Подходит большинству.</string>
+    <string name="onb_net_yes">С VPN</string>
+    <string name="onb_net_yes_sub">Снимок идёт сразу на наш сервер, без российского адреса.</string>
+    <string name="onb_net_why_t">Зачем мы спрашиваем</string>
+    <string name="onb_net_why">Распознавание Google недоступно из России, а часть зарубежных адресов у провайдеров не открывается. Поэтому без VPN снимок сначала идёт через российский адрес (Яндекс Облако), а оттуда на наш сервер и в Google. С VPN этот лишний шаг не нужен: прямой путь быстрее, и снимок проходит через меньше серверов. Ответ можно поменять в «Настройки → Ключ для еды по фото». Если не пользоваться «Едой по фото», ничего никуда не отправляется.</string>
+    <string name="set_net_title">Как вы выходите в интернет</string>
+    <string name="set_net_note">Влияет только на путь снимка в «Еде по фото». Без VPN: через российский адрес. С VPN: сразу на наш сервер.</string>
+    <string name="set_net_no">Без VPN</string>
+    <string name="set_net_yes">С VPN</string>
 </resources>

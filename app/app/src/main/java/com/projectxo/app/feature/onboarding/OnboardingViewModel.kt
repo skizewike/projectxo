@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 /** Шаги первого запуска (Р51: план считается в самом конце). */
-enum class OnbStep { Privacy, Comfort, Modules, About, Activity, Goal, Reminders, Calc, Plan }
+enum class OnbStep { Privacy, Network, Comfort, Modules, About, Activity, Goal, Reminders, Calc, Plan }
 
 data class OnbState(
     val step: OnbStep = OnbStep.Privacy,
@@ -40,6 +40,8 @@ data class OnbState(
     val goal: WeightGoal? = null,
     val reminders: Reminders = Reminders(),
     val policyOpen: Boolean = false,
+    /** null — ещё не отвечал (Р80). */
+    val usesVpn: Boolean? = null,
 ) {
     val profile: Profile get() = Profile(sex, age, heightCm, weightKg, activity, goal)
     val bmi: Double get() = PlanCalculator.bmi(weightKg, heightCm)
@@ -90,6 +92,8 @@ class OnboardingViewModel(
     fun setGoal(g: WeightGoal) = _state.update { it.copy(goal = g) }
     fun setReminders(r: Reminders) = _state.update { it.copy(reminders = r) }
 
+    fun setUsesVpn(v: Boolean) = _state.update { it.copy(usesVpn = v) }
+
     fun setPolicyOpen(open: Boolean) = _state.update { it.copy(policyOpen = open) }
 
     /** Принять план: сохранить профиль, единицы, модули, цели и отметить первый запуск пройденным. */
@@ -110,6 +114,7 @@ class OnboardingViewModel(
                     units = s.units,
                     modules = s.modules.ifEmpty { Module.BASE },
                     reminders = s.reminders,
+                    usesVpn = s.usesVpn ?: false,
                     startEpochDay = it.startEpochDay ?: clock.today().toEpochDay(),
                 )
             }

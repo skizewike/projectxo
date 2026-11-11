@@ -118,6 +118,7 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
                 startEpochDay = if (p.contains("start_day")) p.getLong("start_day", 0) else null,
                 foodAiKey = p.getString("food_ai_key", "").orEmpty(),
                 installId = p.getString("install_id", "").orEmpty(),
+                usesVpn = p.getBoolean("uses_vpn", false),
             )
         }
 
@@ -159,6 +160,7 @@ class PrefsSettingsRepository(context: Context) : SettingsRepository {
             if (s.startEpochDay != null) putLong("start_day", s.startEpochDay) else remove("start_day")
             if (s.foodAiKey.isNotEmpty()) putString("food_ai_key", s.foodAiKey) else remove("food_ai_key")
             if (s.installId.isNotEmpty()) putString("install_id", s.installId) else remove("install_id")
+            putBoolean("uses_vpn", s.usesVpn)
             val pr = s.profile
             if (pr == null) {
                 listOf("p_sex", "p_age", "p_height", "p_weight", "p_activity", "p_goal").forEach(::remove)

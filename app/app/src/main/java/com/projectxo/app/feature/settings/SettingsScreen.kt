@@ -711,6 +711,17 @@ private fun UnitsPage(vm: SettingsViewModel, s: AppSettings) {
 private fun FoodAiPage(vm: SettingsViewModel, s: AppSettings) {
     var keyError by remember { mutableStateOf(false) }
     PageTitle(R.string.set_foodai, if (BuildConfig.FOOD_AI_PROXY_URL.isNotBlank()) R.string.fp_key_optional else null)
+    if (BuildConfig.FOOD_AI_PROXY_URL.isNotBlank()) {
+        Text(stringResource(R.string.set_net_title), style = XoTheme.type.bodyStrong, color = XoTheme.colors.ink)
+        Spacer(Modifier.height(XoSpacing.textGap))
+        Text(stringResource(R.string.set_net_note), style = XoTheme.type.caption, color = XoTheme.colors.muted)
+        Spacer(Modifier.height(XoSpacing.s2))
+        XoSegmented(
+            listOf(false to stringResource(R.string.set_net_no), true to stringResource(R.string.set_net_yes)),
+            s.usesVpn, vm::setUsesVpn,
+        )
+        Spacer(Modifier.height(XoSpacing.s5))
+    }
     com.projectxo.app.feature.food.FoodAiKeyPanel(
         keyError = keyError,
         onSave = { keyError = !vm.setFoodAiKey(it) },

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XO Еда по фото: отправка снимка</title>
+<style>
+:root{
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --page:#ECE8DF; --bg:#F6F3EC; --ink:#171614; --muted:#6E6A62; --line:#DCD7CC; --track:#E3DED3; --accent:#2D64D2; --bezel:#1B1A18;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.top{padding:20px 28px 0;max-width:900px}
+.top h1{font-size:20px;margin:0 0 6px}
+.top p{margin:6px 0 0;color:var(--muted)}
+.bar{display:flex;gap:10px;align-items:center;padding:14px 28px 0;flex-wrap:wrap}
+.chip{border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--muted)}
+.chip[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+.layout{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;padding:20px 28px 56px}
+.col{width:360px}
+.col h2{font-size:15px;font-weight:600;margin:0 0 2px}
+.col .sub{color:var(--muted);font-size:13px;margin:0 0 12px;min-height:76px}
+.device{width:360px;height:640px;padding:8px;border-radius:44px;background:var(--bezel);box-shadow:0 0 0 1px var(--line)}
+.screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--bg)}
+.title{position:absolute;left:24px;top:28px;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.stage{position:absolute;left:0;right:0;top:84px;height:350px;display:flex;align-items:center;justify-content:center}
+.cap{position:absolute;left:24px;right:24px;top:446px;text-align:center}
+.cap b{display:block;font-weight:600;font-size:16px;min-height:24px}
+.cap span{display:block;color:var(--muted);font-size:13px;margin-top:4px;min-height:36px}
+.cancel{position:absolute;left:24px;right:24px;bottom:28px;height:52px;border:1px solid var(--line);border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+svg{display:block;overflow:visible}
+.ink{stroke:var(--ink);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.acc{stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fill-ink{fill:var(--ink)} .fill-acc{fill:var(--accent)} .fill-track{fill:var(--track)}
+.muted{stroke:var(--muted)}
+.t{font:500 11px var(--font);fill:var(--muted)}
+/* «меньше анимаций»: один кадр */
+.still *{animation:none!important;transition:none!important}
+.note{margin:10px 0 0;color:var(--muted);font-size:12px}
+
+/* 01 Кольцо: дуга вокруг снимка заполняется */
+.v1 .arc{stroke-dasharray:408;stroke-dashoffset:408;animation:v1 2.6s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes v1{0%{stroke-dashoffset:408}78%,100%{stroke-dashoffset:0}}
+.v1 .photo{animation:v1p 2.6s ease-in-out infinite;transform-origin:center}
+@keyframes v1p{0%,100%{transform:scale(1)}78%{transform:scale(.97)}}
+.v1 .pct::after{content:"";animation:v1n 2.6s steps(1) infinite}
+@keyframes v1n{0%{content:"0%"}20%{content:"20%"}40%{content:"45%"}60%{content:"70%"}78%,100%{content:"100%"}}
+
+/* 02 Лента: снимок едет по рельсу от телефона к серверу */
+.v2 .rail{stroke-dasharray:3 6}
+.v2 .car{animation:v2 2.4s cubic-bezier(.5,0,.3,1) infinite}
+@keyframes v2{0%{transform:translateX(0);opacity:0}8%{opacity:1}85%{opacity:1}100%{transform:translateX(200px);opacity:0}}
+.v2 .end-r{animation:v2e 2.4s ease infinite}
+@keyframes v2e{0%,80%{opacity:.35}92%,100%{opacity:1}}
+
+/* 03 Слои: снимок режется на полосы, полосы по очереди уходят вправо */
+.v3 .s{animation:v3 2.8s cubic-bezier(.5,0,.2,1) infinite}
+.v3 .s:nth-child(1){animation-delay:0s}.v3 .s:nth-child(2){animation-delay:.14s}.v3 .s:nth-child(3){animation-delay:.28s}
+.v3 .s:nth-child(4){animation-delay:.42s}.v3 .s:nth-child(5){animation-delay:.56s}.v3 .s:nth-child(6){animation-delay:.7s}
+@keyframes v3{0%,12%{transform:translateX(0);opacity:1}55%{transform:translateX(150px);opacity:0}56%{transform:translateX(-150px);opacity:0}90%,100%{transform:translateX(0);opacity:1}}
+
+/* 04 Путь: четыре остановки, подсвечиваются по очереди */
+.v4 .node{fill:var(--bg);stroke:var(--line);stroke-width:1.5;animation:v4n 4.8s infinite}
+.v4 .n1{animation-delay:0s}.v4 .n2{animation-delay:1.2s}.v4 .n3{animation-delay:2.4s}.v4 .n4{animation-delay:3.6s}
+@keyframes v4n{0%{stroke:var(--line);fill:var(--bg)}4%,22%{stroke:var(--ink);fill:var(--ink)}26%,100%{stroke:var(--ink);fill:var(--bg)}}
+.v4 .seg{stroke:var(--line);stroke-width:1.5}
+.v4 .run{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:300;stroke-dashoffset:300;animation:v4r 4.8s linear infinite}
+@keyframes v4r{0%{stroke-dashoffset:300}90%,100%{stroke-dashoffset:0}}
+.v4 .lab{opacity:.35;animation:v4l 4.8s infinite}
+.v4 .l1{animation-delay:0s}.v4 .l2{animation-delay:1.2s}.v4 .l3{animation-delay:2.4s}.v4 .l4{animation-delay:3.6s}
+@keyframes v4l{0%{opacity:.35}4%,22%{opacity:1}26%,100%{opacity:.6}}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Еда по фото: отправка снимка</h1>
+  <p>Что видит человек, пока снимок уходит на сервер (до этапа «Считаем», его анимация уже выбрана: «Скан», Р72). Четыре варианта. Тайминги: цикл 2,4 до 4,8 с, кривые без отскока. Один акцентный цвет, ни свечения, ни градиентов.</p>
+</div>
+<div class="bar">
+  <button class="chip" id="reduce" aria-pressed="false">Меньше анимаций: выкл</button>
+  <button class="chip" id="theme" aria-pressed="false">Тёмная тема: выкл</button>
+</div>
+
+<div class="layout">
+
+  <div class="col">
+    <h2>01 Кольцо</h2>
+    <p class="sub">Тонкая дуга обходит снимок по кругу, внутри процент. Самый привычный образ «идёт загрузка». Честно показывает прогресс, если приложение умеет считать байты.</p>
+    <div class="device"><div class="screen v1">
+      <div class="title">Отправляем</div>
+      <div class="stage">
+        <svg width="220" height="220" viewBox="-110 -110 220 220">
+          <circle r="65" class="ink" style="stroke:var(--track)"/>
+          <circle r="65" class="acc arc" transform="rotate(-90)"/>
+          <g class="photo">
+            <circle r="46" class="ink"/>
+            <circle r="30" class="ink muted" style="stroke-opacity:.6"/>
+            <circle cx="-9" cy="-6" r="2.4" class="fill-ink"/><circle cx="8" cy="-10" r="2.4" class="fill-ink"/><circle cx="3" cy="9" r="2.4" class="fill-ink"/>
+          </g>
+          <text class="t pct" x="0" y="100" text-anchor="middle"></text>
+        </svg>
+      </div>
+      <div class="cap"><b>Отправляем снимок</b><span>Снимок остаётся и на телефоне.</span></div>
+      <div class="cancel">Отмена</div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <h2>02 Лента</h2>
+    <p class="sub">Снимок-карточка едет по пунктирному рельсу от телефона к серверу. Без процентов: просто видно, что он в пути. Спокойный, самый тихий вариант.</p>
+    <div class="device"><div class="screen v2">
+      <div class="title">Отправляем</div>
+      <div class="stage">
+        <svg width="300" height="120" viewBox="0 0 300 120">
+          <!-- телефон -->
+          <rect x="6" y="38" width="26" height="46" rx="6" class="ink"/><line x1="15" y1="77" x2="23" y2="77" class="ink"/>
+          <!-- сервер -->
+          <g class="end-r"><rect x="268" y="36" width="28" height="48" rx="4" class="ink"/><line x1="273" y1="50" x2="291" y2="50" class="ink"/><line x1="273" y1="62" x2="291" y2="62" class="ink"/><circle cx="278" cy="74" r="1.6" class="fill-ink"/></g>
+          <line x1="44" y1="60" x2="256" y2="60" class="ink rail" style="stroke:var(--line)"/>
+          <g class="car"><rect x="46" y="48" width="22" height="22" rx="5" class="acc" style="fill:var(--bg)"/><circle cx="57" cy="59" r="5" class="acc"/></g>
+        </svg>
+      </div>
+      <div class="cap"><b>Отправляем снимок</b><span>Снимок идёт на наш сервер.</span></div>
+      <div class="cancel">Отмена</div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <h2>03 Слои</h2>
+    <p class="sub">Снимок состоит из шести тонких полос, они по очереди уходят вправо и возвращаются на место. Движение связано именно с фото, а не с абстрактной загрузкой.</p>
+    <div class="device"><div class="screen v3">
+      <div class="title">Отправляем</div>
+      <div class="stage">
+        <svg width="240" height="240" viewBox="0 0 240 240">
+          <defs><clipPath id="cp"><rect x="30" y="30" width="180" height="180" rx="22"/></clipPath></defs>
+          <g clip-path="none">
+            <g class="s"><rect x="30" y="30" width="180" height="30" rx="2" class="fill-track"/><line x1="40" y1="45" x2="120" y2="45" class="ink"/></g>
+            <g class="s"><rect x="30" y="60" width="180" height="30" rx="2" class="fill-track"/><circle cx="150" cy="75" r="5" class="ink"/></g>
+            <g class="s"><rect x="30" y="90" width="180" height="30" rx="2" class="fill-track"/><circle cx="90" cy="105" r="9" class="ink"/></g>
+            <g class="s"><rect x="30" y="120" width="180" height="30" rx="2" class="fill-track"/><circle cx="130" cy="135" r="9" class="ink"/></g>
+            <g class="s"><rect x="30" y="150" width="180" height="30" rx="2" class="fill-track"/><line x1="70" y1="165" x2="170" y2="165" class="ink"/></g>
+            <g class="s"><rect x="30" y="180" width="180" height="30" rx="2" class="fill-track"/><circle cx="110" cy="195" r="4" class="acc"/></g>
+          </g>
+        </svg>
+      </div>
+      <div class="cap"><b>Отправляем снимок</b><span>Снимок уходит на распознавание.</span></div>
+      <div class="cancel">Отмена</div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <h2>04 Путь</h2>
+    <p class="sub">Четыре остановки: «Телефон», «Адрес», «Сервер», «Google». Подсвечиваются по очереди, подпись внизу объясняет этап. Единственный вариант, который показывает реальный маршрут, поэтому он честный про то, куда идёт снимок.</p>
+    <div class="device"><div class="screen v4">
+      <div class="title">Отправляем</div>
+      <div class="stage">
+        <svg width="300" height="300" viewBox="0 0 300 300">
+          <line class="seg" x1="40" y1="40" x2="40" y2="260"/>
+          <line class="run" x1="40" y1="40" x2="40" y2="260"/>
+          <circle class="node n1" cx="40" cy="40" r="9"/><circle class="node n2" cx="40" cy="113" r="9"/>
+          <circle class="node n3" cx="40" cy="187" r="9"/><circle class="node n4" cx="40" cy="260" r="9"/>
+          <g class="lab l1"><text x="70" y="45" style="font:600 15px var(--font);fill:var(--ink)">Телефон</text><text class="t" x="70" y="62">снимок уменьшен</text></g>
+          <g class="lab l2"><text x="70" y="118" style="font:600 15px var(--font);fill:var(--ink)">Российский адрес</text><text class="t" x="70" y="135">без VPN</text></g>
+          <g class="lab l3"><text x="70" y="192" style="font:600 15px var(--font);fill:var(--ink)">Наш сервер</text><text class="t" x="70" y="209">добавляет ключ, считает лимит</text></g>
+          <g class="lab l4"><text x="70" y="265" style="font:600 15px var(--font);fill:var(--ink)">Google</text><text class="t" x="70" y="282">распознаёт блюдо</text></g>
+        </svg>
+      </div>
+      <div class="cap"><b>Отправляем снимок</b><span>Путь без VPN. С VPN адрес пропускается.</span></div>
+      <div class="cancel">Отмена</div>
+    </div></div>
+  </div>
+
+</div>
+<div class="top" style="padding-bottom:40px">
+  <p class="note">«Меньше анимаций»: один кадр без движения, подпись «Отправляем снимок» остаётся. В приложении во всех вариантах кнопка «Отмена» прерывает запрос, а снимок остаётся на экране выбора.</p>
+</div>
+<script>
+const root=document.documentElement;
+const r=document.getElementById('reduce'), t=document.getElementById('theme');
+r.onclick=()=>{const on=r.getAttribute('aria-pressed')!=='true';r.setAttribute('aria-pressed',on);r.textContent='Меньше анимаций: '+(on?'вкл':'выкл');document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('still',on))};
+t.onclick=()=>{const on=t.getAttribute('aria-pressed')!=='true';t.setAttribute('aria-pressed',on);t.textContent='Тёмная тема: '+(on?'вкл':'выкл');
+ if(on){root.setAttribute('data-theme','dark');root.style.cssText='--page:#0C0C0B;--bg:#141413;--ink:#ECE9E2;--muted:#8C887F;--line:#2B2A27;--track:#252422;--accent:#6E9BEB;--bezel:#222120'}else{root.removeAttribute('data-theme');root.style.cssText=''}};
+</script>
+</body>
+</html>

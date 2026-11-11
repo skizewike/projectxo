@@ -56,6 +56,7 @@ class OnboardingTest {
     }
 
     @Test fun privacy() = shoot("onb_1_privacy.png", OnbStep.Privacy)
+    @Test fun network() { vm.setUsesVpn(false); shoot("onb_1b_network.png", OnbStep.Network) }
     @Test fun comfortAcid() = shoot("onb_2_comfort_acid.png", OnbStep.Comfort, ThemeChoice.Acid)
     @Test fun modules() = shoot("onb_3_modules.png", OnbStep.Modules, dark = true)
     @Test fun about() = shoot("onb_4_about.png", OnbStep.About)

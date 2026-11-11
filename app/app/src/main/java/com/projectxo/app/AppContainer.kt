@@ -85,16 +85,21 @@ class AppContainer(context: Context) {
     val settings: SettingsRepository = PrefsSettingsRepository(context)
     /** Еда по фото (Р69, Р70): свой ключ из настроек или общий посредник из сборки. */
     val foodAiShared: Boolean = BuildConfig.FOOD_AI_PROXY_URL.isNotBlank()
-    val foodPhoto: com.projectxo.app.core.data.foodai.FoodPhotoAnalyzer by lazy {
-        com.projectxo.app.core.data.foodai.GeminiFoodAnalyzer(
-            apiKey = { settings.settings.value.foodAiKey },
-            proxyUrl = BuildConfig.FOOD_AI_PROXY_URL,
-            installId = {
-                settings.settings.value.installId.ifEmpty {
-                    java.util.UUID.randomUUID().toString().also { id -> settings.update { it.copy(installId = id) } }
-                }
-            },
-        )
+    private fun foodAnalyzer(proxyUrl: String) = com.projectxo.app.core.data.foodai.GeminiFoodAnalyzer(
+        apiKey = { settings.settings.value.foodAiKey },
+        proxyUrl = proxyUrl,
+        installId = {
+            settings.settings.value.installId.ifEmpty {
+                java.util.UUID.randomUUID().toString().also { id -> settings.update { it.copy(installId = id) } }
+            }
+        },
+    )
+    private val foodViaRu by lazy { foodAnalyzer(BuildConfig.FOOD_AI_PROXY_URL) }
+    private val foodDirect by lazy { foodAnalyzer(BuildConfig.FOOD_AI_PROXY_URL_VPN.ifBlank { BuildConfig.FOOD_AI_PROXY_URL }) }
+    /** Р80: с VPN снимок идёт сразу на посредника, без VPN через российский ретранслятор. Выбор читается при каждом запросе. */
+    val foodPhoto: com.projectxo.app.core.data.foodai.FoodPhotoAnalyzer = object : com.projectxo.app.core.data.foodai.FoodPhotoAnalyzer {
+        override suspend fun analyze(jpeg: ByteArray, hint: String, language: String) =
+            (if (settings.settings.value.usesVpn) foodDirect else foodViaRu).analyze(jpeg, hint, language)
     }
     val history by lazy {
         BalanceHistory(water, food, steps, goals, HistoryExtras(sleep, fasting, breathing, habits, workouts, settings) { clock.nowMs() })

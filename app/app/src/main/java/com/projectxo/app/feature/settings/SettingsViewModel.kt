@@ -84,6 +84,7 @@ class SettingsViewModel(
         return true
     }
 
+    fun setUsesVpn(v: Boolean) = repo.update { it.copy(usesVpn = v) }
     fun removeFoodAiKey() = repo.update { it.copy(foodAiKey = "") }
 
     fun setLanguage(l: com.projectxo.app.core.model.AppLanguage) = repo.update { it.copy(language = l) }

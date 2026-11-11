@@ -131,6 +131,7 @@ fun OnboardingScreen(vm: OnboardingViewModel) {
             ) { step ->
                 when (step) {
                     OnbStep.Privacy -> PrivacyStep(onFull = { vm.setPolicyOpen(true) }, onNext = vm::next)
+                    OnbStep.Network -> NetworkStep(s.usesVpn, vm::setUsesVpn, vm::next)
                     OnbStep.Comfort -> ComfortStep(
                         textSize = app.textSize, theme = app.theme, contrast = app.highContrast, motion = app.reduceMotion,
                         onText = { t -> vm.updateAppearance { it.copy(textSize = t) } },
@@ -213,6 +214,24 @@ private fun PrivacyStep(onFull: () -> Unit, onNext: () -> Unit) {
         Point(XoIcons.Trash, R.string.onb_privacy_3_t, R.string.onb_privacy_3_s)
         XoHairline()
         XoTextButton(stringResource(R.string.onb_privacy_full), onFull)
+    }
+}
+
+/** Р80: «Вы пользуетесь VPN?»: от ответа зависит, каким путём уйдёт снимок в «Еде по фото». */
+@Composable
+private fun NetworkStep(usesVpn: Boolean?, onSelect: (Boolean) -> Unit, onNext: () -> Unit) {
+    val c = XoTheme.colors
+    StepScaffold(R.string.onb_net_title, stringResource(R.string.onb_net_lead), footer = {
+        XoPrimaryButton(stringResource(R.string.next), onNext, enabled = usesVpn != null)
+    }) {
+        XoOption(stringResource(R.string.onb_net_no), stringResource(R.string.onb_net_no_sub), usesVpn == false, { onSelect(false) })
+        XoOption(stringResource(R.string.onb_net_yes), stringResource(R.string.onb_net_yes_sub), usesVpn == true, { onSelect(true) })
+        Spacer(Modifier.height(XoSpacing.s4))
+        XoHairline()
+        Spacer(Modifier.height(XoSpacing.s3))
+        Text(stringResource(R.string.onb_net_why_t), style = XoTheme.type.bodyStrong, color = c.ink)
+        Spacer(Modifier.height(XoSpacing.textGap))
+        Text(stringResource(R.string.onb_net_why), style = XoTheme.type.caption, color = c.muted)
     }
 }
 

@@ -39,6 +39,9 @@ android {
         // Адрес общего посредника «Еды по фото» (server/food-proxy, Р70). Пусто: работает только свой ключ пользователя.
         val proxy = (project.findProperty("foodAiProxyUrl") as String?).orEmpty().trim()
         buildConfigField("String", "FOOD_AI_PROXY_URL", "\"$proxy\"")
+        // Прямой адрес посредника для тех, у кого включён VPN (Р80): минуя российский ретранслятор.
+        val proxyVpn = (project.findProperty("foodAiProxyUrlVpn") as String?).orEmpty().trim()
+        buildConfigField("String", "FOOD_AI_PROXY_URL_VPN", "\"$proxyVpn\"")
         // Адрес сервера общих привычек (server/habit-rooms, Р79). Пусто: раздел «Вместе» скрыт.
         val rooms = (project.findProperty("sharedRoomsUrl") as String?).orEmpty().trim()
         buildConfigField("String", "SHARED_ROOMS_URL", "\"$rooms\"")
