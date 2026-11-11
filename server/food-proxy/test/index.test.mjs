@@ -87,3 +87,12 @@ test("health", async () => {
   const r = await handle(new Request("https://p.example/health"), env(), ok);
   assert.equal(r.status, 200);
 });
+
+test("неудачные ответы Google не расходуют лимит", async () => {
+  const e = env({ PER_USER_DAILY: "1" });
+  for (const status of [404, 429, 503]) {
+    assert.equal((await handle(req(), e, async () => new Response("{}", { status }))).status, status);
+  }
+  assert.equal((await handle(req(), e, ok)).status, 200);
+  assert.equal((await handle(req(), e, ok)).status, 429);
+});

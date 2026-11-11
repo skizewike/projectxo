@@ -55,11 +55,14 @@ export async function handle(request, env, fetchFn = fetch, now = new Date()) {
   const day = now.toISOString().slice(0, 10);
   const perUser = num(env.PER_USER_DAILY, 15);
   const global = num(env.GLOBAL_DAILY, 300);
-  // Сначала личный счётчик, потом общий: чужие запросы не съедают общий лимит у того, кто уже исчерпал свой.
-  if ((await bump(env.COUNTERS, `u:${day}:${install}`)) > perUser) {
+  // Лимит проверяем до запроса, но считаем только удачные ответы Google (200): приложение перебирает
+  // модели, и неудачные попытки (404, 429, 5xx) раньше съедали суточный лимит впустую.
+  const userKey = `u:${day}:${install}`;
+  const globalKey = `g:${day}`;
+  if ((Number(await env.COUNTERS.get(userKey)) || 0) >= perUser) {
     return json(429, { error: "user daily limit", scope: "user" });
   }
-  if ((await bump(env.COUNTERS, `g:${day}`)) > global) {
+  if ((Number(await env.COUNTERS.get(globalKey)) || 0) >= global) {
     return json(429, { error: "global daily limit", scope: "global" });
   }
 
@@ -75,6 +78,14 @@ export async function handle(request, env, fetchFn = fetch, now = new Date()) {
   }
   // Ответ Google отдаём как есть: приложение уже умеет читать его коды (429, 404, 5xx).
   const text = await upstream.text();
+  if (upstream.status === 200) {
+    try {
+      await bump(env.COUNTERS, userKey);
+      await bump(env.COUNTERS, globalKey);
+    } catch {
+      // Счётчик не должен ронять ответ, который уже получен.
+    }
+  }
   return new Response(text, { status: upstream.status, headers: { "content-type": "application/json" } });
 }
 
