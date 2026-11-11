@@ -80,7 +80,7 @@ object XoSize {
     val tileGap = 10.dp
     val tileRadius = 16.dp
     val icon = 28.dp
-    /** Огонёк серии у привычки и у кольца (Р81). */
+    /** Огонёк серии у привычки и у кольца (Р80). */
     val streakFlame = 18.dp
 
     /** «Еда»: квадрат дня (DESIGN.md, «Еда», вариант «Под подписью»). */

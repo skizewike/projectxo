@@ -42,7 +42,7 @@ class TodayViewModel(
 
     val date: LocalDate = clock.today()
 
-    // Год назад: хватает и на серию кольца (Р81), и на сегодняшний день одним запросом.
+    // Год назад: хватает и на серию кольца (Р80), и на сегодняшний день одним запросом.
     val state: StateFlow<TodayState?> = combine(
         history.totalsBetween(date.minusDays(STREAK_DAYS), date), history.goals(), settings.settings,
     ) { totals, goals, s ->

@@ -75,7 +75,7 @@
     <string name="set_foodai_shared">works without a key</string>
     <string name="fp_key_optional">A key is optional: Food from photo works without one. Your own key removes the shared daily limit.</string>
 
-    <!-- R80: VPN question at first launch and in settings -->
+    <!-- R81: VPN question at first launch and in settings -->
     <string name="onb_net_title">Do you use a VPN?</string>
     <string name="onb_net_lead">Only matters for Food by photo. Your answer decides the route your meal photo takes.</string>
     <string name="onb_net_no">No VPN</string>

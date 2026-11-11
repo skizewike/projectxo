@@ -463,7 +463,7 @@ private fun CardsView(state: HabitsUiState, actions: HabitsActions, onEdit: (Hab
     }
 }
 
-/** Подпись привычки с огоньком серии слева (Р81): огонь с 3 дней, приглушённый, пока сегодня не отмечено. */
+/** Подпись привычки с огоньком серии слева (Р80): огонь с 3 дней, приглушённый, пока сегодня не отмечено. */
 @Composable
 private fun StreakCaption(item: HabitItem, text: String) {
     val level = StreakFlame.level(item.streak)
